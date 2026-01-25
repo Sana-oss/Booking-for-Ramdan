@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  # Ramadan Booking Backend
+  ramadan-backend:
+    build: .
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - MONGODB_URI=mongodb://mongodb:27017/ramadan-booking
+      - JWT_SECRET=your-super-secret-jwt-key-change-this
+      - FRONTEND_URL=http://localhost:3000
+    depends_on:
+      - mongodb
+    networks:
+      - ramadan-network
+    restart: unless-stopped
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - ramadan-network
+    restart: unless-stopped
+
+  # Nginx Reverse Proxy (Optional)
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - ramadan-backend
+    networks:
+      - ramadan-network
+    restart: unless-stopped
+
+volumes:
+  mongodb_data:
+
+networks:
+  ramadan-network:
+    driver: bridge

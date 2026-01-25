@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول | إدارة كورنثيا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="user-view">
+    
+    <button id="langToggle" class="lang-toggle-btn" style="position: absolute; top: 20px; right: 20px; z-index: 10;" onclick="i18n.toggleLang()">EN</button>
+
+    <div class="booking-container" style="border-top: 6px solid var(--dark-navy);">
+        <div class="logo-container" style="margin-bottom: 20px;">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Corinthia_Hotels_logo.svg/1200px-Corinthia_Hotels_logo.svg.png" 
+                 alt="Corinthia Logo" 
+                 style="height: 60px; filter: grayscale(1) brightness(0.5);">
+        </div>
+
+        <h1 data-i18n="admin_login_title" style="font-family: 'Cinzel', serif; margin-bottom: 10px;">بوابة الموظفين</h1>
+        <p style="color: #666; margin-bottom: 30px;" data-i18n="admin_login_subtitle">الرجاء تسجيل الدخول للوصول إلى لوحة التحكم</p>
+
+        <form id="adminLoginForm">
+            <div class="form-group">
+                <label data-i18n="label_username" style="display: block; margin-bottom: 8px; font-weight: bold;">اسم المستخدم</label>
+                <div style="position: relative;">
+                    <i class="fas fa-user" style="position: absolute; right: 15px; top: 15px; color: var(--primary-gold);"></i>
+                    <input type="text" id="adminUser" style="padding-right: 45px; width: 100%; height: 50px; border: 1px solid #ddd; border-radius: 12px;" required>
+                </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+                <label data-i18n="label_password" style="display: block; margin-bottom: 8px; font-weight: bold;">كلمة المرور</label>
+                <div style="position: relative;">
+                    <i class="fas fa-lock" style="position: absolute; right: 15px; top: 15px; color: var(--primary-gold);"></i>
+                    <input type="password" id="adminPass" style="padding-right: 45px; width: 100%; height: 50px; border: 1px solid #ddd; border-radius: 12px;" required>
+                </div>
+            </div>
+
+            <div id="loginErrorMessage" style="color: var(--danger-red); font-size: 0.85rem; margin: 15px 0; display: none;" data-i18n="error_login">
+                خطأ في البيانات، حاول مجدداً
+            </div>
+
+            <button type="submit" class="submit-btn" style="background: var(--dark-navy); color: var(--primary-gold); margin-top: 10px;">
+                <i class="fas fa-shield-alt" style="margin-left: 10px;"></i>
+                <span data-i18n="btn_login">دخول آمن</span>
+            </button>
+        </form>
+
+        <div style="margin-top: 25px;">
+            <a href="index.html" style="text-decoration: none; color: #888; font-size: 0.9rem;">
+                <i class="fas fa-arrow-right"></i> <span data-i18n="back_to_site">العودة للموقع</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="constants.js"></script>
+    <script src="i18n.js"></script>
+    <script src="admin-login.js"></script>
+</body>
+</html>

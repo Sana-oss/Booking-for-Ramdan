@@ -1,0 +1,63 @@
+name: Deploy Ramadan Booking System
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  # Test Backend
+  test-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        run: cd backend && npm ci
+
+      - name: Run tests
+        run: cd backend && npm test
+
+  # Deploy Backend to Railway (or your preferred platform)
+  deploy-backend:
+    needs: test-backend
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy to Railway
+        uses: railwayapp/cli@v1
+        with:
+          railway-token: ${{ secrets.RAILWAY_TOKEN }}
+          project-path: backend
+
+  # Deploy Frontend to GitHub Pages
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Build frontend
+        run: |
+          mkdir dist
+          cp *.html *.css *.js i18n.js dist/
+          cp -r images dist/ 2>/dev/null || true
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>متابعة الحجز | فندق كورنثيا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="user-view"> <div class="booking-container">
+        <div class="logo-container">
+            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Corinthia_Hotels_logo.svg/1200px-Corinthia_Hotels_logo.svg.png" 
+                 alt="Logo" style="height: 50px; margin-bottom: 20px;">
+        </div>
+
+        <h1 data-i18n="check_status_title">استعلام عن حجز</h1>
+        <p class="subtitle" data-i18n="check_status_desc">أدخل رقم الحجز الخاص بك لمعرفة الحالة</p>
+
+        <div class="form-group">
+            <input type="text" id="resNumberInput" placeholder="مثال: CRN-123456" style="text-align: center; font-size: 1.2rem; letter-spacing: 2px;">
+        </div>
+
+        <button onclick="checkStatus()" class="submit-btn">
+            <i class="fas fa-search"></i> <span data-i18n="search_btn">بحث عن الحجز</span>
+        </button>
+
+        <div id="statusResult" style="margin-top: 25px; display: none;">
+            </div>
+
+        <a href="index.html" style="display: block; margin-top: 25px; color: var(--primary-gold); text-decoration: none;">
+            <i class="fas fa-arrow-right"></i> العودة للحجز الجديد
+        </a>
+    </div>
+
+    <script src="constants.js"></script>
+    <script src="i18n.js"></script>
+    <script src="check-status.js"></script>
+</body>
+</html>
