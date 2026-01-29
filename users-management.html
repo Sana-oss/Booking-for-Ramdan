@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المستخدمين | كورنثيا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="admin-style.css">
+</head>
+<body class="admin-view">
+    <nav class="admin-nav">
+        <div class="brand">
+            <div class="logo-container">
+                <svg class="admin-logo-svg" width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 15 A35 35 0 1 0 50 85 A28 28 0 1 1 50 15 Z" fill="#C5A059"/>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <h1 class="hotel-name">CORINTHIA</h1>
+                <p class="panel-name">إدارة المستخدمين</p>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <a href="admin-dashboard.html" class="logout-btn" style="text-decoration: none; margin-left: 10px;">
+                <i class="fas fa-arrow-right"></i> <span>العودة للوحة التحكم</span>
+            </a>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="dashboard-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h2 style="color: var(--gold); font-family: 'Cinzel', serif;">إدارة المستخدمين</h2>
+            <button onclick="showCreateUserModal()" class="action-btn excel-green">
+                <i class="fas fa-user-plus"></i> <span>إضافة مستخدم جديد</span>
+            </button>
+        </div>
+
+        <div class="table-container">
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>اسم المستخدم</th>
+                            <th>الاسم الكامل</th>
+                            <th>الدور</th>
+                            <th>الحالة</th>
+                            <th>تاريخ الإنشاء</th>
+                            <th>الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding:50px; color:#999;">
+                                <i class="fas fa-circle-notch fa-spin"></i> جاري التحميل...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal لإضافة مستخدم جديد -->
+    <div id="createUserModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: #1a1a2e; padding: 40px; border-radius: 20px; border: 1px solid var(--gold); max-width: 500px; width: 90%;">
+            <h3 style="color: var(--gold); margin-bottom: 20px; font-family: 'Cinzel', serif;">إضافة مستخدم جديد</h3>
+            <form id="createUserForm">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: #fff; margin-bottom: 8px;">اسم المستخدم</label>
+                    <input type="text" id="newUsername" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: #fff; margin-bottom: 8px;">الاسم الكامل</label>
+                    <input type="text" id="newName" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: #fff; margin-bottom: 8px;">كلمة المرور</label>
+                    <input type="password" id="newPassword" required minlength="6" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: #fff; margin-bottom: 8px;">الدور</label>
+                    <select id="newRole" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
+                        <option value="staff">موظف (Staff)</option>
+                        <option value="admin">مدير (Admin)</option>
+                    </select>
+                </div>
+                <div id="createUserError" style="color: #e74c3c; margin-bottom: 15px; display: none;"></div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="action-btn excel-green" style="flex: 1;">
+                        <i class="fas fa-save"></i> حفظ
+                    </button>
+                    <button type="button" onclick="hideCreateUserModal()" class="action-btn secondary-gold" style="flex: 1;">
+                        إلغاء
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="constants.js"></script>
+    <script src="users-management.js"></script>
+</body>
+</html>
