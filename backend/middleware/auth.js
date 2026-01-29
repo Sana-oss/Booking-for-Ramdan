@@ -24,7 +24,7 @@ const auth = async (req, res, next) => {
 };
 
 const requireAdmin = (req, res, next) => {
-  if (req.admin.role !== 'admin' && req.admin.role !== 'superadmin') {
+  if (req.admin.role !== 'admin') {
     return res.status(403).json({ message: 'Admin access required' });
   }
   next();

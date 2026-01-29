@@ -5,13 +5,13 @@ require('dotenv').config();
 
 const setupAdmin = async () => {
   try {
-    // Connect to MongoDB
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/ramadan-booking', {
+    // Connect to MongoDB - استخدام نفس قاعدة البيانات المستخدمة في server.js
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/corinthiaDB', {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
 
-    console.log('🍃 Connected to MongoDB');
+    console.log('🍃 Connected to MongoDB (corinthiaDB)');
 
     // Check if admin already exists
     const existingAdmin = await Admin.findOne({ username: process.env.DEFAULT_ADMIN_USERNAME || 'admin' });

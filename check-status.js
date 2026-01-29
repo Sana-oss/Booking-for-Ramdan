@@ -37,7 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
           // إظهار حالة تحميل بسيطة (اختياري)
           if (checkBtn) checkBtn.disabled = true;
 
-          const response = await fetch(`${CONSTANTS.API_URL}/${id}`);
+          // توحيد مصدر الـ API مع constants.js
+          const response = await fetch(CONSTANTS.API.ITEM(id));
           const result = await response.json();
 
           if (response.ok && result.data) {

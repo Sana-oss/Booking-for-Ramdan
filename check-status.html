@@ -3,39 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>متابعة الحجز | فندق كورنثيا</title>
+    <title>تتبع الحجز | فندق كورنثيا</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="main.css">
+
+    <style>
+        :root {
+            --gold: #c5a059;
+            --dark-card: #111111;
+            --glass: rgba(255, 255, 255, 0.03);
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Cairo', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* زر تبديل اللغة الفاخر */
+        .lang-switcher-wrapper {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+        }
+
+        .btn-lang-pill {
+            background: var(--glass);
+            border: 1px solid var(--gold);
+            color: var(--gold);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Cinzel', serif;
+            transition: 0.4s;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-lang-pill:hover {
+            background: var(--gold);
+            color: #000;
+            box-shadow: 0 0 20px rgba(197, 160, 89, 0.4);
+        }
+
+        /* حاوية التصميم */
+        .luxury-card {
+            background: linear-gradient(145deg, #151515, #050505);
+            padding: 45px;
+            border-radius: 30px;
+            border: 1px solid var(--gold);
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.9);
+        }
+
+        /* حقل الإدخال الملكي */
+        .pill-input {
+            background: #ffffff !important;
+            color: #000000 !important;
+            font-weight: 800 !important;
+            border: 2px solid var(--gold) !important;
+            padding: 18px !important;
+            border-radius: 50px !important;
+            width: 100%;
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+
+        /* زر البحث */
+        .btn-gold-pill {
+            background: var(--gold);
+            color: #000;
+            padding: 18px;
+            border-radius: 50px;
+            border: none;
+            font-weight: bold;
+            font-family: 'Cinzel', serif;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            transition: 0.3s ease;
+        }
+
+        .btn-gold-pill:hover {
+            background: #e2c07d;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(197, 160, 89, 0.3);
+        }
+
+        /* بطاقة النتائج */
+        .status-result-box {
+            margin-top: 40px;
+            padding: 30px;
+            border-radius: 20px;
+            background: var(--glass);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            display: none;
+            animation: slideUpFade 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+        }
+
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .status-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            display: block;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+        }
+
+        /* تأثيرات التوهج */
+        .confirmed { color: #2ecc71 !important; text-shadow: 0 0 20px rgba(46, 204, 113, 0.5); }
+        .pending { color: var(--gold) !important; text-shadow: 0 0 20px rgba(197, 160, 89, 0.5); }
+        .rejected { color: #e74c3c !important; }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .label { color: var(--gold); font-family: 'Cinzel', serif; font-size: 0.85rem; letter-spacing: 1px; }
+        .value { color: #fff; font-weight: bold; font-size: 1.1rem; }
+    </style>
 </head>
+<body>
 
-<body class="user-view"> <div class="booking-container">
-        <div class="logo-container">
-            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/d/d3/Corinthia_Hotels_logo.svg/1200px-Corinthia_Hotels_logo.svg.png" 
-                 alt="Logo" style="height: 50px; margin-bottom: 20px;">
+    <div class="lang-switcher-wrapper">
+        <button onclick="i18n.toggleLang(); if(document.getElementById('statusResult').style.display === 'block') performTrack();" class="btn-lang-pill">
+            <span id="langText">EN</span>
+        </button>
+    </div>
+
+    <div class="luxury-card">
+        <div class="logo-area" style="margin-bottom: 30px;">
+            <img src="logo.png" class="hotel-logo-img" alt="Corinthia Logo" style="max-width: 120px;">
         </div>
 
-        <h1 data-i18n="check_status_title">استعلام عن حجز</h1>
-        <p class="subtitle" data-i18n="check_status_desc">أدخل رقم الحجز الخاص بك لمعرفة الحالة</p>
+        <h1 data-i18n="title_status" style="color: var(--gold); font-family: 'Cinzel', serif; font-size: 2rem;">TRACK REQUEST</h1>
+        <p data-i18n="subtitle_status" style="color: #888; margin-bottom: 30px;">أدخل الرقم المرجعي المكون من 24 رمزاً</p>
 
-        <div class="form-group">
-            <input type="text" id="resNumberInput" placeholder="مثال: CRN-123456" style="text-align: center; font-size: 1.2rem; letter-spacing: 2px;">
-        </div>
+        <input type="text" id="bookingID" class="pill-input" placeholder="# ENTER CODE">
 
-        <button onclick="checkStatus()" class="submit-btn">
-            <i class="fas fa-search"></i> <span data-i18n="search_btn">بحث عن الحجز</span>
+        <button onclick="performTrack()" class="btn-gold-pill">
+            <span data-i18n="btn_check">TRACK NOW</span> <i class="fas fa-search" style="margin-left: 10px;"></i>
         </button>
 
-        <div id="statusResult" style="margin-top: 25px; display: none;">
+        <div id="statusResult" class="status-result-box">
+            <span id="stateText" class="status-title"></span>
+            
+            <div class="info-row">
+                <span class="label" data-i18n="label_name">Name</span>
+                <span id="valName" class="value"></span>
             </div>
+            <div class="info-row">
+                <span class="label" data-i18n="label_date">Date</span>
+                <span id="valDate" class="value"></span>
+            </div>
+            <div class="info-row" style="border:none;">
+                <span class="label" data-i18n="label_people">Guests</span>
+                <span id="valGuests" class="value"></span>
+            </div>
+        </div>
 
-        <a href="index.html" style="display: block; margin-top: 25px; color: var(--primary-gold); text-decoration: none;">
-            <i class="fas fa-arrow-right"></i> العودة للحجز الجديد
+        <a href="index.html" style="margin-top: 40px; display: block; color: var(--gold); text-decoration: none; font-family: 'Cinzel', serif; font-size: 0.9rem; letter-spacing: 1px;">
+            <i class="fas fa-arrow-left"></i> <span data-i18n="back_home">BACK TO HOME</span>
         </a>
     </div>
 
     <script src="constants.js"></script>
     <script src="i18n.js"></script>
-    <script src="check-status.js"></script>
+
+    <script>
+        async function performTrack() {
+            const idInput = document.getElementById('bookingID');
+            const id = idInput.value.trim();
+            const resultBox = document.getElementById('statusResult');
+            const stateText = document.getElementById('stateText');
+
+            if (id.length !== 24) {
+                alert(i18n.currentLang === 'ar' ? "يرجى إدخال الكود الصحيح" : "Invalid ID Length");
+                return;
+            }
+
+            try {
+                // توحيد الربط عبر constants.js + توحيد شكل الرد مع backend/server.js ({ success, data })
+                const response = await fetch(CONSTANTS.API.ITEM(id));
+                const result = await response.json();
+
+                if (!response.ok || !result?.success || !result?.data) {
+                    alert(i18n.currentLang === 'ar' ? "الحجز غير موجود" : "Booking Not Found");
+                    return;
+                }
+
+                const booking = result.data;
+                console.log("Success! Data received:", booking);
+
+                // إظهار الصندوق
+                resultBox.style.display = 'block';
+
+                // حقن البيانات مباشرة (تأكد أن أسماء الحقول تطابق الـ Schema في السيرفر)
+                document.getElementById('valName').innerText = booking.name || "N/A";
+                
+                // تنسيق التاريخ
+                const formattedDate = booking.date ? booking.date.split('T')[0] : "N/A";
+                document.getElementById('valDate').innerText = formattedDate;
+                
+                document.getElementById('valGuests').innerText = booking.guests || "0";
+
+                // معالجة نصوص الحالة بناءً على اللغة والحالة القادمة من السيرفر
+                const status = (booking.status || 'Pending').toLowerCase();
+                const isAr = (i18n.currentLang === 'ar');
+
+                if (status === 'confirmed') {
+                    stateText.innerText = isAr ? "تم التأكيد ✅" : "CONFIRMED ✅";
+                    stateText.className = "status-title confirmed";
+                } else if (status === 'cancelled') {
+                    stateText.innerText = isAr ? "ملغي ❌" : "CANCELLED ❌";
+                    stateText.className = "status-title rejected";
+                } else {
+                    stateText.innerText = isAr ? "قيد الانتظار ⏳" : "PENDING ⏳";
+                    stateText.className = "status-title pending";
+                }
+
+            } catch (err) {
+                console.error("Fetch Error:", err);
+                alert("Connection Error to Server");
+            }
+        }
+    </script>
 </body>
 </html>

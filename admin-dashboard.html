@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin-style.css">
 </head>
 
 <body class="admin-view">
@@ -33,6 +33,10 @@
         </div>
         
         <div class="nav-actions">
+            <a id="usersManagementLink" href="users-management.html" class="logout-btn" style="text-decoration: none; margin-left: 10px; display: none;">
+                <i class="fas fa-users"></i> 
+                <span>إدارة المستخدمين</span>
+            </a>
             <button id="langToggle" class="lang-switch-btn" onclick="i18n.toggleLang()">
                 <i class="fas fa-globe"></i>
                 <span class="lang-text">English</span>
@@ -116,12 +120,13 @@
 
     </main>
 
-
     <script src="constants.js"></script>
     <script src="i18n.js"></script>
     <script src="admin-dash.js"></script>
 
-    
 </body>
 </html>
+
+
+
 

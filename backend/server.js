@@ -2,10 +2,19 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
+require('dotenv').config();
 
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
+
+// ربط مسارات المصادقة (Authentication Routes)
+const authRoutes = require('./routes/auth');
+app.use('/api/auth', authRoutes);
+
+// Middleware للمصادقة
+const { auth, requireAdmin } = require('./middleware/auth');
+const Admin = require('./models/Admin');
 
 // 1. الاتصال بقاعدة البيانات (MongoDB)
 mongoose.connect('mongodb://localhost:27017/corinthiaDB', {
@@ -82,6 +91,68 @@ app.delete('/api/bookings/:id', async (req, res) => {
     try {
         await Booking.findByIdAndDelete(req.params.id);
         res.json({ success: true, message: "Booking deleted" });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// --- مسارات إدارة المستخدمين (Admin Only) ---
+
+// [1] جلب جميع المستخدمين (Admin Only)
+app.get('/api/users', auth, requireAdmin, async (req, res) => {
+    try {
+        const users = await Admin.find().select('-password').sort({ createdAt: -1 });
+        res.json({ success: true, data: users });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// [2] إنشاء مستخدم جديد (Admin Only)
+app.post('/api/users', auth, requireAdmin, async (req, res) => {
+    try {
+        const { username, password, name, role } = req.body;
+        
+        // التحقق من البيانات المطلوبة
+        if (!username || !password || !name) {
+            return res.status(400).json({ success: false, message: 'Username, password, and name are required' });
+        }
+        
+        // التحقق من عدم وجود مستخدم بنفس الاسم
+        const existing = await Admin.findOne({ username: username.toLowerCase() });
+        if (existing) {
+            return res.status(400).json({ success: false, message: 'Username already exists' });
+        }
+        
+        // إنشاء المستخدم (سيتم تشفير كلمة المرور تلقائياً بواسطة Schema)
+        const newUser = new Admin({
+            username: username.toLowerCase(),
+            password,
+            name,
+            role: role || 'staff',
+            isActive: true
+        });
+        
+        await newUser.save();
+        
+        // إرجاع البيانات بدون كلمة المرور
+        const userData = newUser.toJSON();
+        res.json({ success: true, data: userData });
+    } catch (error) {
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+// [3] حذف مستخدم (Admin Only)
+app.delete('/api/users/:id', auth, requireAdmin, async (req, res) => {
+    try {
+        // منع حذف المستخدم الحالي
+        if (req.params.id === req.admin._id.toString()) {
+            return res.status(400).json({ success: false, message: 'Cannot delete your own account' });
+        }
+        
+        await Admin.findByIdAndDelete(req.params.id);
+        res.json({ success: true, message: 'User deleted successfully' });
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }

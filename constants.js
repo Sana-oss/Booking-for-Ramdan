@@ -13,7 +13,19 @@ const CONSTANTS = {
         BASE: API_BASE_URL,
         BOOKINGS: `${API_BASE_URL}/api/bookings`,
         // دالة ديناميكية لجلب رابط عنصر محدد (تحديث أو حذف)
-        ITEM: (id) => `${API_BASE_URL}/api/bookings/${id}`
+        ITEM: (id) => `${API_BASE_URL}/api/bookings/${id}`,
+        // مسارات المصادقة (Authentication)
+        AUTH: {
+            LOGIN: `${API_BASE_URL}/api/auth/login`,
+            ME: `${API_BASE_URL}/api/auth/me`,
+            LOGOUT: `${API_BASE_URL}/api/auth/logout`
+        },
+        // مسارات إدارة المستخدمين (Users Management - Admin Only)
+        USERS: {
+            LIST: `${API_BASE_URL}/api/users`,
+            CREATE: `${API_BASE_URL}/api/users`,
+            DELETE: (id) => `${API_BASE_URL}/api/users/${id}`
+        }
     },
 
     // 2. معرفات العناصر في واجهة المستخدم (DOM Selectors)
