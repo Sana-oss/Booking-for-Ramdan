@@ -3,52 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>تم التأكيد | فندق كورنثيا</title>
+    <title data-i18n="success_title">تم التأكيد | فندق كورنثيا</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="main.css">
 </head>
 <body class="user-view">
 
-    <div class="hero-bg"></div>
+    <div class="lang-switcher-wrapper">
+        <button onclick="i18n.toggleLang()" class="btn-lang-pill">
+            <span id="langText">EN</span>
+        </button>
+    </div>
 
-    <div class="main-wrapper">
-        <div class="luxury-card">
-            <div class="success-icon">
-                <i class="fas fa-check-circle"></i>
+    <div class="luxury-card">
+        <div class="success-icon" style="margin-bottom: 25px;">
+            <i class="fas fa-check-circle" style="font-size: 4.5rem; color: var(--gold); filter: drop-shadow(0 0 15px var(--gold-glow));"></i>
+        </div>
+        
+        <h1 data-i18n="success_title">تم تسجيل طلبكم</h1>
+        <p class="subtitle" data-i18n="success_desc">يسعدنا استضافتكم في فندق كورنثيا طرابلس</p>
+
+        <div class="res-box" style="background: rgba(255,255,255,0.03); border: 1px dashed var(--gold); padding: 30px 20px; border-radius: 25px; margin: 30px 0; position: relative; overflow: hidden;">
+            <span style="color: var(--gold); font-size: 0.85rem; display: block; margin-bottom: 12px; letter-spacing: 1px;" data-i18n="res_num_label">رقم الحجز المرجعي</span>
+            
+            <div id="reservationNumber" style="margin: 10px 0; font-family: 'Cinzel', serif; font-size: 2rem; color: #fff; letter-spacing: 4px; text-shadow: 0 0 10px rgba(255,255,255,0.2);">
+                ----
             </div>
             
-            <h1 data-i18n="success_title">تم تسجيل طلبكم</h1>
-            <p class="subtitle" data-i18n="success_desc">يسعدنا استضافتكم في فندق كورنثيا طرابلس</p>
+            <button id="copyBtn" onclick="copyResNumber()" class="status-link" style="background: rgba(197, 160, 89, 0.1); border: 1px solid var(--gold); padding: 10px 25px; border-radius: 50px; cursor: pointer; margin-top: 15px; font-weight: bold; display: inline-flex; align-items: center; gap: 8px;">
+                <i class="fas fa-copy"></i> <span data-i18n="copy_btn">نسخ رقم الحجز</span>
+            </button>
+        </div>
 
-            <div class="res-box">
-                <span style="color: var(--gold); font-size: 0.85rem;" data-i18n="res_num_label">رقم الحجز المرجعي</span>
-                <div id="reservationNumber" style="margin: 15px 0; font-family: 'Cinzel', serif;">جاري جلب الرقم...</div>
-                
-                <button id="copyBtn" onclick="copyResNumber()" class="btn-outline-gold" style="font-size: 0.75rem; padding: 6px 15px;">
-                    <i class="fas fa-copy"></i> <span data-i18n="copy_btn">نسخ رقم الحجز</span>
-                </button>
-            </div>
+        <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 35px; line-height: 1.6;" data-i18n="success_note">يرجى تصوير الشاشة أو نسخ الرقم لمتابعته لاحقاً.</p>
 
-            <p style="font-size: 0.85rem; color: #aaa; margin-bottom: 25px;" data-i18n="success_note">يرجى تصوير الشاشة أو نسخ الرقم لمتابعته لاحقاً.</p>
-
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <a href="index.html" class="btn-gold" style="text-decoration: none;" data-i18n="new_booking">حجز جديد</a>
-                <a href="check-status.html" style="color: var(--gold); text-decoration: none; font-size: 0.9rem;" data-i18n="follow_up">متابعة حالة الحجز</a>
-            </div>
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <a href="index.html" class="btn-gold-pill" style="text-decoration: none;" data-i18n="new_booking">حجز جديد</a>
+            <a href="check-status.html" class="status-link" style="justify-content: center; font-size: 1rem;" data-i18n="follow_up">متابعة حالة الحجز</a>
         </div>
     </div>
 
     <div class="floating-contact">
-        <a href="tel:+218910100708" class="contact-item ph-btn">
+        <a href="tel:+218910100708" class="contact-item ph-btn" title="Call Us">
             <i class="fas fa-phone-alt"></i>
         </a>
-        <a href="https://wa.me/218943351990" target="_blank" class="contact-item wa-btn">
+        <a href="https://wa.me/218943351990" target="_blank" class="contact-item wa-btn" title="WhatsApp">
             <i class="fab fa-whatsapp"></i>
         </a>
     </div>
 
-    <script src="constants.js"></script>
     <script src="i18n.js"></script>
     <script src="success.js"></script>
 </body>

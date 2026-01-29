@@ -1,15 +1,16 @@
 /**
- * CORINTHIA HOTELS - i18n ENGINE (FINAL OPTIMIZED V11)
- * نظام الترجمة الذكي: يدعم اللغات، الاتجاهات، والعناصر الديناميكية
+ * CORINTHIA HOTELS - UNIFIED i18n ENGINE (v2.5)
+ * المحرك الموحد لترجمة: الرئيسية، حالة الحجز، والداشبورد
  */
 
 const i18n = {
-    // 1. الحالة الحالية: جلب اللغة من التخزين أو اعتماد العربية كافتراضية
-    currentLang: localStorage.getItem('adminLang') || 'ar',
-    
-    // 2. القاموس الكامل (الثوابت)
+    // 1. الحالة: جلب اللغة أو اعتماد العربية كافتراضية
+    currentLang: localStorage.getItem('hotel_lang') || 'ar',
+
+    // 2. القاموس الموحد للمشروع بالكامل
     translations: {
         ar: {
+            // --- لوحة التحكم (Dashboard) ---
             admin_panel: "لوحة التحكم والإدارة",
             logout: "تسجيل الخروج",
             total_bookings: "إجمالي الحجوزات",
@@ -18,14 +19,37 @@ const i18n = {
             export_excel: "تصدير Excel",
             col_id: "المعرف",
             col_guest: "معلومات الضيف",
-            col_date: "التاريخ",
+            col_date: "تاريخ الحجز",
             col_guests_count: "الأفراد",
             col_status: "الحالة",
             col_action: "الإجراءات",
             search_placeholder: "بحث عن ضيف أو رقم هاتف...",
-            no_results: "لا توجد نتائج تطابق معايير البحث"
+            loading_data: "جاري مزامنة البيانات...",
+
+            // --- حالات الحجز (Statuses) ---
+            status_pending: "قيد الانتظار",
+            status_confirmed: "تم التأكيد",
+            status_rejected: "ملغي",
+
+            // --- الصفحة الرئيسية (index.html) ---
+            hotelName: "فندق كورنثيا",
+            title_home: "تجربة إفطار ملكية",
+            subtitle_home: "أهلاً بكم في قلب الفخامة بمدينة طرابلس",
+            label_name: "الاسم الكامل",
+            label_phone: "رقم الهاتف",
+            label_date: "تاريخ الحجز",
+            label_people: "الضيوف",
+            group_booking: "حجز لمجموعة كبيرة / مناسبة",
+            submit_booking: "تأكيد حجز طاولة",
+            follow_up: "متابعة حالة الحجز",
+            placeholder_name: "أدخل اسمك بالكامل",
+
+            // --- صفحة النجاح (success.html) ---
+            success_title: "تم استلام طلبك بنجاح",
+            back_home: "العودة للرئيسية"
         },
         en: {
+            // --- Dashboard ---
             admin_panel: "Management Dashboard",
             logout: "Logout",
             total_bookings: "Total Bookings",
@@ -34,45 +58,67 @@ const i18n = {
             export_excel: "Export Excel",
             col_id: "ID",
             col_guest: "Guest Info",
-            col_date: "Date",
+            col_date: "Booking Date",
             col_guests_count: "Pax",
             col_status: "Status",
             col_action: "Actions",
             search_placeholder: "Search name or phone...",
-            no_results: "No results found for your search"
+            loading_data: "Synchronizing data...",
+
+            // --- Statuses ---
+            status_pending: "Pending Approval",
+            status_confirmed: "Confirmed",
+            status_rejected: "Cancelled",
+
+            // --- Home Page ---
+            hotelName: "Corinthia Hotel",
+            title_home: "Royal Breakfast Experience",
+            subtitle_home: "Welcome to the heart of luxury in Tripoli",
+            label_name: "Full Name",
+            label_phone: "Phone Number",
+            label_date: "Booking Date",
+            label_people: "Guests",
+            group_booking: "Group / Special Event",
+            submit_booking: "Confirm Reservation",
+            follow_up: "Track Reservation",
+            placeholder_name: "Enter your full name",
+
+            // --- Success Page ---
+            success_title: "Request Received Successfully",
+            back_home: "Back to Home"
         }
     },
 
     /**
-     * تشغيل النظام عند الإقلاع
+     * تشغيل المحرك وتحديث سمات الصفحة
      */
     init() {
-        console.log("i18n Engine: Initializing in", this.currentLang);
+        console.log("i18n Engine: Active Language is", this.currentLang);
         this.updatePageAttributes();
         this.apply();
     },
 
     /**
-     * تحديث خصائص الصفحة (لغة المتصفح واتجاه النص)
+     * تحديث اتجاه الصفحة (RTL/LTR) والخطوط بناءً على اللغة
      */
     updatePageAttributes() {
         const isAr = this.currentLang === 'ar';
         document.documentElement.lang = this.currentLang;
         document.documentElement.dir = isAr ? 'rtl' : 'ltr';
         
-        // إضافة كلاس للتحكم في الخطوط وتنسيقات الـ CSS الخاصة بكل لغة
+        // كلاسات للتحكم في CSS الخاص بكل لغة
         document.body.classList.remove('lang-ar', 'lang-en');
         document.body.classList.add(isAr ? 'lang-ar' : 'lang-en');
     },
 
     /**
-     * تبديل اللغة مع تأثير انسيابي
+     * تبديل اللغة مع تأثير Fade-out فخم
      */
     toggleLang() {
         this.currentLang = this.currentLang === 'ar' ? 'en' : 'ar';
-        localStorage.setItem('adminLang', this.currentLang);
+        localStorage.setItem('hotel_lang', this.currentLang);
         
-        // تأثير تلاشي فخم قبل إعادة التحميل
+        // تأثير انسيابي قبل إعادة التحميل
         document.body.style.transition = 'opacity 0.3s ease';
         document.body.style.opacity = '0';
         
@@ -82,12 +128,12 @@ const i18n = {
     },
 
     /**
-     * ترجمة العناصر الثابتة والمتحركة (Placeholders)
+     * تطبيق الترجمات على جميع العناصر المستهدفة
      */
     apply() {
         const dict = this.translations[this.currentLang];
 
-        // 1. ترجمة النصوص التي تحمل data-i18n
+        // 1. ترجمة النصوص التي تحمل السمة [data-i18n]
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if (dict[key]) {
@@ -95,19 +141,20 @@ const i18n = {
             }
         });
 
-        // 2. ترجمة الـ Placeholders (مثل مربعات البحث)
+        // 2. ترجمة الـ Placeholders (البحث والاسم)
         const searchInput = document.getElementById('searchInput');
-        if (searchInput) {
-            searchInput.placeholder = dict.search_placeholder;
-        }
+        if (searchInput) searchInput.placeholder = dict.search_placeholder;
 
-        // 3. تحديث نص زر التبديل (يعرض اللغة الأخرى المتاحة)
-        const langBtnText = document.querySelector('.lang-text');
-        if (langBtnText) {
-            langBtnText.innerText = this.currentLang === 'ar' ? 'English' : 'العربية';
+        const nameInput = document.getElementById('name');
+        if (nameInput) nameInput.placeholder = dict.placeholder_name;
+
+        // 3. تحديث نص زر التبديل (يدعم id و class لضمان التوافق)
+        const langText = document.getElementById('langText') || document.querySelector('.lang-text');
+        if (langText) {
+            langText.innerText = this.currentLang === 'ar' ? 'English' : 'العربية';
         }
     }
 };
 
-// تهيئة النظام تلقائياً بمجرد جاهزية المستند
+// تهيئة النظام عند جاهزية المتصفح
 document.addEventListener('DOMContentLoaded', () => i18n.init());
