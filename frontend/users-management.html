@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة المستخدمين | كورنثيا</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="admin-style.css">
+    <style>
+        /* Toggle Switch Styles */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 26px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #e74c3c;
+            transition: 0.3s;
+            border-radius: 26px;
+        }
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+        input:checked + .toggle-slider {
+            background-color: #27ae60;
+        }
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+        .action-btn-group {
+            display: flex;
+            gap: 8px;
+        }
+        .edit-btn {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .edit-btn:hover {
+            background: rgba(52, 152, 219, 0.4);
+        }
+        .reset-btn {
+            background: rgba(155, 89, 182, 0.2);
+            color: #9b59b6;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .reset-btn:hover {
+            background: rgba(155, 89, 182, 0.4);
+        }
+        .delete-btn {
+            background: rgba(231, 76, 60, 0.2);
+            color: #e74c3c;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .delete-btn:hover {
+            background: rgba(231, 76, 60, 0.4);
+        }
+        .delete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body class="admin-view">
+    <nav class="admin-nav">
+        <div class="brand">
+            <div class="logo-container">
+                <svg class="admin-logo-svg" width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 15 A35 35 0 1 0 50 85 A28 28 0 1 1 50 15 Z" fill="#C5A059"/>
+                </svg>
+            </div>
+            <div class="brand-text">
+                <h1 class="hotel-name">CORINTHIA</h1>
+                <p class="panel-name" data-i18n="user_mgmt_title">إدارة المستخدمين</p>
+            </div>
+        </div>
+        <div class="nav-actions">
+            <a href="admin-dashboard.html" class="logout-btn" style="text-decoration: none; margin-left: 10px;">
+                <i class="fas fa-arrow-right"></i> <span data-i18n="back_to_dashboard">العودة للوحة التحكم</span>
+            </a>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="dashboard-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+            <h2 style="color: var(--gold); font-family: 'Cinzel', serif;" data-i18n="user_mgmt_title">إدارة المستخدمين</h2>
+            <button onclick="showCreateUserModal()" class="action-btn excel-green">
+                <i class="fas fa-user-plus"></i> <span data-i18n="add_user">إضافة مستخدم جديد</span>
+            </button>
+        </div>
+
+        <div class="table-container">
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="col_username">اسم المستخدم</th>
+                            <th data-i18n="col_fullname">الاسم الكامل</th>
+                            <th data-i18n="col_role">الدور</th>
+                            <th data-i18n="col_status">الحالة</th>
+                            <th data-i18n="col_date">تاريخ الإنشاء</th>
+                            <th data-i18n="col_actions">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding:50px; color:#999;">
+                                <i class="fas fa-circle-notch fa-spin"></i> جاري التحميل...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal لإضافة مستخدم جديد -->
+    <div id="createUserModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: #1a1a2e; padding: 40px; border-radius: 20px; border: 1px solid var(--gold); max-width: 500px; width: 90%;">
+            <h3 style="color: var(--gold); margin-bottom: 20px; font-family: 'Cinzel', serif;">إضافة مستخدم جديد</h3>
+            <form id="createUserForm">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: #fff; margin-bottom: 8px;" data-i18n="col_username">اسم المستخدم</label>
+                    <input type="text" id="newUsername" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: #fff; margin-bottom: 8px;" data-i18n="col_fullname">الاسم الكامل</label>
+                    <input type="text" id="newName" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: #fff; margin-bottom: 8px;" data-i18n="label_password">كلمة المرور</label>
+                    <input type="password" id="newPassword" required minlength="6" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; color: #fff; margin-bottom: 8px;" data-i18n="col_role">الدور</label>
+                    <select id="newRole" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
+                        <option value="staff" data-i18n="role_staff">موظف (Staff)</option>
+                        <option value="admin" data-i18n="role_admin">مدير (Admin)</option>
+                    </select>
+                </div>
+                <div id="createUserError" style="color: #e74c3c; margin-bottom: 15px; display: none;"></div>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit" class="action-btn excel-green" style="flex: 1;">
+                        <i class="fas fa-save"></i> <span data-i18n="btn_save">حفظ</span>
+                    </button>
+                    <button type="button" onclick="hideCreateUserModal()" class="action-btn secondary-gold" style="flex: 1;">
+                        <span data-i18n="btn_cancel">إلغاء</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal تأكيد الحذف -->
+    <div id="deleteConfirmModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;">
+        <div style="background: #1a1a2e; padding: 40px; border-radius: 20px; border: 1px solid var(--gold); max-width: 400px; width: 90%; text-align: center;">
+            <h3 style="color: #e74c3c; margin-bottom: 15px; font-family: 'Cinzel', serif;" data-i18n="delete_confirm_title">تأكيد الحذف</h3>
+            <p style="color: #fff; margin-bottom: 25px;" data-i18n="delete_confirm_message">هل أنت متأكد من حذف هذا المستخدم؟</p>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="confirmDeleteUserAction()" class="delete-btn" style="flex: 1; padding: 12px;">
+                    <i class="fas fa-trash-alt"></i> <span data-i18n="btn_delete">حذف</span>
+                </button>
+                <button onclick="hideDeleteConfirmModal()" class="action-btn secondary-gold" style="flex: 1; padding: 12px;">
+                    <span data-i18n="btn_cancel">إلغاء</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="constants.js"></script>
+    <script src="i18n.js"></script>
+    <script src="users-management.js"></script>
+</body>
+</html>

@@ -1,0 +1,213 @@
+/**
+ * CORINTHIA HOTEL - ADMIN LOGIN SYSTEM (JWT AUTHENTICATION)
+ * نظام تسجيل دخول آمن باستخدام JWT Token
+ */
+
+// Get the correct API base URL
+const getApiUrl = () => {
+    // If running on localhost with different ports, use explicit localhost:5000
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        return 'http://localhost:5000';
+    }
+    // For network access, use relative path
+    return '';
+};
+
+// Override CONSTANTS.API.AUTH with explicit URL for development
+const API_BASE = getApiUrl();
+const LOGIN_URL = API_BASE ? `${API_BASE}/api/auth/login` : '/api/auth/login';
+const ME_URL = API_BASE ? `${API_BASE}/api/auth/me` : '/api/auth/me';
+
+console.log('🔐 API Base URL:', API_BASE || '(relative)');
+console.log('🔐 Login URL:', LOGIN_URL);
+
+document.addEventListener('DOMContentLoaded', () => {
+    // التحقق من وجود Token صالح - إذا كان موجوداً، توجيه للوحة التحكم
+    const token = localStorage.getItem('adminToken');
+    if (token) {
+        // التحقق من صحة التوكن قبل التوجيه
+        verifyTokenAndRedirect(token);
+    }
+    
+    // تهيئة نظام الترجمة
+    if (typeof i18n !== 'undefined') {
+        i18n.init();
+    }
+    
+    // ربط نموذج تسجيل الدخول
+    const loginForm = document.getElementById('adminLoginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+    }
+});
+
+/**
+ * التحقق من صحة التوكن وإعادة التوجيه
+ */
+async function verifyTokenAndRedirect(token) {
+    try {
+        const response = await fetch(ME_URL, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        if (response.ok) {
+            // التوكن صالح - توجيه للوحة التحكم
+            window.location.href = 'admin-dashboard.html';
+        } else {
+            // التوكن غير صالح - حذفه
+            localStorage.removeItem('adminToken');
+            localStorage.removeItem('adminUser');
+        }
+    } catch (error) {
+        console.error('Token verification error:', error);
+        localStorage.removeItem('adminToken');
+        localStorage.removeItem('adminUser');
+    }
+}
+
+/**
+ * معالجة عملية تسجيل الدخول
+ */
+async function handleLogin(e) {
+    e.preventDefault();
+    
+    const username = document.getElementById('adminUser').value.trim();
+    const password = document.getElementById('adminPass').value;
+    const errorMsg = document.getElementById('loginErrorMessage');
+    const submitBtn = document.getElementById('loginSubmitBtn');
+    
+    // إخفاء رسالة الخطأ السابقة
+    hideError();
+    
+    // التحقق من إدخال البيانات
+    if (!username || !password) {
+        showError('يرجى إدخال اسم المستخدم وكلمة المرور');
+        return;
+    }
+    
+    // تفعيل حالة التحميل
+    setLoadingState(submitBtn, true);
+    
+    try {
+        // Debug: Log the login URL being called
+        console.log('🔐 Attempting login to:', LOGIN_URL);
+        
+        // إرسال طلب تسجيل الدخول للـ Backend
+        const response = await fetch(LOGIN_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: username,
+                password: password
+            })
+        });
+        
+        console.log('🔐 Login response status:', response.status, response.statusText);
+        
+        // Check if response is OK before parsing JSON
+        if (!response.ok) {
+            console.error('🔐 Login failed with status:', response.status);
+            
+            // Try to get error message from response
+            let errorMessage = 'خطأ في اسم المستخدم أو كلمة المرور';
+            try {
+                const errorResult = await response.json();
+                errorMessage = errorResult.message || errorMessage;
+            } catch (e) {
+                console.error('🔐 Error parsing response:', e);
+            }
+            
+            showError(errorMessage);
+            setLoadingState(submitBtn, false);
+            return;
+        }
+        
+        const result = await response.json();
+        console.log('🔐 Login result:', result.success ? 'SUCCESS' : 'FAILED');
+        
+        if (response.ok && result.token) {
+            // نجاح تسجيل الدخول
+            // حفظ التوكن وبيانات المستخدم في localStorage
+            localStorage.setItem('adminToken', result.token);
+            localStorage.setItem('adminUser', JSON.stringify(result.admin));
+            
+            // إظهار رسالة نجاح مؤقتة
+            showSuccess('تم تسجيل الدخول بنجاح');
+            
+            // الانتقال للوحة التحكم بعد تأخير بسيط
+            setTimeout(() => {
+                window.location.href = 'admin-dashboard.html';
+            }, 500);
+        } else {
+            // فشل تسجيل الدخول
+            const errorMessage = result.message || 'خطأ في اسم المستخدم أو كلمة المرور';
+            showError(errorMessage);
+            setLoadingState(submitBtn, false);
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        showError('تعذر الاتصال بالسيرفر. يرجى التأكد من تشغيل السيرفر.');
+        setLoadingState(submitBtn, false);
+    }
+}
+
+/**
+ * إظهار رسالة خطأ
+ */
+function showError(message) {
+    const errorMsg = document.getElementById('loginErrorMessage');
+    if (errorMsg) {
+        errorMsg.textContent = message;
+        errorMsg.classList.add('show');
+        
+        // إخفاء الرسالة تلقائياً بعد 5 ثوانٍ
+        setTimeout(() => {
+            hideError();
+        }, 5000);
+    }
+}
+
+/**
+ * إخفاء رسالة الخطأ
+ */
+function hideError() {
+    const errorMsg = document.getElementById('loginErrorMessage');
+    if (errorMsg) {
+        errorMsg.classList.remove('show');
+    }
+}
+
+/**
+ * إظهار رسالة نجاح (مؤقتة)
+ */
+function showSuccess(message) {
+    const errorMsg = document.getElementById('loginErrorMessage');
+    if (errorMsg) {
+        errorMsg.style.background = 'rgba(39, 174, 96, 0.15)';
+        errorMsg.style.borderColor = 'var(--success-green)';
+        errorMsg.style.color = 'var(--success-green)';
+        errorMsg.textContent = message;
+        errorMsg.classList.add('show');
+    }
+}
+
+/**
+ * تفعيل/تعطيل حالة التحميل
+ */
+function setLoadingState(button, isLoading) {
+    if (!button) return;
+    
+    if (isLoading) {
+        button.disabled = true;
+        button.classList.add('loading');
+    } else {
+        button.disabled = false;
+        button.classList.remove('loading');
+    }
+}

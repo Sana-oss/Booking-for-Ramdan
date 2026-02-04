@@ -24,15 +24,24 @@ router.post('/login', [
     }
 
     const { username, password } = req.body;
+    console.log('🔐 Login attempt for username:', username);
 
     // Find admin
     const admin = await Admin.findOne({ username, isActive: true });
+    console.log('🔐 Admin found:', admin ? admin.username : 'NOT FOUND');
+    
     if (!admin) {
+      // Try finding any admin with that username regardless of active status
+      const anyAdmin = await Admin.findOne({ username });
+      console.log('🔐 Admin found (any status):', anyAdmin ? anyAdmin.username : 'NOT FOUND');
+      console.log('🔐 Admin isActive:', anyAdmin ? anyAdmin.isActive : 'N/A');
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // Check password
     const isMatch = await bcrypt.compare(password, admin.password);
+    console.log('🔐 Password match:', isMatch);
+    
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -45,6 +54,7 @@ router.post('/login', [
     );
 
     res.json({
+      success: true,
       message: 'Login successful',
       token,
       admin: {
@@ -66,6 +76,7 @@ router.post('/login', [
 router.get('/me', auth, async (req, res) => {
   try {
     res.json({
+      success: true,
       admin: {
         id: req.admin._id,
         username: req.admin.username,
@@ -83,7 +94,7 @@ router.get('/me', auth, async (req, res) => {
 // @desc    Logout (client-side token removal)
 // @access  Private
 router.post('/logout', auth, (req, res) => {
-  res.json({ message: 'Logged out successfully' });
+  res.json({ success: true, message: 'Logged out successfully' });
 });
 
 module.exports = router;

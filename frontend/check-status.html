@@ -1,0 +1,1214 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Corinthia Hotel - تتبع الحجز</title>
+    
+    <!-- Premium Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- html2canvas Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    
+    <!-- Luxury Design System -->
+    <link rel="stylesheet" href="luxury-design-system.css">
+    
+    <style>
+        /* =========================================
+           CORINTHIA VIP CHECK-STATUS STYLE
+           ========================================= */
+        :root {
+            --corinthia-maroon: #4A0E0E;
+            --corinthia-gold: #D4AF37;
+            --corinthia-gold-light: #E5C558;
+            --corinthia-gold-dark: #B4922A;
+            --ivory: #FFFFF0;
+            --cream: #F5F5DC;
+            --dark-bg: #0D0D0D;
+        }
+        
+        /* =========================================
+           DOWNLOADABLE DIGITAL PASS TEMPLATE
+           Hidden off-screen until capture
+           ========================================= */
+        #downloadablePass {
+            position: fixed;
+            left: -9999px;
+            top: 0;
+            width: 400px;
+            background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 50%, #1a1a1a 100%);
+            border: 3px solid var(--corinthia-gold);
+            border-radius: 0;
+            padding: 0;
+            text-align: center;
+            box-sizing: border-box;
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        #downloadablePass .pass-header {
+            background: linear-gradient(135deg, var(--corinthia-maroon) 0%, #2a0a0a 100%);
+            padding: 25px 20px 20px;
+            border-bottom: 2px solid var(--corinthia-gold);
+        }
+        
+        #downloadablePass .pass-logo {
+            margin-bottom: 15px;
+        }
+        
+        #downloadablePass .pass-logo img {
+            height: 50px;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+        }
+        
+        #downloadablePass .pass-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            color: var(--corinthia-gold);
+            letter-spacing: 2px;
+            margin: 0;
+            text-transform: uppercase;
+        }
+        
+        #downloadablePass .pass-subtitle {
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 5px;
+        }
+        
+        #downloadablePass .pass-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--corinthia-gold), transparent);
+            margin: 15px 30px;
+        }
+        
+        #downloadablePass .pass-ref {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            padding: 20px;
+            margin: 15px 20px;
+        }
+        
+        #downloadablePass .pass-ref-label {
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.7rem;
+            color: var(--corinthia-gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+        
+        #downloadablePass .pass-ref-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--ivory);
+            letter-spacing: 3px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+        }
+        
+        #downloadablePass .pass-details {
+            padding: 0 25px;
+            text-align: right;
+        }
+        
+        #downloadablePass .pass-detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+        }
+        
+        #downloadablePass .pass-detail-row:last-child {
+            border-bottom: none;
+        }
+        
+        #downloadablePass .pass-detail-label {
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        #downloadablePass .pass-detail-value {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            color: var(--ivory);
+            font-weight: 600;
+        }
+        
+        #downloadablePass .pass-status {
+            margin: 20px 20px 15px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        #downloadablePass .pass-status.pending {
+            background: rgba(243, 156, 18, 0.15);
+            border: 1px solid #f39c12;
+        }
+        
+        #downloadablePass .pass-status.confirmed {
+            background: rgba(39, 174, 96, 0.15);
+            border: 1px solid #2ecc71;
+        }
+        
+        #downloadablePass .pass-status-badge {
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+        
+        #downloadablePass .pass-status.pending .pass-status-badge {
+            color: #f39c12;
+        }
+        
+        #downloadablePass .pass-status.confirmed .pass-status-badge {
+            color: #2ecc71;
+        }
+        
+        #downloadablePass .pass-qr {
+            margin: 15px 0;
+        }
+        
+        #downloadablePass .pass-qr-box {
+            width: 80px;
+            height: 80px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid var(--corinthia-gold);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 0.7rem;
+            color: var(--corinthia-gold);
+            text-align: center;
+            line-height: 1.2;
+        }
+        
+        #downloadablePass .pass-footer {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 18px 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        #downloadablePass .pass-footer-text {
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        #downloadablePass .pass-footer-text strong {
+            color: var(--corinthia-gold);
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--corinthia-maroon) 50%, #1a0a0a 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        /* Celebration Animation Background */
+        .celebration-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        
+        .gold-particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: var(--corinthia-gold);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+            opacity: 0.6;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.6; }
+            90% { opacity: 0.6; }
+            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
+        }
+        
+        /* Fade-in-up Animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; opacity: 0; }
+        .delay-2 { animation-delay: 0.2s; opacity: 0; }
+        .delay-3 { animation-delay: 0.3s; opacity: 0; }
+        .delay-4 { animation-delay: 0.4s; opacity: 0; }
+        .delay-5 { animation-delay: 0.5s; opacity: 0; }
+        
+        /* Main Glassmorphism Card */
+        .main-card {
+            max-width: 500px;
+            width: 100%;
+            background: linear-gradient(145deg, rgba(30, 30, 30, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%);
+            border: 2px solid var(--corinthia-gold);
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            box-shadow: 
+                0 0 60px rgba(212, 175, 55, 0.2),
+                0 20px 60px rgba(0, 0, 0, 0.5),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+        
+        .main-card::before {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 8px;
+            right: 8px;
+            bottom: 8px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 16px;
+            pointer-events: none;
+        }
+        
+        /* Notification Bell */
+        .notification-bell {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--corinthia-gold);
+            color: var(--corinthia-gold);
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .notification-bell:hover {
+            background: var(--corinthia-gold);
+            color: #1a0a0a;
+        }
+        
+        .notification-bell .badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #e74c3c;
+            color: white;
+            font-size: 0.65rem;
+            padding: 3px 6px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        /* Language Toggle */
+        .lang-toggle {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--corinthia-gold);
+            color: var(--corinthia-gold);
+            padding: 10px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        
+        .lang-toggle:hover {
+            background: var(--corinthia-gold);
+            color: #1a0a0a;
+        }
+        
+        /* Logo */
+        .card-logo {
+            margin-bottom: 25px;
+        }
+        
+        .card-logo img {
+            height: 70px;
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.4));
+        }
+        
+        /* Title */
+        .page-title {
+            margin-bottom: 30px;
+        }
+        
+        .page-title h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: var(--corinthia-gold);
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .page-title p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.95rem;
+        }
+        
+        /* Search Section */
+        .search-section {
+            margin-bottom: 25px;
+        }
+        
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 10px;
+            padding: 18px 20px;
+            color: var(--ivory);
+            font-family: 'Cairo', sans-serif;
+            font-size: 1rem;
+            text-align: center;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--corinthia-gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+        
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+            letter-spacing: 1px;
+        }
+        
+        .search-btn {
+            background: linear-gradient(135deg, var(--corinthia-gold) 0%, var(--corinthia-gold-dark) 100%);
+            color: #1a0a0a;
+            border: none;
+            border-radius: 10px;
+            padding: 18px 25px;
+            cursor: pointer;
+            font-family: 'Cairo', sans-serif;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .search-btn:hover {
+            background: linear-gradient(135deg, var(--corinthia-gold-light) 0%, var(--corinthia-gold) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+        }
+        
+        /* Status Timeline */
+        .status-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+            padding: 0 10px;
+        }
+        
+        .status-timeline::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 25px;
+            right: 25px;
+            height: 2px;
+            background: rgba(212, 175, 55, 0.3);
+        }
+        
+        .timeline-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(30, 30, 30, 0.95);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            color: rgba(212, 175, 55, 0.5);
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+        }
+        
+        .step-icon.active {
+            background: var(--corinthia-gold);
+            border-color: var(--corinthia-gold);
+            color: #1a0a0a;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.5);
+        }
+        
+        .step-icon.current {
+            border-color: var(--corinthia-gold);
+            color: var(--corinthia-gold);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+        }
+        
+        .step-label {
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.5);
+            white-space: nowrap;
+        }
+        
+        .step-label.active {
+            color: var(--corinthia-gold);
+        }
+        
+        /* Decorative Line */
+        .decorative-line {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--corinthia-gold), transparent);
+            margin: 20px auto;
+        }
+        
+        /* Reference Number - Royal Seal */
+        .reference-section {
+            background: rgba(212, 175, 55, 0.08);
+            border: 2px solid rgba(212, 175, 55, 0.4);
+            border-radius: 16px;
+            padding: 30px;
+            margin: 25px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .reference-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--corinthia-gold), transparent);
+        }
+        
+        .reference-label {
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.8rem;
+            color: var(--corinthia-gold);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        
+        .reference-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-weight: 600;
+            color: var(--ivory);
+            letter-spacing: 4px;
+            text-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+        }
+        
+        /* Guest Info Card */
+        .guest-info-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .guest-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .guest-info-row:last-child {
+            border-bottom: none;
+        }
+        
+        .guest-info-label {
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .guest-info-value {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            color: var(--ivory);
+            font-weight: 600;
+        }
+        
+        /* Payment Instructions Card */
+        .payment-instructions {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.05) 100%);
+            border: 1px solid var(--corinthia-gold);
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            text-align: center;
+            transition: all 0.5s ease;
+        }
+        
+        .payment-instructions.pending {
+            background: linear-gradient(135deg, rgba(243, 156, 18, 0.15) 0%, rgba(230, 126, 34, 0.05) 100%);
+            border-color: #f39c12;
+        }
+        
+        .payment-instructions.confirmed {
+            background: linear-gradient(135deg, rgba(39, 174, 96, 0.15) 0%, rgba(46, 204, 113, 0.05) 100%);
+            border-color: #2ecc71;
+        }
+        
+        .payment-instructions.cancelled {
+            background: linear-gradient(135deg, rgba(149, 165, 166, 0.15) 0%, rgba(189, 195, 199, 0.05) 100%);
+            border-color: #95a5a6;
+        }
+        
+        .payment-instructions-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+            justify-content: center;
+        }
+        
+        .payment-instructions-header i {
+            font-size: 1.5rem;
+            color: var(--corinthia-gold);
+        }
+        
+        .payment-instructions-header h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--corinthia-gold);
+            margin: 0;
+        }
+        
+        .payment-instructions ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .payment-instructions li {
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            padding: 8px 0;
+            padding-right: 25px;
+            position: relative;
+            line-height: 1.6;
+        }
+        
+        .payment-instructions li::before {
+            content: '•';
+            position: absolute;
+            right: 0;
+            color: var(--corinthia-gold);
+            font-size: 1.2rem;
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 30px;
+        }
+        
+        .btn-gold {
+            background: linear-gradient(135deg, var(--corinthia-gold) 0%, var(--corinthia-gold-dark) 100%);
+            color: #1a0a0a;
+            border: none;
+            padding: 16px 30px;
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+            text-decoration: none;
+        }
+        
+        .btn-gold:hover {
+            background: linear-gradient(135deg, var(--corinthia-gold-light) 0%, var(--corinthia-gold) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--corinthia-gold);
+            border: 2px solid var(--corinthia-gold);
+            padding: 14px 30px;
+            border-radius: 10px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn-outline:hover {
+            background: rgba(212, 175, 55, 0.1);
+            border-color: var(--corinthia-gold-light);
+        }
+        
+        /* Concierge Section */
+        .concierge-section {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .concierge-title {
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 15px;
+        }
+        
+        .concierge-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .concierge-btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .concierge-btn.location {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.4);
+            color: var(--corinthia-gold);
+        }
+        
+        .concierge-btn.location:hover {
+            background: rgba(212, 175, 55, 0.2);
+        }
+        
+        .concierge-btn.help {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+        }
+        
+        .concierge-btn.help:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        /* Contact Buttons */
+        .contact-buttons {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 100;
+        }
+        
+        .contact-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .contact-btn.phone {
+            background: var(--corinthia-gold);
+            color: #1a0a0a;
+        }
+        
+        .contact-btn.whatsapp {
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--corinthia-gold);
+            color: var(--corinthia-gold);
+        }
+        
+        .contact-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
+        }
+        
+        /* Hidden Result Section */
+        #resultSection {
+            display: none;
+        }
+        
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 15px 0;
+        }
+        
+        .status-badge.pending {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--corinthia-gold);
+            color: var(--corinthia-gold);
+        }
+        
+        .status-badge.confirmed {
+            background: rgba(39, 174, 96, 0.2);
+            border: 1px solid #2ecc71;
+            color: #2ecc71;
+        }
+        
+        .status-badge.cancelled {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+        }
+        
+        /* Responsive */
+        @media (max-width: 480px) {
+            .main-card {
+                padding: 30px 20px;
+            }
+            
+            .reference-number {
+                font-size: 1.8rem;
+            }
+            
+            .page-title h1 {
+                font-size: 1.4rem;
+            }
+            
+            .search-input-wrapper {
+                flex-direction: column;
+            }
+            
+            .search-btn {
+                justify-content: center;
+            }
+            
+            .status-timeline {
+                transform: scale(0.85);
+            }
+        }
+    </style>
+</head>
+<body class="user-view">
+    
+    <!-- ========================================= -->
+    <!-- DOWNLOADABLE DIGITAL PASS TEMPLATE -->
+    <!-- Hidden off-screen, populated via JavaScript -->
+    <!-- ========================================= -->
+    <div id="downloadablePass">
+        <div class="pass-header">
+            <div class="pass-logo">
+                <img src="logo-gold.svg" alt="Corinthia Hotel">
+            </div>
+            <h2 class="pass-title">Corinthia Tripoli</h2>
+            <p class="pass-subtitle">Ramadan 2026</p>
+        </div>
+        
+        <div class="pass-divider"></div>
+        
+        <div class="pass-ref">
+            <div class="pass-ref-label">Reference Number</div>
+            <div class="pass-ref-number" id="passRefNumber">----</div>
+        </div>
+        
+        <div class="pass-details">
+            <div class="pass-detail-row">
+                <span class="pass-detail-label">Guest Name</span>
+                <span class="pass-detail-value" id="passGuestName">----</span>
+            </div>
+            <div class="pass-detail-row">
+                <span class="pass-detail-label">Date</span>
+                <span class="pass-detail-value" id="passDate">----</span>
+            </div>
+            <div class="pass-detail-row">
+                <span class="pass-detail-label">Time</span>
+                <span class="pass-detail-value" id="passTime">----</span>
+            </div>
+            <div class="pass-detail-row">
+                <span class="pass-detail-label">Guests</span>
+                <span class="pass-detail-value" id="passGuests">0</span>
+            </div>
+        </div>
+        
+        <div class="pass-status pending" id="passStatus">
+            <span class="pass-status-badge" id="passStatusBadge">PENDING</span>
+        </div>
+        
+        <div class="pass-qr">
+            <div class="pass-qr-box" id="passQR">
+                CRT<br>REF
+            </div>
+        </div>
+        
+        <div class="pass-footer">
+            <p class="pass-footer-text">
+                Please present this pass at the reception.<br>
+                <strong>Welcome to Corinthia</strong>
+            </p>
+        </div>
+    </div>
+    
+    <!-- Celebration Background -->
+    <div class="celebration-bg" id="celebrationBg"></div>
+    
+    <!-- Language Toggle -->
+    <button class="lang-toggle" onclick="toggleLanguage()">
+        <i class="fas fa-globe"></i> <span id="langLabel">EN</span>
+    </button>
+    
+    <!-- Notification Bell -->
+    <div class="notification-bell" onclick="showNotification()" title="الإشعارات">
+        <i class="fas fa-bell"></i>
+        <span class="badge">1</span>
+    </div>
+    
+    <!-- Main Card -->
+    <div id="mainCard" class="main-card">
+        <!-- Logo -->
+        <div class="card-logo fade-in-up">
+            <img src="logo-gold.svg" alt="Corinthia Hotel">
+        </div>
+        
+        <!-- Search Section -->
+        <div id="searchSection" class="fade-in-up">
+            <div class="page-title">
+                <h1 data-ar="تتبع حجزك" data-en="Track Your Booking">تتبع حجزك</h1>
+                <p data-ar="أدخل الرقم المرجعي للتحقق من حالة الحجز" data-en="Enter your reference number to check booking status">أدخل الرقم المرجعي للتحقق من حالة الحجز</p>
+            </div>
+            
+            <div class="search-section">
+                <div class="search-input-wrapper">
+                    <input type="text" id="bookingID" class="search-input" 
+                           data-i18n-placeholder="placeholder_booking_id"
+                           placeholder="مثال: RMD12345"
+                           maxlength="10" pattern="[A-Za-z0-9\-]*"
+                           autocomplete="off"
+                           oninput="cleanCheckStatusInput(this)" />
+                    <button onclick="performTrack()" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Result Section -->
+        <div id="resultSection">
+            <!-- Status Timeline -->
+            <div class="status-timeline fade-in-up delay-1">
+                <div class="timeline-step">
+                    <div class="step-icon active" id="stepReceived">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span class="step-label active" data-ar="تم الاستلام" data-en="Received">تم الاستلام</span>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-icon current" id="stepPayment">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <span class="step-label current" data-ar="في الانتظار" data-en="Pending">في الانتظار</span>
+                </div>
+                <div class="timeline-step">
+                    <div class="step-icon" id="stepConfirmed">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <span class="step-label" data-ar="مؤكد" data-en="Confirmed">مؤكد</span>
+                </div>
+            </div>
+            
+            <div class="decorative-line fade-in-up delay-2"></div>
+            
+            <!-- Reference Number -->
+            <div class="reference-section fade-in-up delay-3">
+                <div class="reference-label" data-ar="الرقم المرجعي" data-en="Reference Number">الرقم المرجعي</div>
+                <div class="reference-number" id="cardRef">----</div>
+            </div>
+            
+            <!-- Status Badge -->
+            <div class="status-badge pending fade-in-up delay-3" id="statusBadge">
+                <i class="fas fa-clock"></i>
+                <span data-ar="قيد الانتظار" data-en="Pending Confirmation">قيد الانتظار</span>
+            </div>
+            
+            <!-- Guest Info Card -->
+            <div class="guest-info-card fade-in-up delay-4">
+                <div class="guest-info-row">
+                    <span class="guest-info-label" data-ar="اسم الضيف" data-en="Guest Name">اسم الضيف</span>
+                    <span class="guest-info-value" id="cardName">----</span>
+                </div>
+                <div class="guest-info-row">
+                    <span class="guest-info-label" data-ar="تاريخ الحجز" data-en="Booking Date">تاريخ الحجز</span>
+                    <span class="guest-info-value" id="cardDate">----</span>
+                </div>
+                <div class="guest-info-row">
+                    <span class="guest-info-label" data-ar="عدد الضيوف" data-en="Guests">عدد الضيوف</span>
+                    <span class="guest-info-value" id="cardGuests">0</span>
+                </div>
+            </div>
+            
+            <!-- Dynamic Payment Instructions -->
+            <div id="paymentInstructions" class="payment-instructions pending fade-in-up delay-4">
+                <div class="payment-instructions-header" id="instructionHeader">
+                    <i class="fas fa-hotel" id="instructionIcon"></i>
+                    <h3 id="instructionTitle" data-ar="تعليمات الدفع" data-en="Payment Instructions">تعليمات الدفع</h3>
+                </div>
+                <p id="instructionMessage" class="instruction-message" style="font-family: 'Cairo', sans-serif; font-size: 0.95rem; color: rgba(255,255,255,0.9); line-height: 1.8; margin: 15px 0;">
+                    لضمان طاولتكم، يرجى التوجه لمكتب استقبال فندق كورنثيا لإتمام الدفع خلال الوقت المتبقي.
+                </p>
+                <div id="instructionTimer" class="instruction-timer" style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-top: 15px;">
+                    <i class="fas fa-clock" style="color: #f39c12;"></i>
+                    <span id="countdownTimer" style="font-family: 'Playfair Display', serif; font-size: 1.2rem; color: #fff; font-weight: 600;">--:--:--</span>
+                </div>
+                <div id="instructionAction" class="instruction-action" style="margin-top: 15px;">
+                    <a href="https://maps.google.com/?q=Corinthia+Hotel+Tripoli" target="_blank" class="btn-instruction" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; border-radius: 8px; font-family: 'Cairo', sans-serif; font-size: 0.9rem; font-weight: 600; text-decoration: none; transition: all 0.3s ease; background: rgba(243, 156, 18, 0.2); border: 1px solid #f39c12; color: #f39c12;">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span data-ar="موقع الفندق" data-en="Hotel Location">موقع الفندق</span>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="action-buttons fade-in-up delay-5" style="margin-top: 20px;">
+                <button id="savePassBtn" onclick="saveBookingPass()" class="btn-gold">
+                    <i class="fas fa-download"></i>
+                    <span data-ar="تحميل البطاقة" data-en="Download Pass">تحميل البطاقة</span>
+                </button>
+                <a href="index.html" class="btn-outline">
+                    <i class="fas fa-plus"></i>
+                    <span data-ar="حجز جديد" data-en="New Booking">حجز جديد</span>
+                </a>
+            </div>
+            
+            <!-- Concierge Section -->
+            <div class="concierge-section fade-in-up delay-5">
+                <div class="concierge-title" data-ar="مساعدة الضيوف" data-en="Guest Assistance">مساعدة الضيوف</div>
+                <div class="concierge-buttons">
+                    <a href="https://maps.google.com/?q=Corinthia+Hotel+Tripoli" target="_blank" class="concierge-btn location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span data-ar="موقع الفندق" data-en="Hotel Location">موقع الفندق</span>
+                    </a>
+                    <button onclick="showHelpInfo()" class="concierge-btn help">
+                        <i class="fas fa-headset"></i>
+                        <span data-ar="اتصل بنا" data-en="Contact Us">اتصل بنا</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Contact Buttons -->
+    <div class="contact-buttons">
+        <a href="tel:+218910100708" class="contact-btn phone" title="اتصل بنا">
+            <i class="fas fa-phone-alt"></i>
+        </a>
+        <a href="https://wa.me/218910100708" target="_blank" class="contact-btn whatsapp" title="واتساب">
+            <i class="fab fa-whatsapp"></i>
+        </a>
+    </div>
+    
+    <script src="constants.js"></script>
+    <script src="i18n.js"></script>
+    <script src="check-status.js"></script>
+    
+    <script>
+        // Celebration Particles
+        function createCelebrationParticles() {
+            const container = document.getElementById('celebrationBg');
+            const colors = ['#D4AF37', '#E5C558', '#B4922A', '#F5F5DC'];
+            
+            for (let i = 0; i < 25; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'gold-particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 8 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                container.appendChild(particle);
+            }
+        }
+        
+        // Initialize particles
+        createCelebrationParticles();
+        
+        // Language Toggle
+        let currentLang = 'ar';
+        
+        function toggleLanguage() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            document.getElementById('langLabel').textContent = currentLang === 'ar' ? 'EN' : 'عربي';
+            document.documentElement.lang = currentLang;
+            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
+            updateTextDirection();
+            
+            // Dispatch language change event for instant UI updates
+            window.dispatchEvent(new Event('languageChanged'));
+        }
+        
+        function updateTextDirection() {
+            const elements = document.querySelectorAll('[data-ar]');
+            elements.forEach(el => {
+                if (currentLang === 'ar') {
+                    el.textContent = el.getAttribute('data-ar');
+                } else {
+                    el.textContent = el.getAttribute('data-en');
+                }
+            });
+        }
+        
+        // Make updateTextDirection globally accessible
+        window.updateTextDirection = updateTextDirection;
+        
+        // Show Notification
+        function showNotification() {
+            const isAr = currentLang === 'ar';
+            alert(isAr 
+                ? '⏰ تذكير: يرجى إتمام الدفع خلال 24 ساعة لضمان حجزكم.\n\nفي حال عدم الدفع، سيتم إلغاء الحجز تلقائياً.'
+                : '⏰ Reminder: Please complete payment within 24 hours to secure your booking.\n\nIf payment is not received, the reservation will be automatically cancelled.');
+        }
+        
+        // Show Help Info
+        function showHelpInfo() {
+            const isAr = currentLang === 'ar';
+            const phoneNumber = '+218 91 010 0708';
+            const message = isAr 
+                ? `للمساعدة، يرجى الاتصال:\n\n📞 ${phoneNumber}\n\nساعات العمل: 24 ساعة`
+                : `For assistance, please contact:\n\n📞 ${phoneNumber}\n\nHours: 24 hours`;
+            alert(message);
+        }
+        
+        // Save Booking Pass
+        function saveBookingPass() {
+            const isAr = currentLang === 'ar';
+            alert(isAr ? 'سيتم تحميل بطاقة الحجز...' : 'Downloading booking pass...');
+            // The actual download is handled by saveBookingCard() in check-status.js
+            if (typeof saveBookingCard === 'function') {
+                saveBookingCard();
+            }
+        }
+        
+        // Handle Enter key on search
+        document.getElementById('bookingID').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performTrack();
+            }
+        });
+        
+        // Initialize i18n
+        document.addEventListener('DOMContentLoaded', function() {
+            if (typeof i18n !== 'undefined') {
+                i18n.init();
+            }
+        });
+        
+        // Observe result section visibility to update translations
+        const resultSection = document.getElementById('resultSection');
+        if (resultSection) {
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.target.style.display === 'block') {
+                        updateTextDirection();
+                    }
+                });
+            });
+            observer.observe(resultSection, { attributes: true, attributeFilter: ['style'] });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="hotelName">فندق كورنثيا | حجز الإفطار</title>
+    
+    <!-- Google Fonts - Playfair Display for titles, Cairo for body -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="main.css">
+</head>
+<body class="user-view">
+
+    <!-- Language Switcher - Elegant Glass Container -->
+    <div class="language-toggle-container" onclick="i18n.toggleLang()">
+        <div class="lang-toggle-item active" id="langAr">
+            <span>🇸🇦 العربية</span>
+        </div>
+        <div class="lang-toggle-item" id="langEn">
+            <span>🇬🇧 English</span>
+        </div>
+    </div>
+
+    <!-- Main Luxury Glass Card -->
+    <div class="luxury-glass-card">
+        <!-- Logo Area -->
+        <div class="luxury-logo-area">
+            <img src="logo-gold.svg" class="luxury-logo-img" alt="Corinthia Hotel Logo">
+        </div>
+        
+        <!-- Welcome Section -->
+        <div class="luxury-welcome">
+            <p class="luxury-greeting" data-i18n="ramadan_greeting">رمضان مبارك</p>
+            <h1 class="luxury-title" data-i18n="title_home">تجربة رمضانية فاخرة في فندق كورنثيا</h1>
+            <p class="luxury-subtitle" data-i18n="subtitle_home">أهلاً بكم في قلب الفخامة بمدينة طرابلس</p>
+        </div>
+
+        <!-- Booking Form -->
+        <form id="bookingForm" class="luxury-form" novalidate>
+            
+            <!-- Name Input -->
+            <div class="luxury-input-group">
+                <i class="fas fa-user luxury-input-icon"></i>
+                <input type="text" id="guestName" class="luxury-input" maxlength="100" pattern="^[a-zA-Z\s\u0600-\u06FF]+$" required placeholder data-i18n-attr="placeholder:placeholder_name">
+                <label class="luxury-label" data-i18n="label_name">الاسم الكامل</label>
+                <div class="luxury-border"></div>
+            </div>
+
+            <!-- Phone & Date Row -->
+            <div class="luxury-input-row">
+                <div class="luxury-input-group" style="flex: 1.3;">
+                    <i class="fas fa-phone luxury-input-icon"></i>
+                    <input type="tel" id="phone" class="luxury-input" placeholder data-i18n-attr="placeholder:placeholder_phone" required>
+                    <label class="luxury-label" data-i18n="label_phone">رقم الهاتف</label>
+                    <div class="luxury-border"></div>
+                </div>
+                <div class="luxury-input-group" style="flex: 1;">
+                    <i class="fas fa-calendar-alt luxury-input-icon"></i>
+                    <input type="text" id="bookingDate" class="luxury-input flatpickr-input" placeholder data-i18n-attr="placeholder:select_date" required>
+                    <label class="luxury-label" data-i18n="label_date">التاريخ</label>
+                    <div class="luxury-border"></div>
+                </div>
+            </div>
+
+            <!-- Guests Input -->
+            <div class="luxury-input-group">
+                <i class="fas fa-users luxury-input-icon"></i>
+                <input type="number" id="guests" class="luxury-input" min="1" max="200" value="2" required>
+                <label class="luxury-label" data-i18n="label_people">عدد الضيوف</label>
+                <div class="luxury-border"></div>
+            </div>
+
+            <!-- Group Booking Toggle -->
+            <div class="luxury-group-option">
+                <label class="luxury-switch">
+                    <input type="checkbox" id="isGroup">
+                    <span class="luxury-slider"></span>
+                </label>
+                <span class="luxury-group-text" data-i18n="group_booking">حجز لمجموعة / مناسبة</span>
+            </div>
+
+            <!-- Hero Submit Button -->
+            <button type="submit" class="luxury-btn-hero" id="submitBtn">
+                <span id="btnText" data-i18n="submit_booking">تأكيد حجز طاولة</span>
+                <i class="fas fa-arrow-left btn-arrow-icon"></i>
+            </button>
+        </form>
+
+        <!-- Status Link -->
+        <a href="check-status.html" class="luxury-status-link">
+            <i class="fas fa-search"></i>
+            <span data-i18n="follow_up">متابعة حالة الحجز</span>
+        </a>
+    </div>
+
+    <!-- Phone Call Floating Button - Right Side (Above WhatsApp) -->
+    <a href="tel:+218910100708" class="phone-float">
+        <i class="fas fa-phone-alt"></i>
+    </a>
+
+    <!-- WhatsApp Floating Button - Always Right -->
+    <a href="https://wa.me/218910100708" target="_blank" class="whatsapp-float">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <!-- Floating Bell Icon - Transparent Glass Circle -->
+    <button class="bell-float" onclick="toggleInfoCard()">
+        <i class="fas fa-bell"></i>
+    </button>
+
+    <!-- Info Card Popup -->
+    <div class="info-popup" id="infoPopup">
+        <div class="info-popup-header">
+            <span data-i18n="info_title">معلومات الحجز</span>
+            <button class="info-popup-close" onclick="closeInfoCard()">&times;</button>
+        </div>
+        <div class="info-popup-content">
+            <div class="info-popup-item">
+                <i class="fas fa-clock"></i>
+                <span data-i18n="notice_expiry">تنتهي صلاحية الحجز خلال 24 ساعة في حالة عدم الدفع</span>
+            </div>
+            <div class="info-popup-item">
+                <i class="fas fa-chair"></i>
+                <span data-i18n="notice_capacity">السعة اليومية: 200 مقعد</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="constants.js"></script>
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

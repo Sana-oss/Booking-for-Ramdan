@@ -1,0 +1,693 @@
+/**
+ * CORINTHIA HOTEL - LUXURY DESIGN SYSTEM
+ * Complete Premium UI/UX Overhaul for Admin Login, Check Status, and Success Pages
+ * 
+ * Color Palette:
+ * - Background: Midnight Black (#0a0a0f) / Deep Charcoal (#1a1a1a)
+ * - Accent: Corinthia Gold (#c5a059)
+ * - Text: Cream/Off-white (#f5f5f5)
+ * 
+ * Typography:
+ * - Headings: Cinzel (Serif)
+ * - Body: Cairo (Sans-serif)
+ */
+
+/* ============================================
+   CORE LUXURY VARIABLES & RESET
+   ============================================ */
+
+:root {
+    /* Colors */
+    --midnight-black: #0a0a0f;
+    --deep-charcoal: #1a1a1a;
+    --rich-black: #050508;
+    --corinthia-gold: #c5a059;
+    --gold-glow: rgba(197, 160, 89, 0.4);
+    --gold-gradient: linear-gradient(135deg, #c5a059 0%, #d4b068 50%, #b8954a 100%);
+    --cream-white: #f5f5f5;
+    --off-white: #e8e6e3;
+    --text-muted: #888888;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(197, 160, 89, 0.2);
+    
+    /* Status Colors */
+    --success-green: #27ae60;
+    --pending-gold: #c5a059;
+    --danger-red: #e74c3c;
+    
+    /* Typography */
+    --font-heading: 'Cinzel', serif;
+    --font-body: 'Cairo', sans-serif;
+    
+    /* Spacing */
+    --spacing-xs: 8px;
+    --spacing-sm: 16px;
+    --spacing-md: 24px;
+    --spacing-lg: 32px;
+    --spacing-xl: 48px;
+    
+    /* Border Radius */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --radius-pill: 50px;
+    
+    /* Shadows */
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.3);
+    --shadow-medium: 0 20px 50px rgba(0, 0, 0, 0.4);
+    --shadow-strong: 0 30px 80px rgba(0, 0, 0, 0.6);
+    --shadow-gold: 0 10px 40px rgba(197, 160, 89, 0.3);
+    --shadow-gold-hover: 0 15px 50px rgba(197, 160, 89, 0.5);
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --transition-slow: 0.5s ease;
+    --transition-premium: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ============================================
+   GLOBAL RESET & BASE STYLES
+   ============================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: var(--font-body);
+    background: var(--midnight-black);
+    color: var(--cream-white);
+    min-height: 100vh;
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Premium Background Effect */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: 
+        radial-gradient(ellipse at 20% 20%, rgba(197, 160, 89, 0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 80%, rgba(197, 160, 89, 0.05) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.8) 0%, var(--midnight-black) 100%);
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ============================================
+   LUXURY TYPOGRAPHY
+   ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--corinthia-gold);
+    font-weight: 700;
+    letter-spacing: 1px;
+    line-height: 1.3;
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+
+p {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.text-gold { color: var(--corinthia-gold); }
+.text-white { color: var(--cream-white); }
+.text-muted { color: var(--text-muted); }
+
+/* ============================================
+   GLASSMORPHISM CARDS
+   ============================================ */
+
+.luxury-glass-card {
+    background: linear-gradient(145deg, 
+        rgba(26, 26, 46, 0.9) 0%, 
+        rgba(10, 10, 15, 0.95) 100%);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--shadow-medium);
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 0.6s ease-out;
+}
+
+.luxury-glass-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        var(--corinthia-gold) 50%, 
+        transparent 100%);
+    opacity: 0.5;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ============================================
+   GOLD BUTTONS
+   ============================================ */
+
+.btn-gold {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: 16px 32px;
+    font-family: var(--font-heading);
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--midnight-black);
+    background: var(--gold-gradient);
+    border: none;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: var(--transition-premium);
+    box-shadow: var(--shadow-gold);
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+}
+
+.btn-gold::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.3), 
+        transparent);
+    transition: left 0.5s ease;
+}
+
+.btn-gold:hover::before {
+    left: 100%;
+}
+
+.btn-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-gold-hover);
+}
+
+.btn-gold:active {
+    transform: translateY(-1px);
+}
+
+.btn-gold-outline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    padding: 14px 30px;
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--corinthia-gold);
+    background: transparent;
+    border: 2px solid var(--corinthia-gold);
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    transition: var(--transition-premium);
+}
+
+.btn-gold-outline:hover {
+    background: rgba(197, 160, 89, 0.1);
+    box-shadow: 0 0 20px var(--gold-glow);
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   GOLD INPUT FIELDS
+   ============================================ */
+
+.input-gold {
+    width: 100%;
+    padding: 18px 24px;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: var(--cream-white);
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    border-bottom: 2px solid var(--corinthia-gold);
+    border-radius: 0;
+    outline: none;
+    transition: var(--transition-medium);
+}
+
+.input-gold:focus {
+    background: rgba(255, 255, 255, 0.08);
+    border-bottom-color: var(--corinthia-gold);
+    box-shadow: 0 10px 30px rgba(197, 160, 89, 0.1);
+}
+
+.input-gold::placeholder {
+    color: var(--text-muted);
+}
+
+/* ============================================
+   PRESTIGE STATUS CARDS
+   ============================================ */
+
+.prestige-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-lg);
+    position: relative;
+    overflow: hidden;
+    animation: slideUpFade 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+}
+
+.prestige-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--gold-gradient);
+}
+
+@keyframes slideUpFade {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.prestige-card h3 {
+    font-size: 1.3rem;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.status-icon {
+    font-size: 3rem;
+    margin-bottom: var(--spacing-md);
+}
+
+.status-icon.confirmed {
+    color: var(--success-green);
+    text-shadow: 0 0 30px rgba(39, 174, 96, 0.5);
+}
+
+.status-icon.pending {
+    color: var(--pending-gold);
+    text-shadow: 0 0 30px rgba(197, 160, 89, 0.5);
+}
+
+.status-icon.cancelled {
+    color: var(--danger-red);
+    text-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
+}
+
+/* ============================================
+   ANIMATED SUCCESS CHECKMARK
+   ============================================ */
+
+.success-checkmark {
+    width: 120px;
+    height: 120px;
+    margin: 0 auto var(--spacing-lg);
+    position: relative;
+}
+
+.success-checkmark svg {
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 0 20px var(--gold-glow));
+}
+
+.success-checkmark .checkmark-circle {
+    stroke: var(--corinthia-gold);
+    stroke-width: 2;
+    fill: none;
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    animation: strokeCircle 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.success-checkmark .checkmark-check {
+    stroke: var(--corinthia-gold);
+    stroke-width: 3;
+    fill: none;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    animation: strokeCheck 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+}
+
+@keyframes strokeCircle {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes strokeCheck {
+    100% {
+        stroke-dashoffset: 0;
+    }
+}
+
+/* ============================================
+   LANGUAGE TOGGLE BUTTON
+   ============================================ */
+
+.lang-toggle-luxury {
+    position: absolute;
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+    z-index: 100;
+    background: var(--glass-bg);
+    border: 1px solid var(--corinthia-gold);
+    color: var(--corinthia-gold);
+    padding: 12px 24px;
+    border-radius: var(--radius-pill);
+    cursor: pointer;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: var(--transition-premium);
+    backdrop-filter: blur(10px);
+}
+
+.lang-toggle-luxury:hover {
+    background: var(--corinthia-gold);
+    color: var(--midnight-black);
+    box-shadow: 0 0 30px var(--gold-glow);
+    transform: translateY(-2px);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+    :root {
+        --spacing-xl: 32px;
+        --spacing-lg: 24px;
+    }
+    
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.6rem; }
+    
+    .luxury-glass-card {
+        padding: var(--spacing-lg);
+        margin: var(--spacing-md);
+    }
+}
+
+@media (max-width: 480px) {
+    h1 { font-size: 1.8rem; }
+    
+    .luxury-glass-card {
+        padding: var(--spacing-md);
+        border-radius: var(--radius-lg);
+    }
+    
+    .btn-gold {
+        padding: 14px 24px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ============================================
+   RAMADAN LUXURY THEME EXTENSIONS
+   ============================================ */
+
+/* Ramadan Crescent Moon & Lantern Icons */
+.ramadan-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--corinthia-gold);
+    filter: drop-shadow(0 0 10px var(--gold-glow));
+}
+
+.ramadan-icon svg {
+    width: 24px;
+    height: 24px;
+}
+
+.crescent-moon {
+    font-size: 1.5rem;
+    color: var(--corinthia-gold);
+    filter: drop-shadow(0 0 15px rgba(197, 160, 89, 0.6));
+    animation: crescentGlow 3s ease-in-out infinite;
+}
+
+.lantern-icon {
+    font-size: 1.3rem;
+    color: #ff6b35;
+    filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5));
+    animation: lanternFlicker 4s ease-in-out infinite;
+}
+
+@keyframes crescentGlow {
+    0%, 100% { filter: drop-shadow(0 0 15px rgba(197, 160, 89, 0.6)); }
+    50% { filter: drop-shadow(0 0 25px rgba(197, 160, 89, 0.9)); }
+}
+
+@keyframes lanternFlicker {
+    0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px rgba(255, 107, 53, 0.5)); }
+    50% { opacity: 0.85; filter: drop-shadow(0 0 15px rgba(255, 107, 53, 0.7)); }
+}
+
+/* Islamic Geometric Pattern Overlay */
+.islamic-pattern-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23c5a059' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+/* Enhanced Gold Glow Cards */
+.luxury-glass-card:hover {
+    box-shadow: 0 25px 60px rgba(197, 160, 89, 0.2);
+    border-color: rgba(197, 160, 89, 0.4);
+}
+
+/* Prestige Card Hover Effect */
+.prestige-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(197, 160, 89, 0.15);
+    border-color: var(--corinthia-gold);
+}
+
+/* Scroll Fade Animation */
+.fade-in-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.fade-in-scroll.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Ramadan Greeting Banner */
+.ramadan-greeting {
+    background: linear-gradient(135deg, rgba(197, 160, 89, 0.1) 0%, rgba(197, 160, 89, 0.05) 100%);
+    border: 1px solid rgba(197, 160, 89, 0.3);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-md) var(--spacing-lg);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+    font-family: var(--font-heading);
+    color: var(--corinthia-gold);
+    font-size: 1.1rem;
+    letter-spacing: 2px;
+    animation: gentlePulse 3s ease-in-out infinite;
+}
+
+@keyframes gentlePulse {
+    0%, 100% { box-shadow: 0 0 20px rgba(197, 160, 89, 0.1); }
+    50% { box-shadow: 0 0 30px rgba(197, 160, 89, 0.2); }
+}
+
+/* Enhanced Button Glow on Hover */
+.btn-gold:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 50px rgba(197, 160, 89, 0.5);
+    filter: brightness(1.1);
+}
+
+.btn-gold-outline:hover {
+    background: rgba(197, 160, 89, 0.15);
+    box-shadow: 0 0 30px rgba(197, 160, 89, 0.4);
+    transform: translateY(-2px);
+    border-color: var(--corinthia-gold);
+}
+
+/* Booking Card Gold Radiance */
+.booking-card {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-md);
+    transition: var(--transition-premium);
+    position: relative;
+    overflow: hidden;
+}
+
+.booking-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(ellipse at center, rgba(197, 160, 89, 0.1) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity var(--transition-medium);
+    pointer-events: none;
+}
+
+.booking-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 50px rgba(197, 160, 89, 0.2);
+    border-color: rgba(197, 160, 89, 0.4);
+}
+
+.booking-card:hover::before {
+    opacity: 1;
+}
+
+/* Success Page Ramadan Message */
+.ramadan-blessing {
+    font-family: var(--font-heading);
+    color: var(--corinthia-gold);
+    font-size: 1.2rem;
+    text-align: center;
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-md);
+    background: linear-gradient(135deg, rgba(197, 160, 89, 0.08) 0%, rgba(197, 160, 89, 0.03) 100%);
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(197, 160, 89, 0.2);
+    animation: blessingFadeIn 1s ease-out 0.5s both;
+}
+
+@keyframes blessingFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header with Ramadan Elements */
+.ramadan-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-lg);
+    padding-bottom: var(--spacing-md);
+    border-bottom: 1px solid var(--glass-border);
+}
+
+.ramadan-header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    background: var(--gold-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 480px) {
+    .ramadan-header {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .ramadan-header h1 {
+        font-size: 1.5rem;
+        text-align: center;
+    }
+    
+    .ramadan-greeting {
+        font-size: 0.95rem;
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .ramadan-blessing {
+        font-size: 1rem;
+        padding: var(--spacing-sm);
+    }
+    
+    .crescent-moon {
+        font-size: 1.2rem;
+    }
+    
+    .booking-card:hover {
+        transform: translateY(-4px);
+    }
+}
+
+/* Logo Container Enhancement */
+.logo-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.logo-area img {
+    filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.4));
+    transition: var(--transition-premium);
+}
+
+.logo-area img:hover {
+    filter: drop-shadow(0 0 30px rgba(197, 160, 89, 0.6));
+    transform: scale(1.02);
+}

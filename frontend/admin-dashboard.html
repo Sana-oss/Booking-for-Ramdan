@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | Corinthia Hotel</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <link rel="stylesheet" href="admin-style.css">
+</head>
+
+<body class="admin-view">
+
+    <nav class="admin-nav">
+        <div class="brand">
+            <div class="logo-container">
+                <svg class="admin-logo-svg" width="50" height="50" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M50 15 A35 35 0 1 0 50 85 A28 28 0 1 1 50 15 Z" fill="#C5A059"/>
+                    <circle cx="68" cy="35" r="2.5" fill="white">
+                        <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                </svg>
+            </div>
+            
+            <div class="brand-text">
+                <h1 class="hotel-name">CORINTHIA</h1>
+                <p class="panel-name" data-i18n="admin_panel">لوحة التحكم والإدارة</p>
+            </div>
+        </div>
+        
+        <div class="nav-actions">
+            <a id="archiveNavLink" href="archives.html" target="_blank" class="archive-btn" style="text-decoration: none; margin-left: 10px; background: linear-gradient(135deg, #7f8c8d, #95a5a6); padding: 10px 15px; border-radius: 8px; color: white; display: none; align-items: center; gap: 8px;">
+                <i class="fas fa-folder-open"></i>
+                <span data-i18n="restaurant_archives">أرشيف المطعم</span>
+            </a>
+            <a id="usersManagementLink" href="users-management.html" class="logout-btn" style="text-decoration: none; margin-left: 10px; display: none;">
+                <i class="fas fa-users"></i> 
+                <span data-i18n="users_management">إدارة المستخدمين</span>
+            </a>
+            <button id="langToggle" class="lang-switch-text" onclick="i18n.toggleLang()">
+                <span class="lang-text">English</span>
+            </button>
+            
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> 
+                <span data-i18n="logout">تسجيل الخروج</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="dashboard-content">
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3 data-i18n="total_bookings">إجمالي الحجوزات</h3>
+                <div id="totalCount" class="value">0</div>
+                <div class="card-icon-bg"><i class="fas fa-calendar-check"></i></div>
+            </div>
+            
+            <div class="stat-card border-confirmed">
+                <h3 data-i18n="confirmed_bookings">تم التأكيد</h3>
+                <div id="confirmedCount" class="value">0</div>
+                <div class="card-icon-bg"><i class="fas fa-user-check"></i></div>
+            </div>
+            
+            <div class="stat-card border-pending">
+                <h3 data-i18n="pending_bookings">قيد الانتظار</h3>
+                <div id="pendingCount" class="value">0</div>
+                <div class="card-icon-bg"><i class="fas fa-clock"></i></div>
+            </div>
+        </div>
+
+        <!-- Analytics Dashboard Section (NEW) -->
+        <div class="analytics-grid">
+            <!-- Status Distribution Card -->
+            <div class="analytics-card dark-theme">
+                <h3>Status Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="statusDistributionChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Weekly Trends Card -->
+            <div class="analytics-card dark-theme">
+                <h3>Weekly Trends</h3>
+                <div class="chart-container">
+                    <canvas id="weeklyTrendsChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Capacity Overview Card -->
+            <div class="analytics-card dark-theme capacity-card">
+                <h3>Booking Capacity</h3>
+                <div id="capacityBarsContainer" class="capacity-bars-container">
+                    <p style="color: #888; text-align: center;"><i class="fas fa-circle-notch fa-spin"></i> Loading data...</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-tools-container">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="searchInput" 
+                       placeholder="RMD12345" 
+                       maxlength="10" pattern="[A-Za-z0-9\-]*"
+                       autocomplete="off"
+                       oninput="cleanSearchInput(this)">
+            </div>
+
+            <div class="controls-group">
+                <div class="date-range-container">
+                    <i class="fas fa-calendar-alt"></i>
+                    <input type="text" id="dateRangePicker" class="flatpickr-input" data-i18n-attr="placeholder:select_date_range">
+                </div>
+                
+                <button onclick="resetFilter()" class="action-btn secondary-gold" title="Reset">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+
+                <button onclick="exportToExcel()" class="action-btn excel-green">
+                    <i class="fas fa-file-excel"></i>
+                    <span>Export Excel</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th data-i18n="col_id">المعرف</th>
+                            <th data-i18n="col_guest">معلومات الضيف</th>
+                            <th data-i18n="col_date">تاريخ الحجز</th>
+                            <th data-i18n="col_guests">الأفراد</th>
+                            <th data-i18n="col_status">الحالة</th>
+                            <th data-i18n="col_action">الإجراءات</th>
+                        </tr>
+                    </thead>
+                    <tbody id="adminTableBody">
+                        <tr>
+                            <td colspan="6" style="text-align:center; padding:50px; color:#999;">
+                                <i class="fas fa-circle-notch fa-spin"></i> <span data-i18n="syncing">جاري المزامنة...</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div id="adminPagination" class="pagination"></div>
+        </div>
+
+    </main>
+
+    <script src="constants.js"></script>
+    <script src="i18n.js"></script>
+    <script src="admin-dash.js"></script>
+
+</body>
+</html>
+
+
+
+

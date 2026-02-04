@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Staff Portal | Corinthia Hotel</title>
+    
+    <!-- Premium English Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Luxury Design System -->
+    <link rel="stylesheet" href="luxury-design-system.css">
+    
+    <style>
+        /* Admin Login Specific Styles - English/LTR Only */
+        .admin-login-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-xl);
+            position: relative;
+            background-image: url('lobby.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            direction: ltr !important;
+        }
+        
+        .admin-login-wrapper::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, 
+                rgba(10, 10, 15, 0.9) 0%, 
+                rgba(26, 26, 46, 0.85) 50%, 
+                rgba(10, 10, 15, 0.95) 100%);
+            backdrop-filter: blur(3px);
+        }
+        
+        .admin-login-card {
+            max-width: 480px;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .admin-logo-section {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        
+        .admin-logo-section img {
+            height: 80px;
+            filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.3));
+            transition: transform var(--transition-premium);
+        }
+        
+        .admin-logo-section img:hover {
+            transform: scale(1.05);
+        }
+        
+        .admin-login-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            margin-bottom: var(--spacing-xs);
+            text-shadow: 0 0 30px var(--gold-glow);
+            text-align: left !important;
+        }
+        
+        .admin-login-subtitle {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: var(--spacing-xl);
+            text-align: left !important;
+        }
+        
+        .admin-form-group {
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .admin-form-group label {
+            display: block;
+            color: var(--cream-white);
+            font-weight: 600;
+            margin-bottom: var(--spacing-sm);
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            text-align: left !important;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .admin-input-wrapper {
+            position: relative;
+        }
+        
+        .admin-input-wrapper i {
+            position: absolute;
+            left: 20px;
+            right: auto;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--corinthia-gold);
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+        
+        .admin-input {
+            width: 100%;
+            padding: 18px 24px 18px 55px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 1rem;
+            color: var(--cream-white);
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px solid rgba(197, 160, 89, 0.3);
+            border-radius: var(--radius-md);
+            outline: none;
+            transition: var(--transition-premium);
+            direction: ltr !important;
+            text-align: left !important;
+        }
+        
+        .admin-input:focus {
+            border-color: var(--corinthia-gold);
+            background: rgba(255, 255, 255, 0.08);
+            box-shadow: 0 0 30px rgba(197, 160, 89, 0.15);
+        }
+        
+        .admin-input::placeholder {
+            color: var(--text-muted);
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .admin-error-message {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid var(--danger-red);
+            color: var(--danger-red);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin: var(--spacing-lg) 0;
+            text-align: center;
+            font-size: 0.95rem;
+            display: none;
+            animation: shakeError 0.5s ease;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .admin-error-message.show {
+            display: block;
+        }
+        
+        @keyframes shakeError {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .admin-submit-btn {
+            width: 100%;
+            padding: 20px;
+            margin-top: var(--spacing-md);
+            font-size: 1.1rem;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        .admin-back-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-top: var(--spacing-xl);
+            font-size: 0.95rem;
+            transition: var(--transition-medium);
+            font-family: 'Poppins', sans-serif;
+            direction: ltr !important;
+        }
+        
+        .admin-back-link:hover {
+            color: var(--corinthia-gold);
+        }
+        
+        .admin-loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(0, 0, 0, 0.3);
+            border-top-color: #000;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        .admin-submit-btn.loading .admin-btn-text {
+            opacity: 0;
+        }
+        
+        .admin-submit-btn.loading .admin-loading-spinner {
+            display: inline-block;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    
+    <div class="admin-login-wrapper">
+        <div class="luxury-glass-card admin-login-card">
+            <div class="admin-logo-section">
+                <img src="logo-gold.svg" alt="Corinthia Hotel Logo" style="height: 80px; filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.5)); transition: transform var(--transition-premium);">
+            </div>
+
+            <h1 class="admin-login-title">Royal Staff Portal</h1>
+            <p class="admin-login-subtitle">Please sign in to access the control panel</p>
+
+            <form id="adminLoginForm">
+                <div class="admin-form-group">
+                    <label>Username</label>
+                    <div class="admin-input-wrapper">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="adminUser" 
+                               class="admin-input" 
+                               placeholder="Enter your username" 
+                               required 
+                               autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="admin-form-group">
+                    <label>Password</label>
+                    <div class="admin-input-wrapper">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="adminPass" 
+                               class="admin-input" 
+                               placeholder="Enter your password" 
+                               required 
+                               autocomplete="current-password">
+                    </div>
+                </div>
+
+                <div id="loginErrorMessage" class="admin-error-message">
+                    Invalid username or password
+                </div>
+
+                <button type="submit" class="btn-gold admin-submit-btn" id="loginSubmitBtn">
+                    <span class="admin-btn-text">SECURE ACCESS</span>
+                    <span class="admin-loading-spinner"></span>
+                    <i class="fas fa-shield-alt"></i>
+                </button>
+            </form>
+
+            <a href="index.html" class="admin-back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Main Site</span>
+            </a>
+        </div>
+    </div>
+
+    <script src="constants.js"></script>
+    <script src="admin-login.js"></script>
+</body>
+</html>
