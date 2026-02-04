@@ -44,29 +44,35 @@ const CONSTANTS = {
     // 1. روابط السيرفر (API Endpoints)
     API: {
         BASE: API_BASE_URL,
-        BOOKINGS: API_BASE_URL ? `${API_BASE_URL}/api/bookings` : '/api/bookings',
+        BOOKINGS: API_BASE_URL ? `${API_BASE_URL}/bookings` : '/api/bookings',
         // دالة ديناميكية لجلب رابط عنصر محدد (تحديث أو حذف)
-        ITEM: (id) => API_BASE_URL ? `${API_BASE_URL}/api/bookings/${id}` : `/api/bookings/${id}`,
+        ITEM: (id) => API_BASE_URL ? `${API_BASE_URL}/bookings/${id}` : `/api/bookings/${id}`,
         // تحديث حالة الحجز
-        STATUS: (id) => API_BASE_URL ? `${API_BASE_URL}/api/bookings/${id}` : `/api/bookings/${id}`,
+        STATUS: (id) => API_BASE_URL ? `${API_BASE_URL}/bookings/${id}` : `/api/bookings/${id}`,
         // التحقق من التوافر
-        AVAILABILITY: (date) => API_BASE_URL ? `${API_BASE_URL}/api/bookings/availability/${date}` : `/api/bookings/availability/${date}`,
+        AVAILABILITY: (date) => API_BASE_URL ? `${API_BASE_URL}/bookings/availability/${date}` : `/api/bookings/availability/${date}`,
         // إنشاء حجز بواسطة الأدمن
-        ADMIN_CREATE: API_BASE_URL ? `${API_BASE_URL}/api/bookings/admin` : '/api/bookings/admin',
+        ADMIN_CREATE: API_BASE_URL ? `${API_BASE_URL}/bookings/admin` : '/api/bookings/admin',
         // مسارات المصادقة (Authentication)
         AUTH: {
-            LOGIN: API_BASE_URL ? `${API_BASE_URL}/api/auth/login` : '/api/auth/login',
-            ME: API_BASE_URL ? `${API_BASE_URL}/api/auth/me` : '/api/auth/me',
-            LOGOUT: API_BASE_URL ? `${API_BASE_URL}/api/auth/logout` : '/api/auth/logout'
+            LOGIN: API_BASE_URL ? `${API_BASE_URL}/auth/login` : '/api/auth/login',
+            ME: API_BASE_URL ? `${API_BASE_URL}/auth/me` : '/api/auth/me',
+            LOGOUT: API_BASE_URL ? `${API_BASE_URL}/auth/logout` : '/api/auth/logout'
         },
         // مسارات إدارة المستخدمين (Users Management - Admin Only)
         USERS: {
-            LIST: API_BASE_URL ? `${API_BASE_URL}/api/admin/users` : '/api/admin/users',
-            CREATE: API_BASE_URL ? `${API_BASE_URL}/api/admin/users` : '/api/admin/users',
-            DELETE: (id) => API_BASE_URL ? `${API_BASE_URL}/api/admin/users/${id}` : `/api/admin/users/${id}`
+            LIST: API_BASE_URL ? `${API_BASE_URL}/admin/users` : '/api/admin/users',
+            CREATE: API_BASE_URL ? `${API_BASE_URL}/admin/users` : '/api/admin/users',
+            DELETE: (id) => API_BASE_URL ? `${API_BASE_URL}/admin/users/${id}` : `/api/admin/users/${id}`
         },
         // Analytics Dashboard (Admin Only)
-        ANALYTICS: API_BASE_URL ? `${API_BASE_URL}/api/admin/analytics` : '/api/admin/analytics'
+        ANALYTICS: API_BASE_URL ? `${API_BASE_URL}/admin/analytics` : '/api/admin/analytics',
+        
+        // Archives Management (Admin Only)
+        ARCHIVES: {
+            LIST: API_BASE_URL ? `${API_BASE_URL}/admin/archived-bookings` : '/api/admin/archived-bookings',
+            RESTORE: (id) => API_BASE_URL ? `${API_BASE_URL}/bookings/restore/${id}` : `/api/bookings/restore/${id}`
+        }
     },
 
     // 2. معرفات العناصر في واجهة المستخدم (DOM Selectors)

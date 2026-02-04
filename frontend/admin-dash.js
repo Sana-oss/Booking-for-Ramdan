@@ -14,12 +14,15 @@ const getApiUrl = () => {
 const API_BASE = getApiUrl();
 const BOOKINGS_URL = API_BASE ? `${API_BASE}/api/bookings` : '/api/bookings';
 const BOOKING_STATUS_URL = (id) => API_BASE ? `${API_BASE}/api/bookings/${id}` : `/api/bookings/${id}`;
+const BOOKING_ARCHIVE_URL = (id) => API_BASE ? `${API_BASE}/api/bookings/archive/${id}` : `/api/bookings/archive/${id}`;
+const BOOKING_DELETE_URL = (id) => API_BASE ? `${API_BASE}/api/bookings/${id}` : `/api/bookings/${id}`;
 const AUTH_ME_URL = API_BASE ? `${API_BASE}/api/auth/me` : '/api/auth/me';
 const CAPACITY_URL = API_BASE ? `${API_BASE}/api/admin/capacity` : '/api/admin/capacity';
 const ANALYTICS_URL = API_BASE ? `${API_BASE}/api/admin/analytics` : '/api/admin/analytics';
 
 console.log('📊 Admin Dashboard API Base:', API_BASE || '(relative)');
 console.log('📊 Bookings URL:', BOOKINGS_URL);
+console.log('📊 Archive URL:', BOOKING_ARCHIVE_URL('test'));
 console.log('📊 Capacity URL:', CAPACITY_URL);
 console.log('📊 Analytics URL:', ANALYTICS_URL);
 
@@ -838,6 +841,7 @@ async function archiveBooking(id, reason) {
     if (!confirm(message)) return;
 
     console.log(`📂 Archiving booking ${id} as '${reason}'`);
+    console.log(`📂 Archive URL: ${BOOKING_ARCHIVE_URL(id)}`);
     
     try {
         const token = localStorage.getItem('adminToken');
@@ -849,11 +853,16 @@ async function archiveBooking(id, reason) {
             headers['Authorization'] = `Bearer ${token}`;
         }
         
-        const response = await fetch(`${BOOKINGS_URL}/archive/${id}`, {
+        const archiveUrl = BOOKING_ARCHIVE_URL(id);
+        console.log(`📡 POST ${archiveUrl}`);
+        
+        const response = await fetch(archiveUrl, {
             method: 'POST',
             headers: headers,
             body: JSON.stringify({ archiveReason: reason })
         });
+        
+        console.log(`📡 Archive response status: ${response.status}`);
         
         if (response.status === 401) {
             localStorage.removeItem('adminToken');
@@ -863,6 +872,7 @@ async function archiveBooking(id, reason) {
         }
         
         const result = await response.json();
+        console.log(`📊 Archive response:`, result);
         
         if (result.success) {
             showNotification(`✅ ${result.message}`);
@@ -874,7 +884,7 @@ async function archiveBooking(id, reason) {
         
     } catch (error) {
         console.error('Archive error:', error);
-        showNotification('❌ Error archiving booking');
+        showNotification('❌ Error archiving booking: ' + error.message);
     }
 }
 

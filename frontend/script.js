@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
         event.preventDefault();
 
         // Get form values
-        const name = document.getElementById('name').value.trim();
+        const name = document.getElementById('guestName').value.trim();
         const phone = document.getElementById('phone').value.trim();
         const date = document.getElementById('bookingDate').value;
         const guests = parseInt(document.getElementById('guests').value) || 0;
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     : nameValidation.message_en,
                 'error'
             );
-            document.getElementById('name').focus();
+            document.getElementById('guestName').focus();
             return;
         }
 

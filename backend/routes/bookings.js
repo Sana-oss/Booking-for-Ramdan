@@ -1,10 +1,20 @@
 const express = require('express');
+const mongoose = require('mongoose');
 const { body, param, validationResult } = require('express-validator');
 const Booking = require('../models/Booking');
 const BookingArchive = require('../models/BookingArchive');
 const { auth, requireAdmin, requireStaff, requireSuperAdmin } = require('../middleware/auth');
 
 const router = express.Router();
+
+// Helper function to convert string to ObjectId
+const toObjectId = (id) => {
+    try {
+        return new mongoose.Types.ObjectId(id);
+    } catch (e) {
+        return null;
+    }
+};
 
 // Debug: Log when router is used
 router.stack.forEach(function(layer) {
@@ -205,24 +215,40 @@ router.post('/archive/:id', auth, requireStaff, async (req, res) => {
       });
     }
     
-    // Find the booking
+    // Find the booking (support both numeric id and MongoDB _id)
     let booking;
     const numericId = parseInt(idParam);
+    
+    // First try: numeric id (local DB format)
     if (!isNaN(numericId)) {
+      console.log('🔍 Looking for booking with numeric id:', numericId);
       booking = await Booking.findOne({ id: numericId });
+      if (booking) {
+        console.log('✅ Found booking by numeric id:', booking.id);
+      }
     }
+    
+    // Second try: MongoDB ObjectId (Atlas format)
     if (!booking && idParam.length === 24) {
-      booking = await Booking.findById(idParam);
+      const objectId = toObjectId(idParam);
+      if (objectId) {
+        console.log('🔍 Looking for booking with ObjectId:', idParam);
+        booking = await Booking.findById(objectId);
+        if (booking) {
+          console.log('✅ Found booking by ObjectId:', booking._id);
+        }
+      }
     }
     
     if (!booking) {
+      console.log('❌ Booking not found for id:', idParam);
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
     
     // Create archive record
     const archiveData = {
       id: booking.id,
-      referenceNumber: booking.referenceNumber || `CRT-${booking.id.toString().slice(-4)}`,
+      referenceNumber: booking.referenceNumber || `CRT-${booking.id?.toString()?.slice(-4) || Date.now().toString().slice(-4)}`,
       name: booking.name,
       phone: booking.phone,
       date: booking.date,
@@ -236,16 +262,25 @@ router.post('/archive/:id', auth, requireStaff, async (req, res) => {
       expiresAt: booking.expiresAt,
       archiveReason: archiveReason,
       archivedAt: new Date(),
-      originalReference: booking.referenceNumber || `CRT-${booking.id.toString().slice(-4)}`,
+      originalReference: booking.referenceNumber || `CRT-${booking.id?.toString()?.slice(-4) || Date.now().toString().slice(-4)}`,
       archivedBy: req.admin ? req.admin.username : 'Staff',
       notes: notes || ''
     };
     
     const archiveEntry = new BookingArchive(archiveData);
     await archiveEntry.save();
+    console.log('✅ Archive record created:', archiveEntry._id);
     
-    // Delete from active bookings
-    await Booking.findByIdAndDelete(booking._id);
+    // Delete from active bookings (support both formats)
+    let deleteResult;
+    if (booking._id && toObjectId(booking._id.toString())) {
+      // Has valid ObjectId
+      deleteResult = await Booking.deleteOne({ _id: toObjectId(booking._id.toString()) });
+    } else {
+      // Delete by numeric id
+      deleteResult = await Booking.deleteOne({ id: booking.id });
+    }
+    console.log('🗑️ Delete result:', deleteResult);
     
     console.log(`✅ Booking ${booking.id} archived as '${archiveReason}' by ${archiveData.archivedBy}`);
     
@@ -395,13 +430,49 @@ router.get('/archive/stats', auth, requireAdmin, async (req, res) => {
 // @access  Private (Admin only)
 router.post('/restore/:id', auth, requireAdmin, async (req, res) => {
   try {
-    const { id } = req.params;
+    const idParam = req.params.id;
     const adminId = req.user?.id || req.user?._id;
     
-    // Find the archived booking
-    const archivedBooking = await BookingArchive.findById(id);
+    console.log('🔄 Restore request - id:', idParam);
+    
+    // Find the archived booking (support both ObjectId and numeric id)
+    let archivedBooking;
+    
+    // First try: MongoDB ObjectId
+    if (idParam.length === 24) {
+      const objectId = toObjectId(idParam);
+      if (objectId) {
+        console.log('🔍 Searching by ObjectId:', idParam);
+        archivedBooking = await BookingArchive.findById(objectId);
+        if (archivedBooking) {
+          console.log('✅ Found by ObjectId:', archivedBooking._id);
+        }
+      }
+    }
+    
+    // Second try: numeric id
+    if (!archivedBooking) {
+      const numericId = parseInt(idParam);
+      if (!isNaN(numericId)) {
+        console.log('🔍 Searching by numeric id:', numericId);
+        archivedBooking = await BookingArchive.findOne({ id: numericId });
+        if (archivedBooking) {
+          console.log('✅ Found by numeric id:', archivedBooking.id);
+        }
+      }
+    }
+    
+    // Third try: referenceNumber
+    if (!archivedBooking && /^CRT-[A-Z0-9]{4}$/i.test(idParam)) {
+      console.log('🔍 Searching by referenceNumber:', idParam.toUpperCase());
+      archivedBooking = await BookingArchive.findOne({ referenceNumber: idParam.toUpperCase() });
+      if (archivedBooking) {
+        console.log('✅ Found by referenceNumber:', archivedBooking.referenceNumber);
+      }
+    }
     
     if (!archivedBooking) {
+      console.log('❌ Archived booking not found for id:', idParam);
       return res.status(404).json({ 
         success: false, 
         message: 'Archived booking not found' 
@@ -413,7 +484,7 @@ router.post('/restore/:id', auth, requireAdmin, async (req, res) => {
     const restoredBooking = new Booking({
       id: generateBookingId(), // Generate unique numeric ID
       referenceNumber: archivedBooking.referenceNumber,
-      name: archivedBooking.name || (archivedBooking.firstName + ' ' + archivedBooking.lastName).trim(),
+      name: archivedBooking.name || (archivedBooking.firstName && archivedBooking.lastName ? archivedBooking.firstName + ' ' + archivedBooking.lastName : archivedBooking.firstName || archivedBooking.lastName || 'Unknown'),
       phone: archivedBooking.phone,
       email: archivedBooking.email || '',
       date: archivedBooking.date,
@@ -431,11 +502,18 @@ router.post('/restore/:id', auth, requireAdmin, async (req, res) => {
     });
     
     await restoredBooking.save();
+    console.log('✅ New booking created:', restoredBooking.id);
     
     // Remove from archive
-    await BookingArchive.findByIdAndDelete(id);
+    let deleteResult;
+    if (archivedBooking._id && toObjectId(archivedBooking._id.toString())) {
+      deleteResult = await BookingArchive.deleteOne({ _id: toObjectId(archivedBooking._id.toString()) });
+    } else {
+      deleteResult = await BookingArchive.deleteOne({ id: archivedBooking.id });
+    }
+    console.log('🗑️ Archive entry deleted:', deleteResult);
     
-    console.log('Booking restored from archive:', {
+    console.log('✅ Booking restored successfully:', {
       originalId: archivedBooking._id,
       restoredId: restoredBooking._id,
       referenceNumber: restoredBooking.referenceNumber,
@@ -484,25 +562,37 @@ router.get('/:id', async (req, res) => {
     let booking;
     const searchId = req.params.id.trim();
     
+    console.log('🔍 Searching for booking:', searchId);
+    
     // 1. Try to find by referenceNumber (e.g., CRT-XXXX)
     if (/^CRT-[A-Z0-9]{4}$/i.test(searchId)) {
+      console.log('📋 Searching by referenceNumber:', searchId.toUpperCase());
       booking = await Booking.findOne({ referenceNumber: searchId.toUpperCase() });
+      if (booking) console.log('✅ Found by referenceNumber:', booking.referenceNumber);
     }
     
     // 2. If not found, try numeric id
     if (!booking) {
       const numericId = parseInt(searchId);
       if (!isNaN(numericId)) {
+        console.log('🔢 Searching by numeric id:', numericId);
         booking = await Booking.findOne({ id: numericId });
+        if (booking) console.log('✅ Found by numeric id:', booking.id);
       }
     }
     
-    // 3. If not found, try MongoDB _id
+    // 3. If not found, try MongoDB ObjectId
     if (!booking && searchId.length === 24) {
-      booking = await Booking.findById(searchId);
+      const objectId = toObjectId(searchId);
+      if (objectId) {
+        console.log('🆔 Searching by ObjectId:', searchId);
+        booking = await Booking.findById(objectId);
+        if (booking) console.log('✅ Found by ObjectId:', booking._id);
+      }
     }
     
     if (!booking) {
+      console.log('❌ Booking not found:', searchId);
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
     
@@ -522,12 +612,12 @@ router.put('/:id', auth, requireStaff, async (req, res) => {
     const idParam = req.params.id;
     const { status } = req.body;
     
-    const validStatuses = ['Pending', 'Confirmed', 'Cancelled'];
+    const validStatuses = ['Pending', 'Confirmed', 'Cancelled', 'Arrived'];
     if (!validStatuses.includes(status)) {
-      return res.status(400).json({ success: false, message: 'Invalid status. Must be: Pending, Confirmed, or Cancelled' });
+      return res.status(400).json({ success: false, message: 'Invalid status. Must be: Pending, Confirmed, Cancelled, or Arrived' });
     }
     
-    // Build update object with archived flag for cancelled bookings
+    // Build update object
     const updateObj = { 
       status: status,
       cancelledAt: status === 'Cancelled' ? new Date() : null
@@ -543,6 +633,7 @@ router.put('/:id', auth, requireStaff, async (req, res) => {
     // Try to find by numeric id first
     const numericId = parseInt(idParam);
     if (!isNaN(numericId)) {
+      console.log('🔄 Updating booking by numeric id:', numericId);
       booking = await Booking.findOneAndUpdate(
         { id: numericId },
         updateObj,
@@ -550,20 +641,25 @@ router.put('/:id', auth, requireStaff, async (req, res) => {
       );
     }
     
-    // If not found by numeric id, try MongoDB _id
+    // If not found by numeric id, try MongoDB ObjectId
     if (!booking && idParam.length === 24) {
-      booking = await Booking.findByIdAndUpdate(
-        idParam,
-        updateObj,
-        { new: true }
-      );
+      const objectId = toObjectId(idParam);
+      if (objectId) {
+        console.log('🔄 Updating booking by ObjectId:', idParam);
+        booking = await Booking.findByIdAndUpdate(
+          objectId,
+          updateObj,
+          { new: true }
+        );
+      }
     }
     
     if (!booking) {
+      console.log('❌ Booking not found for update:', idParam);
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
     
-    console.log('✅ Booking status updated:', booking.id || booking._id, '->', status, '(archived:', updateObj.archived || false, ')');
+    console.log('✅ Booking status updated:', booking.id || booking._id, '->', status);
     res.json({ 
       success: true, 
       message: 'Booking status updated successfully!',
@@ -583,18 +679,32 @@ router.delete('/:id', auth, requireAdmin, async (req, res) => {
     let booking;
     const idParam = req.params.id;
     
+    console.log('🗑️ Attempting to delete booking:', idParam);
+    
     // Try to find by numeric id first
     const numericId = parseInt(idParam);
     if (!isNaN(numericId)) {
+      console.log('🔍 Looking for booking with numeric id:', numericId);
       booking = await Booking.findOneAndDelete({ id: numericId });
+      if (booking) {
+        console.log('✅ Found booking by numeric id:', booking.id);
+      }
     }
     
-    // If not found by numeric id, try MongoDB _id
+    // If not found by numeric id, try MongoDB ObjectId
     if (!booking && idParam.length === 24) {
-      booking = await Booking.findByIdAndDelete(idParam);
+      const objectId = toObjectId(idParam);
+      if (objectId) {
+        console.log('🔍 Looking for booking with ObjectId:', idParam);
+        booking = await Booking.findByIdAndDelete(objectId);
+        if (booking) {
+          console.log('✅ Found booking by ObjectId:', booking._id);
+        }
+      }
     }
     
     if (!booking) {
+      console.log('❌ Booking not found for deletion:', idParam);
       return res.status(404).json({ success: false, message: 'Booking not found' });
     }
     

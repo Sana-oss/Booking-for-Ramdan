@@ -5,10 +5,12 @@
 
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+require('dotenv').config();
 
 async function forceReset() {
-  // Connect directly without models to avoid caching issues
-  await mongoose.connect('mongodb://localhost:27017/corinthiaDB', {
+  // Connect using environment variable (supports local and Atlas)
+  const mongoUri = process.env.MONGODB_URI || 'mongodb://localhost:27017/corinthiaDB';
+  await mongoose.connect(mongoUri, {
     useNewUrlParser: true,
     useUnifiedTopology: true
   });

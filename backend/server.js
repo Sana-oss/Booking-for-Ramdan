@@ -7,7 +7,7 @@ const cron = require('node-cron');
 require('dotenv').config();
 
 const app = express();
-const frontendPath = path.join(__dirname, '..');
+const frontendPath = path.join(__dirname, '..', 'frontend');
 
 // ============================================
 // 1. MIDDLEWARES (First - Apply to all requests)

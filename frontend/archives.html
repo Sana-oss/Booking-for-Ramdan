@@ -1007,8 +1007,12 @@
     <script src="constants.js"></script>
     <script src="i18n.js"></script>
     <script>
-        // API_BASE compatibility
+        // API_BASE compatibility (using constants.js)
         const API_BASE = CONSTANTS.API.BASE || '';
+        
+        // Debug: Log API_BASE to help troubleshoot URL issues
+        console.log('🔗 Archives Page - API_BASE:', API_BASE);
+        console.log('🔗 Archives Page - ARCHIVES.LIST:', CONSTANTS.API.ARCHIVES?.LIST || 'Not defined');
         
         // =========================================
         // LANGUAGE SWITCHER
@@ -1105,7 +1109,7 @@
                 const headers = { 'Content-Type': 'application/json' };
                 if (token) headers['Authorization'] = 'Bearer ' + token;
                 
-                const response = await fetch(API_BASE + '/api/bookings/archive/stats', { headers: headers });
+                const response = await fetch(API_BASE + '/bookings/archive/stats', { headers: headers });
                 const result = await response.json();
                 
                 if (result.success) {
@@ -1287,14 +1291,32 @@
                 const headers = { 'Content-Type': 'application/json' };
                 if (token) headers['Authorization'] = 'Bearer ' + token;
                 
+                console.log('📥 Loading archives from:', API_BASE);
+                
                 // First, fetch ALL data without filters for accurate stats calculation
-                const archiveUrlAll = API_BASE + '/api/bookings/archive?page=1&limit=1000';
+                // Note: API_BASE already includes /api, so use relative path
+                const archiveUrlAll = API_BASE + '/bookings/archive?page=1&limit=1000';
+                console.log('📥 Fetching from archive collection:', archiveUrlAll);
                 const archiveResponseAll = await fetch(archiveUrlAll, { headers: headers });
                 const archiveResultAll = await archiveResponseAll.json();
+                console.log('📊 Archive collection result:', archiveResultAll);
                 
-                const adminUrlAll = API_BASE + '/api/admin/archived-bookings';
+                // Use constants.js endpoint for admin archived bookings (already includes /api)
+                const adminUrlAll = CONSTANTS.API.ARCHIVES?.LIST || (API_BASE + '/admin/archived-bookings');
+                console.log('📥 Fetching from admin endpoint:', adminUrlAll);
                 const adminResponseAll = await fetch(adminUrlAll, { headers: headers });
+                
+                // Check for auth errors
+                if (adminResponseAll.status === 401) {
+                    console.error('❌ Unauthorized - redirecting to login');
+                    localStorage.removeItem('adminToken');
+                    localStorage.removeItem('adminUser');
+                    window.location.href = 'admin-login.html';
+                    return;
+                }
+                
                 const adminResultAll = await adminResponseAll.json();
+                console.log('📊 Admin archived bookings result:', adminResultAll);
                 
                 // Combine ALL data for stats calculation
                 let allDataForStats = [];
@@ -1567,7 +1589,7 @@
             
             try {
                 const token = localStorage.getItem('adminToken');
-                const response = await fetch(API_BASE + '/api/bookings/restore/' + id, {
+                const response = await fetch(CONSTANTS.API.ARCHIVES.RESTORE(id), {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
