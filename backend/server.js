@@ -255,7 +255,9 @@ app.get('/api/admin/archived-bookings', auth, async (req, res) => {
             guests: b.guests,
             status: b.status,
             archived: b.archived,
+            archivedAt: b.archivedAt || b.updatedAt || b.cancelledAt || new Date(),
             archiveReason: b.archiveReason,
+            archivedBy: b.archivedBy || 'System',
             createdAt: b.createdAt,
             updatedAt: b.updatedAt,
             _source: 'booking'
@@ -274,7 +276,8 @@ app.get('/api/admin/archived-bookings', auth, async (req, res) => {
             guests: b.guests,
             status: b.status,
             archiveReason: b.archiveReason,
-            archivedAt: b.archivedAt,
+            archivedAt: b.archivedAt || b.createdAt || new Date(),
+            archivedBy: b.archivedBy || 'Unknown',
             createdAt: b.createdAt,
             _source: 'archive'
         }));
@@ -329,7 +332,8 @@ const autoCancelExpiredBookings = async () => {
                     cancelledAt: now,
                     archived: true,
                     archivedAt: now,
-                    archiveReason: 'Auto-expiry'
+                    archiveReason: 'Auto-expiry',
+                    archivedBy: 'System'
                 } 
             }
         );
