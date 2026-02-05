@@ -1,6 +1,6 @@
 /**
  * CORINTHIA HOTEL - USERS MANAGEMENT SYSTEM
- * نظام إدارة المستخدمين (Super Admin Only for Delete)
+ * User Management for Super Admin
  */
 
 let allUsers = [];
@@ -53,7 +53,7 @@ function formatDate(dateStr) {
 }
 
 /**
- * التحقق من صلاحية الدخول (Admin Only)
+ * Check admin authentication (Super Admin Only)
  */
 async function checkAdminAuth() {
     const token = localStorage.getItem('adminToken');
@@ -77,7 +77,7 @@ async function checkAdminAuth() {
         
         // Only superadmin can access this page
         if (result.admin.role !== 'superadmin') {
-            alert('غير مصرح لك بالوصول إلى هذه الصفحة - يتطلب صلاحيات Super Admin');
+            alert('Access denied - Super Admin privileges required');
             window.location.href = 'admin-dashboard.html';
         }
     } catch (error) {
@@ -86,7 +86,7 @@ async function checkAdminAuth() {
 }
 
 /**
- * جلب جميع المستخدمين
+ * Load all users from the server
  */
 async function loadUsers() {
     try {
@@ -114,7 +114,7 @@ async function loadUsers() {
 }
 
 /**
- * عرض جدول المستخدمين
+ * Render users table
  */
 function renderUsersTable() {
     const tbody = document.getElementById('usersTableBody');
@@ -179,7 +179,7 @@ function renderUsersTable() {
 }
 
 /**
- * Toggle user status
+ * Toggle user status (active/inactive)
  */
 async function toggleUserStatus(userId, isActive) {
     try {
@@ -243,14 +243,15 @@ function hideDeleteConfirmModal() {
 }
 
 /**
- * تأكيد حذف المستخدم
+ * Confirm and execute user deletion
  */
 async function confirmDeleteUserAction() {
     if (!userToDelete) return;
     
     try {
         const token = localStorage.getItem('adminToken');
-        const response = await fetch(CONSTANTS.API.USERS.DELETE.replace('{id}', userToDelete), {
+        const deleteUrl = CONSTANTS.API.USERS.DELETE(userToDelete);
+        const response = await fetch(deleteUrl, {
             method: 'DELETE',
             headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -263,7 +264,7 @@ async function confirmDeleteUserAction() {
             hideDeleteConfirmModal();
             
             // Show success message
-            alert(t('delete_success') || 'تم حذف المستخدم بنجاح');
+            alert(t('delete_success') || 'User deleted successfully');
         } else {
             alert(result.message || t('error_loading'));
         }
@@ -274,7 +275,7 @@ async function confirmDeleteUserAction() {
 }
 
 /**
- * إظهار نافذة إضافة مستخدم
+ * Show create user modal
  */
 function showCreateUserModal() {
     document.getElementById('createUserModal').style.display = 'flex';
@@ -283,14 +284,14 @@ function showCreateUserModal() {
 }
 
 /**
- * إخفاء نافذة إضافة مستخدم
+ * Hide create user modal
  */
 function hideCreateUserModal() {
     document.getElementById('createUserModal').style.display = 'none';
 }
 
 /**
- * معالجة إنشاء مستخدم جديد
+ * Handle new user creation
  */
 async function handleCreateUser(e) {
     e.preventDefault();
@@ -320,23 +321,23 @@ async function handleCreateUser(e) {
             hideCreateUserModal();
             loadUsers();
         } else {
-            errorDiv.textContent = result.message || 'حدث خطأ أثناء إنشاء المستخدم';
+            errorDiv.textContent = result.message || 'Error creating user';
             errorDiv.style.display = 'block';
         }
     } catch (error) {
-        errorDiv.textContent = 'خطأ في الاتصال بالسيرفر';
+        errorDiv.textContent = 'Server connection error';
         errorDiv.style.display = 'block';
     }
 }
 
 /**
- * حذف مستخدم
+ * Legacy delete user function (kept for compatibility)
  */
 async function confirmDeleteUser(userId) {
     const user = allUsers.find(u => u._id === userId);
     if (!user) return;
     
-    if (!confirm(`هل أنت متأكد من حذف المستخدم "${user.name}"؟`)) return;
+    if (!confirm(`Are you sure you want to delete user "${user.name}"?`)) return;
     
     try {
         const token = localStorage.getItem('adminToken');
@@ -349,18 +350,18 @@ async function confirmDeleteUser(userId) {
             loadUsers();
         } else {
             const result = await response.json();
-            alert(result.message || 'حدث خطأ أثناء الحذف');
+            alert(result.message || 'Error deleting user');
         }
     } catch (error) {
-        alert('خطأ في الاتصال بالسيرفر');
+        alert('Server connection error');
     }
 }
 
 /**
- * تسجيل الخروج
+ * Logout and redirect to login
  */
 async function logout() {
-    if (!confirm('هل تريد تسجيل الخروج؟')) return;
+    if (!confirm('Do you want to logout?')) return;
     
     const token = localStorage.getItem('adminToken');
     if (token) {
