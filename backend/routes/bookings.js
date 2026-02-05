@@ -435,96 +435,151 @@ router.post('/restore/:id', auth, requireAdmin, async (req, res) => {
     
     console.log('🔄 Restore request - id:', idParam);
     
-    // Find the archived booking (support both ObjectId and numeric id)
-    let archivedBooking;
+    // Determine if this is from Booking collection or BookingArchive collection
+    // Check if idParam is a valid MongoDB ObjectId (24 chars)
+    const isMongoId = idParam.length === 24 && /^[a-f0-9]+$/i.test(idParam);
     
-    // First try: MongoDB ObjectId
-    if (idParam.length === 24) {
+    let archivedBooking;
+    let sourceCollection = '';
+    
+    if (isMongoId) {
+      // Try BookingArchive first (most common for archived items)
       const objectId = toObjectId(idParam);
       if (objectId) {
-        console.log('🔍 Searching by ObjectId:', idParam);
+        console.log('🔍 Searching in BookingArchive by ObjectId:', idParam);
         archivedBooking = await BookingArchive.findById(objectId);
         if (archivedBooking) {
-          console.log('✅ Found by ObjectId:', archivedBooking._id);
+          console.log('✅ Found in BookingArchive:', archivedBooking._id);
+          sourceCollection = 'archive';
         }
       }
-    }
-    
-    // Second try: numeric id
-    if (!archivedBooking) {
+      
+      // If not found, try Booking collection
+      if (!archivedBooking) {
+        console.log('🔍 Searching in Booking by ObjectId:', idParam);
+        archivedBooking = await Booking.findById(objectId);
+        if (archivedBooking) {
+          console.log('✅ Found in Booking:', archivedBooking._id);
+          sourceCollection = 'booking';
+        }
+      }
+    } else {
+      // Try numeric id in Booking collection
       const numericId = parseInt(idParam);
       if (!isNaN(numericId)) {
-        console.log('🔍 Searching by numeric id:', numericId);
-        archivedBooking = await BookingArchive.findOne({ id: numericId });
+        console.log('🔍 Searching in Booking by numeric id:', numericId);
+        archivedBooking = await Booking.findOne({ id: numericId });
         if (archivedBooking) {
-          console.log('✅ Found by numeric id:', archivedBooking.id);
+          console.log('✅ Found in Booking by numeric id:', archivedBooking.id);
+          sourceCollection = 'booking';
+        }
+      }
+      
+      // Try referenceNumber
+      if (!archivedBooking && /^CRT-[A-Z0-9]{4}$/i.test(idParam)) {
+        const refUpper = idParam.toUpperCase();
+        console.log('🔍 Searching by referenceNumber:', refUpper);
+        
+        // Search in both collections
+        archivedBooking = await BookingArchive.findOne({ referenceNumber: refUpper });
+        if (archivedBooking) {
+          console.log('✅ Found in BookingArchive by referenceNumber:', archivedBooking.referenceNumber);
+          sourceCollection = 'archive';
+        } else {
+          archivedBooking = await Booking.findOne({ referenceNumber: refUpper });
+          if (archivedBooking) {
+            console.log('✅ Found in Booking by referenceNumber:', archivedBooking.referenceNumber);
+            sourceCollection = 'booking';
+          }
         }
       }
     }
     
-    // Third try: referenceNumber
-    if (!archivedBooking && /^CRT-[A-Z0-9]{4}$/i.test(idParam)) {
-      console.log('🔍 Searching by referenceNumber:', idParam.toUpperCase());
-      archivedBooking = await BookingArchive.findOne({ referenceNumber: idParam.toUpperCase() });
-      if (archivedBooking) {
-        console.log('✅ Found by referenceNumber:', archivedBooking.referenceNumber);
-      }
-    }
-    
     if (!archivedBooking) {
-      console.log('❌ Archived booking not found for id:', idParam);
+      console.log('❌ Booking not found for id:', idParam);
       return res.status(404).json({ 
         success: false, 
-        message: 'Archived booking not found' 
+        message: 'Booking not found in archives' 
       });
     }
     
-    // Create a new active booking from the archived data
-    // Map fields from BookingArchive to Booking model
-    const restoredBooking = new Booking({
-      id: generateBookingId(), // Generate unique numeric ID
+    console.log('📦 Source collection:', sourceCollection);
+    console.log('📋 Booking data:', {
       referenceNumber: archivedBooking.referenceNumber,
-      name: archivedBooking.name || (archivedBooking.firstName && archivedBooking.lastName ? archivedBooking.firstName + ' ' + archivedBooking.lastName : archivedBooking.firstName || archivedBooking.lastName || 'Unknown'),
-      phone: archivedBooking.phone,
-      email: archivedBooking.email || '',
-      date: archivedBooking.date,
-      time: archivedBooking.time,
-      guests: archivedBooking.guests || archivedBooking.numberOfSeats || 1,
-      numberOfSeats: archivedBooking.numberOfSeats || archivedBooking.guests || 1,
-      status: 'Confirmed', // Restore as Confirmed by default
-      notes: archivedBooking.notes || '',
-      specialRequests: archivedBooking.specialRequests || '',
-      createdAt: new Date(), // New creation date
-      restoredFromArchive: true,
-      originalArchiveId: archivedBooking._id,
-      restoredBy: adminId,
-      restoredAt: new Date()
+      name: archivedBooking.name,
+      status: archivedBooking.status
     });
     
-    await restoredBooking.save();
-    console.log('✅ New booking created:', restoredBooking.id);
+    // Check which collection the booking came from
+    const fromArchive = sourceCollection === 'archive';
     
-    // Remove from archive
-    let deleteResult;
-    if (archivedBooking._id && toObjectId(archivedBooking._id.toString())) {
-      deleteResult = await BookingArchive.deleteOne({ _id: toObjectId(archivedBooking._id.toString()) });
+    if (fromArchive) {
+      // Booking came from BookingArchive collection - restore it
+      console.log('📦 Restoring from BookingArchive collection');
+      
+      // Create a new active booking from the archived data
+      const restoredBooking = new Booking({
+        id: generateBookingId(), // Generate unique numeric ID
+        referenceNumber: archivedBooking.referenceNumber,
+        name: archivedBooking.name || (archivedBooking.firstName && archivedBooking.lastName ? archivedBooking.firstName + ' ' + archivedBooking.lastName : archivedBooking.firstName || archivedBooking.lastName || 'Unknown'),
+        phone: archivedBooking.phone,
+        email: archivedBooking.email || '',
+        date: archivedBooking.date,
+        time: archivedBooking.time,
+        guests: archivedBooking.guests || archivedBooking.numberOfSeats || 1,
+        numberOfSeats: archivedBooking.numberOfSeats || archivedBooking.guests || 1,
+        status: 'Confirmed', // Restore as Confirmed by default
+        notes: archivedBooking.notes || '',
+        specialRequests: archivedBooking.specialRequests || '',
+        createdAt: new Date(), // New creation date
+        restoredFromArchive: true,
+        originalArchiveId: archivedBooking._id,
+        restoredBy: adminId,
+        restoredAt: new Date()
+      });
+      
+      await restoredBooking.save();
+      console.log('✅ New booking created:', restoredBooking.id);
+      
+      // Remove from BookingArchive
+      const deleteResult = await BookingArchive.deleteOne({ _id: toObjectId(archivedBooking._id.toString()) });
+      console.log('🗑️ Archive entry deleted:', deleteResult);
+      
+      console.log('✅ Booking restored successfully:', {
+        originalId: archivedBooking._id,
+        restoredId: restoredBooking._id,
+        referenceNumber: restoredBooking.referenceNumber,
+        restoredBy: adminId
+      });
+      
+      res.json({
+        success: true,
+        message: 'Booking restored successfully from archive',
+        data: restoredBooking
+      });
     } else {
-      deleteResult = await BookingArchive.deleteOne({ id: archivedBooking.id });
+      // Booking came from Booking collection - just update its status
+      console.log('📦 Updating existing booking in Booking collection');
+      
+      // Update the booking to make it active again
+      archivedBooking.status = 'Confirmed';
+      archivedBooking.archived = false;
+      archivedBooking.archivedAt = null;
+      archivedBooking.archiveReason = null;
+      archivedBooking.restoredFromArchive = true;
+      archivedBooking.restoredBy = adminId;
+      archivedBooking.restoredAt = new Date();
+      
+      await archivedBooking.save();
+      
+      console.log('✅ Booking updated successfully:', archivedBooking.id);
+      
+      res.json({
+        success: true,
+        message: 'Booking restored successfully',
+        data: archivedBooking
+      });
     }
-    console.log('🗑️ Archive entry deleted:', deleteResult);
-    
-    console.log('✅ Booking restored successfully:', {
-      originalId: archivedBooking._id,
-      restoredId: restoredBooking._id,
-      referenceNumber: restoredBooking.referenceNumber,
-      restoredBy: adminId
-    });
-    
-    res.json({
-      success: true,
-      message: 'Booking restored successfully',
-      data: restoredBooking
-    });
   } catch (error) {
     console.error('Restore booking error:', error);
     res.status(500).json({ 

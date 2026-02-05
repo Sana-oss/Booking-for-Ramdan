@@ -70,6 +70,7 @@ setTimeout(function() {
 const { auth, requireAdmin } = require('./middleware/auth');
 const Admin = require('./models/Admin');
 const Booking = require('./models/Booking');
+const BookingArchive = require('./models/BookingArchive');
 
 // Inject Booking model into security module
 security.setBookingModel(Booking);
@@ -233,16 +234,66 @@ app.get('/api/admin/capacity', auth, async (req, res) => {
 });
 
 // --- Get Archived/Cancelled Bookings (for archives page) ---
+// Also fetches from BookingArchive collection for restored items
 app.get('/api/admin/archived-bookings', auth, async (req, res) => {
     try {
-        const archived = await Booking.find({
+        // Fetch from Booking collection (cancelled/expired from main collection)
+        const fromBookingRaw = await Booking.find({
             $or: [
                 { archived: true },
-                { status: { $in: ['Cancelled', 'Expired', 'No-Show'] } }
+                { status: { $in: ['Cancelled', 'Expired', 'No-Show', 'Arrived'] } }
             ]
-        }).sort({ updatedAt: -1 });
+        }).sort({ updatedAt: -1 }).lean();
         
-        res.json({ success: true, data: archived });
+        const fromBooking = fromBookingRaw.map(b => ({
+            _id: b._id,
+            id: b.id,
+            referenceNumber: b.referenceNumber,
+            name: b.name,
+            phone: b.phone,
+            date: b.date,
+            guests: b.guests,
+            status: b.status,
+            archived: b.archived,
+            archiveReason: b.archiveReason,
+            createdAt: b.createdAt,
+            updatedAt: b.updatedAt,
+            _source: 'booking'
+        }));
+        
+        // Fetch from BookingArchive collection (explicitly archived items)
+        const fromArchiveRaw = await BookingArchive.find({}).sort({ archivedAt: -1 }).lean();
+        
+        const fromArchive = fromArchiveRaw.map(b => ({
+            _id: b._id,
+            id: b.id,
+            referenceNumber: b.referenceNumber,
+            name: b.name,
+            phone: b.phone,
+            date: b.date,
+            guests: b.guests,
+            status: b.status,
+            archiveReason: b.archiveReason,
+            archivedAt: b.archivedAt,
+            createdAt: b.createdAt,
+            _source: 'archive'
+        }));
+        
+        // Combine both sources
+        const combined = [...fromBooking, ...fromArchive];
+        
+        // Remove duplicates based on referenceNumber or id
+        const seen = new Set();
+        const unique = combined.filter(item => {
+            const key = item.referenceNumber || item.id || String(item._id);
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+        
+        console.log(`📦 Loaded ${fromBooking.length} from Booking, ${fromArchive.length} from Archive, ${unique.length} unique`);
+        
+        res.json({ success: true, data: unique });
     } catch (error) {
         console.error('❌ Archived bookings fetch error:', error);
         res.status(500).json({ 

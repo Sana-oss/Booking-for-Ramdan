@@ -1587,8 +1587,13 @@
             
             if (!confirm(confirmMsg)) return;
             
+            console.log('🔧 Restore Debug:');
+            console.log('  - ID:', id);
+            console.log('  - CONSTANTS.API.ARCHIVES.RESTORE:', CONSTANTS.API.ARCHIVES.RESTORE(id));
+            
             try {
                 const token = localStorage.getItem('adminToken');
+                console.log('  - Token exists:', !!token);
                 const response = await fetch(CONSTANTS.API.ARCHIVES.RESTORE(id), {
                     method: 'POST',
                     headers: {
