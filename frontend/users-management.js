@@ -1,9 +1,10 @@
 /**
  * CORINTHIA HOTEL - USERS MANAGEMENT SYSTEM
- * نظام إدارة المستخدمين (Admin Only)
+ * نظام إدارة المستخدمين (Super Admin Only for Delete)
  */
 
 let allUsers = [];
+let currentAdmin = null;
 let userToDelete = null;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -31,7 +32,8 @@ function t(key) {
  * Get translated role
  */
 function tRole(role) {
-    return t(role === 'admin' ? 'role_admin' : 'role_staff');
+    const roleKey = role === 'superadmin' ? 'role_superadmin' : (role === 'admin' ? 'role_admin' : 'role_staff');
+    return t(roleKey);
 }
 
 /**
@@ -71,8 +73,11 @@ async function checkAdminAuth() {
         }
         
         const result = await response.json();
-        if (result.admin.role !== 'admin' && result.admin.role !== 'superadmin') {
-            alert('غير مصرح لك بالوصول إلى هذه الصفحة');
+        currentAdmin = result.admin;
+        
+        // Only superadmin can access this page
+        if (result.admin.role !== 'superadmin') {
+            alert('غير مصرح لك بالوصول إلى هذه الصفحة - يتطلب صلاحيات Super Admin');
             window.location.href = 'admin-dashboard.html';
         }
     } catch (error) {
@@ -118,43 +123,59 @@ function renderUsersTable() {
         return;
     }
     
-    tbody.innerHTML = allUsers.map(user => `
-        <tr>
-            <td><strong>${user.username}</strong></td>
-            <td>${user.name}</td>
-            <td>
-                <span style="padding: 5px 12px; border-radius: 15px; font-size: 0.85rem; 
-                    background: ${user.role === 'admin' ? 'rgba(197, 160, 89, 0.2)' : 'rgba(52, 152, 219, 0.2)'}; 
-                    color: ${user.role === 'admin' ? 'var(--gold)' : '#3498db'};">
-                    ${tRole(user.role)}
-                </span>
-            </td>
-            <td>
-                <label class="toggle-switch">
-                    <input type="checkbox" ${user.isActive ? 'checked' : ''} 
-                        onchange="toggleUserStatus('${user._id}', this.checked)" 
-                        ${user.role === 'admin' && allUsers.filter(u => u.role === 'admin').length === 1 ? 'disabled' : ''}>
-                    <span class="toggle-slider"></span>
-                </label>
-            </td>
-            <td>${formatDate(user.createdAt)}</td>
-            <td>
-                <div class="action-btn-group">
-                    <button onclick="editUser('${user._id}')" class="edit-btn" title="${t('btn_edit')}">
-                        <i class="fas fa-pencil-alt"></i>
-                    </button>
-                    <button onclick="resetUserPassword('${user._id}')" class="reset-btn" title="${t('btn_reset_password')}">
-                        <i class="fas fa-key"></i>
-                    </button>
-                    <button onclick="showDeleteConfirmModal('${user._id}')" class="delete-btn" 
-                        ${user.role === 'admin' && allUsers.filter(u => u.role === 'admin').length === 1 ? 'disabled' : ''}
-                        title="${t('delete_last_admin')}">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-            </td>
-        </tr>
-    `).join('');
+    const isSuperAdmin = currentAdmin && currentAdmin.role === 'superadmin';
+    
+    tbody.innerHTML = allUsers.map(user => {
+        const isSelf = user._id === currentAdmin._id;
+        const isSuperAdminUser = user.role === 'superadmin';
+        const isLastSuperAdmin = isSuperAdminUser && allUsers.filter(u => u.role === 'superadmin').length <= 1;
+        
+        // Delete button only visible to superadmin and not on self or protected users
+        const showDeleteBtn = isSuperAdmin && !isSelf && !isLastSuperAdmin;
+        
+        // Toggle disabled for last admin
+        const isLastAdmin = user.role === 'admin' && allUsers.filter(u => u.role === 'admin').length <= 1;
+        const toggleDisabled = user.role === 'superadmin' || isLastAdmin;
+        
+        return `
+            <tr>
+                <td><strong>${user.username}</strong></td>
+                <td>${user.name}</td>
+                <td>
+                    <span style="padding: 5px 12px; border-radius: 15px; font-size: 0.85rem; 
+                        background: ${user.role === 'superadmin' ? 'rgba(231, 76, 60, 0.2)' : (user.role === 'admin' ? 'rgba(197, 160, 89, 0.2)' : 'rgba(52, 152, 219, 0.2)')};
+                        color: ${user.role === 'superadmin' ? '#e74c3c' : (user.role === 'admin' ? 'var(--gold)' : '#3498db')};">
+                        ${tRole(user.role)}
+                    </span>
+                </td>
+                <td>
+                    <label class="toggle-switch">
+                        <input type="checkbox" ${user.isActive ? 'checked' : ''} 
+                            onchange="toggleUserStatus('${user._id}', this.checked)" 
+                            ${toggleDisabled ? 'disabled' : ''}>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </td>
+                <td>${formatDate(user.createdAt)}</td>
+                <td>
+                    <div class="action-btn-group">
+                        <button onclick="editUser('${user._id}')" class="edit-btn" title="${t('btn_edit')}">
+                            <i class="fas fa-pencil-alt"></i>
+                        </button>
+                        <button onclick="resetUserPassword('${user._id}')" class="reset-btn" title="${t('btn_reset_password')}">
+                            <i class="fas fa-key"></i>
+                        </button>
+                        ${showDeleteBtn ? `
+                        <button onclick="showDeleteConfirmModal('${user._id}')" class="delete-btn" 
+                            title="${t('btn_delete')}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                        ` : ''}
+                    </div>
+                </td>
+            </tr>
+        `;
+    }).join('');
 }
 
 /**
@@ -222,7 +243,7 @@ function hideDeleteConfirmModal() {
 }
 
 /**
- * Confirm delete user action
+ * تأكيد حذف المستخدم
  */
 async function confirmDeleteUserAction() {
     if (!userToDelete) return;
@@ -236,9 +257,13 @@ async function confirmDeleteUserAction() {
         
         const result = await response.json();
         if (result.success) {
+            // Remove from local list
             allUsers = allUsers.filter(u => u._id !== userToDelete);
             renderUsersTable();
             hideDeleteConfirmModal();
+            
+            // Show success message
+            alert(t('delete_success') || 'تم حذف المستخدم بنجاح');
         } else {
             alert(result.message || t('error_loading'));
         }

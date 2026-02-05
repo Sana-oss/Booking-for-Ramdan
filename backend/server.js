@@ -67,7 +67,7 @@ setTimeout(function() {
 }, 500);
 
 // Middleware for auth
-const { auth, requireAdmin } = require('./middleware/auth');
+const { auth, requireAdmin, requireSuperAdmin } = require('./middleware/auth');
 const Admin = require('./models/Admin');
 const Booking = require('./models/Booking');
 const BookingArchive = require('./models/BookingArchive');
@@ -405,22 +405,41 @@ app.post('/api/admin/users', auth, requireAdmin, async (req, res) => {
     }
 });
 
-app.delete('/api/admin/users/:id', auth, requireAdmin, async (req, res) => {
+app.delete('/api/admin/users/:id', auth, requireSuperAdmin, async (req, res) => {
     try {
         const userId = req.params.id;
+        const requestingAdmin = req.admin;
+        
+        // Prevent self-deletion
+        if (userId === requestingAdmin._id.toString()) {
+            return res.status(400).json({ success: false, message: 'لا يمكنك حذف حسابك بنفسك' });
+        }
         
         const userToDelete = await Admin.findById(userId);
         if (!userToDelete) {
             return res.status(404).json({ success: false, message: 'User not found' });
         }
         
-        const adminCount = await Admin.countDocuments({ role: 'admin' });
-        if (userToDelete.role === 'admin' && adminCount <= 1) {
-            return res.status(400).json({ success: false, message: 'Cannot delete last admin' });
+        // Check if trying to delete a superadmin
+        if (userToDelete.role === 'superadmin') {
+            // Count remaining superadmins
+            const superAdminCount = await Admin.countDocuments({ role: 'superadmin' });
+            if (superAdminCount <= 1) {
+                return res.status(400).json({ success: false, message: 'لا يمكن حذف آخر Super Admin في النظام' });
+            }
+        }
+        
+        // Check if trying to delete an admin (non-superadmin)
+        if (userToDelete.role === 'admin') {
+            const adminCount = await Admin.countDocuments({ role: 'admin' });
+            if (adminCount <= 1) {
+                return res.status(400).json({ success: false, message: 'لا يمكن حذف آخر Admin في النظام' });
+            }
         }
         
         await Admin.findByIdAndDelete(userId);
         
+        console.log('🗑️ User deleted:', userToDelete.username, 'by', requestingAdmin.username);
         res.json({ success: true, message: 'User deleted successfully' });
     } catch (error) {
         console.error('Delete user error:', error);
