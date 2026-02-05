@@ -29,44 +29,9 @@ const authRoutes = require('./routes/auth');
 app.use('/api/auth', authRoutes);
 
 // Booking routes
-try {
-    const bookingRoutes = require('./routes/bookings');
-    console.log('✅ Booking routes loaded, stack length:', bookingRoutes.stack.length);
-    app.use('/api/bookings', bookingRoutes);
-} catch(e) {
-    console.error('❌ ERROR loading booking routes:', e.message);
-    console.error(e.stack);
-}
+const bookingRoutes = require('./routes/bookings');
+app.use('/api/bookings', bookingRoutes);
 
-// DEBUG: Show all registered routes
-setTimeout(function() {
-    console.log('\n=== REGISTERED ROUTES ===');
-    
-    // Check main router for routes
-    app._router.stack.forEach(function(r) {
-        if (r.route && r.route.path) {
-            var methods = Object.keys(r.route.methods).map(function(m) { return m.toUpperCase(); }).join(',');
-            console.log('  ' + methods.padEnd(8) + r.route.path);
-        }
-    });
-    
-    // Check for mounted routers
-    app._router.stack.forEach(function(r) {
-        if (r.name === 'router' && r.handle.stack) {
-            r.handle.stack.forEach(function(sr) {
-                if (sr.route && sr.route.path) {
-                    var methods = Object.keys(sr.route.methods).map(function(m) { return m.toUpperCase(); }).join(',');
-                    var basePath = r.regexp ? '/api/bookings' : '';
-                    console.log('  ' + methods.padEnd(8) + basePath + sr.route.path + ' (MOUNTED)');
-                }
-            });
-        }
-    });
-    
-    console.log('========================\n');
-}, 500);
-
-// Middleware for auth
 const { auth, requireAdmin, requireSuperAdmin } = require('./middleware/auth');
 const Admin = require('./models/Admin');
 const Booking = require('./models/Booking');

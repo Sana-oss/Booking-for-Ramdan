@@ -534,7 +534,7 @@ router.post('/restore/:id', auth, requireAdmin, async (req, res) => {
         createdAt: new Date(), // New creation date
         restoredFromArchive: true,
         originalArchiveId: archivedBooking._id,
-        restoredBy: adminId,
+        restoredBy: req.admin?.username || 'Unknown',
         restoredAt: new Date()
       });
       
@@ -566,8 +566,9 @@ router.post('/restore/:id', auth, requireAdmin, async (req, res) => {
       archivedBooking.archived = false;
       archivedBooking.archivedAt = null;
       archivedBooking.archiveReason = null;
+      archivedBooking.archivedBy = null;
       archivedBooking.restoredFromArchive = true;
-      archivedBooking.restoredBy = adminId;
+      archivedBooking.restoredBy = req.admin?.username || 'Unknown';
       archivedBooking.restoredAt = new Date();
       
       await archivedBooking.save();
@@ -678,11 +679,12 @@ router.put('/:id', auth, requireStaff, async (req, res) => {
       cancelledAt: status === 'Cancelled' ? new Date() : null
     };
     
-    // If cancelling, set archived flag
+    // If cancelling, set archived flag and tracking fields
     if (status === 'Cancelled') {
       updateObj.archived = true;
       updateObj.archivedAt = new Date();
       updateObj.archiveReason = 'Manual cancellation';
+      updateObj.archivedBy = req.admin?.username || 'Staff';
     }
     
     // Try to find by numeric id first

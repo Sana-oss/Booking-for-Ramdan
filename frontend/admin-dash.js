@@ -20,12 +20,6 @@ const AUTH_ME_URL = API_BASE ? `${API_BASE}/api/auth/me` : '/api/auth/me';
 const CAPACITY_URL = API_BASE ? `${API_BASE}/api/admin/capacity` : '/api/admin/capacity';
 const ANALYTICS_URL = API_BASE ? `${API_BASE}/api/admin/analytics` : '/api/admin/analytics';
 
-console.log('📊 Admin Dashboard API Base:', API_BASE || '(relative)');
-console.log('📊 Bookings URL:', BOOKINGS_URL);
-console.log('📊 Archive URL:', BOOKING_ARCHIVE_URL('test'));
-console.log('📊 Capacity URL:', CAPACITY_URL);
-console.log('📊 Analytics URL:', ANALYTICS_URL);
-
 let allBookings = []; // قاعدة البيانات المؤقتة في المتصفح
 let statusChart = null;
 let weeklyChart = null;

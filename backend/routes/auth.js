@@ -24,24 +24,16 @@ router.post('/login', [
     }
 
     const { username, password } = req.body;
-    console.log('🔐 Login attempt for username:', username);
 
     // Find admin
     const admin = await Admin.findOne({ username, isActive: true });
-    console.log('🔐 Admin found:', admin ? admin.username : 'NOT FOUND');
     
     if (!admin) {
-      // Try finding any admin with that username regardless of active status
-      const anyAdmin = await Admin.findOne({ username });
-      console.log('🔐 Admin found (any status):', anyAdmin ? anyAdmin.username : 'NOT FOUND');
-      console.log('🔐 Admin isActive:', anyAdmin ? anyAdmin.isActive : 'N/A');
       return res.status(401).json({ message: 'Invalid credentials' });
     }
 
     // Check password
     const isMatch = await bcrypt.compare(password, admin.password);
-    console.log('🔐 Password match:', isMatch);
-    
     if (!isMatch) {
       return res.status(401).json({ message: 'Invalid credentials' });
     }
@@ -49,7 +41,7 @@ router.post('/login', [
     // Generate JWT token
     const token = jwt.sign(
       { id: admin._id, username: admin.username, role: admin.role },
-      process.env.JWT_SECRET || 'your-secret-key',
+      process.env.JWT_SECRET,
       { expiresIn: '24h' }
     );
 
