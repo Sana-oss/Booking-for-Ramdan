@@ -202,33 +202,32 @@ app.get('/api/admin/capacity', auth, async (req, res) => {
 // Also fetches from BookingArchive collection for restored items
 app.get('/api/admin/archived-bookings', auth, async (req, res) => {
     try {
-        // Fetch from Booking collection (cancelled/expired from main collection)
-        const fromBookingRaw = await Booking.find({
-            $or: [
-                { archived: true },
-                { status: { $in: ['Cancelled', 'Expired', 'No-Show', 'Arrived'] } }
-            ]
-        }).sort({ updatedAt: -1 }).lean();
+        // Helper function to generate unique key for deduplication
+        const generateUniqueKey = (item) => {
+            // Priority 1: referenceNumber (most reliable)
+            if (item.referenceNumber && item.referenceNumber.trim() !== '') {
+                return item.referenceNumber.trim().toUpperCase();
+            }
+            // Priority 2: guestName + guestPhone + bookingDate (fallback)
+            const name = (item.name || item.guestName || '').trim().toLowerCase();
+            const phone = (item.phone || item.guestPhone || '').replace(/\D/g, '');
+            const date = item.date || item.bookingDate || '';
+            if (name && phone && date) {
+                return `${name}:${phone}:${date}`;
+            }
+            // Priority 3: _id as last resort
+            return String(item._id);
+        };
         
-        const fromBooking = fromBookingRaw.map(b => ({
-            _id: b._id,
-            id: b.id,
-            referenceNumber: b.referenceNumber,
-            name: b.name,
-            phone: b.phone,
-            date: b.date,
-            guests: b.guests,
-            status: b.status,
-            archived: b.archived,
-            archivedAt: b.archivedAt || b.updatedAt || b.cancelledAt || new Date(),
-            archiveReason: b.archiveReason,
-            archivedBy: b.archivedBy || 'System',
-            createdAt: b.createdAt,
-            updatedAt: b.updatedAt,
-            _source: 'booking'
-        }));
+        // Helper to determine if item is from archive (has proper archive metadata)
+        const isProperlyArchived = (item) => {
+            return item._source === 'archive' && 
+                   item.archivedAt && 
+                   item.archivedAt !== null &&
+                   item.archivedAt instanceof Date;
+        };
         
-        // Fetch from BookingArchive collection (explicitly archived items)
+        // Fetch from BookingArchive collection FIRST (higher priority for deduplication)
         const fromArchiveRaw = await BookingArchive.find({}).sort({ archivedAt: -1 }).lean();
         
         const fromArchive = fromArchiveRaw.map(b => ({
@@ -247,21 +246,94 @@ app.get('/api/admin/archived-bookings', auth, async (req, res) => {
             _source: 'archive'
         }));
         
-        // Combine both sources
-        const combined = [...fromBooking, ...fromArchive];
+        // Fetch from Booking collection (cancelled/expired from main collection)
+        const fromBookingRaw = await Booking.find({
+            $or: [
+                { archived: true },
+                { status: { $in: ['Cancelled', 'Expired', 'No-Show', 'Arrived', 'ملغي'] } }
+            ]
+        }).sort({ updatedAt: -1 }).lean();
         
-        // Remove duplicates based on referenceNumber or id
-        const seen = new Set();
-        const unique = combined.filter(item => {
-            const key = item.referenceNumber || item.id || String(item._id);
-            if (seen.has(key)) return false;
-            seen.add(key);
-            return true;
+        console.log('📊 Raw bookings found:', fromBookingRaw.length);
+        fromBookingRaw.forEach(b => {
+            console.log(`  - ${b.referenceNumber || 'N/A'}: status="${b.status}", archived=${b.archived}, archivedAt=${b.archivedAt}`);
         });
         
-        console.log(`📦 Loaded ${fromBooking.length} from Booking, ${fromArchive.length} from Archive, ${unique.length} unique`);
+        const fromBooking = fromBookingRaw.map(b => ({
+            _id: b._id,
+            id: b.id,
+            referenceNumber: b.referenceNumber,
+            name: b.name,
+            phone: b.phone,
+            date: b.date,
+            guests: b.guests,
+            status: b.status,
+            archived: b.archived,
+            archivedAt: b.archivedAt || b.cancelledAt || b.updatedAt || b.createdAt || null,
+            archiveReason: b.archiveReason,
+            archivedBy: b.archivedBy || 'Staff',
+            createdAt: b.createdAt,
+            updatedAt: b.updatedAt,
+            _source: 'booking'
+        }));
         
-        res.json({ success: true, data: unique });
+        // Build Map of Archive entries (higher priority)
+        const archiveMap = new Map();
+        fromArchive.forEach(item => {
+            const key = generateUniqueKey(item);
+            archiveMap.set(key, item);
+        });
+        
+        // STRICT DEDUPLICATION: Filter out Booking entries that exist in Archive
+        // but INCLUDE cancelled bookings even without full archive metadata
+        const cleanedBooking = fromBooking.filter(item => {
+            const key = generateUniqueKey(item);
+            
+            // Skip if this key exists in archive (archive has better data)
+            if (archiveMap.has(key)) {
+                return false; // Exclude - archive version will be used
+            }
+            
+            // Include cancelled bookings even if archivedBy is missing
+            const cancelledStatuses = ['Cancelled', 'No-Show'];
+            if (cancelledStatuses.includes(item.status)) {
+                // Always include cancelled bookings, use updatedAt/cancelledAt as archivedAt fallback
+                if (!item.archivedAt) {
+                    item.archivedAt = item.cancelledAt || item.updatedAt || new Date();
+                }
+                if (!item.archivedBy) {
+                    item.archivedBy = item.cancelledBy || item.updatedBy || 'Staff';
+                }
+                return true; // Include cancelled bookings
+            }
+            
+            // Skip if archivedAt is null/invalid (for non-cancelled statuses)
+            if (!item.archivedAt || item.archivedAt === null) {
+                return false; // Exclude incomplete records
+            }
+            
+            // Skip if status is Expired/Arrived without proper archive metadata
+            const invalidStatuses = ['Expired', 'Arrived'];
+            if (invalidStatuses.includes(item.status) && !item.archivedBy) {
+                return false; // Exclude incomplete records
+            }
+            
+            return true; // Keep this record
+        });
+        
+        // Combine: Archive entries + cleaned Booking entries
+        const allEntries = [...fromArchive, ...cleanedBooking];
+        
+        // Sort by archivedAt (newest first)
+        const sorted = allEntries.sort((a, b) => {
+            const dateA = a.archivedAt ? new Date(a.archivedAt).getTime() : 0;
+            const dateB = b.archivedAt ? new Date(b.archivedAt).getTime() : 0;
+            return dateB - dateA;
+        });
+        
+        console.log(`📦 Final result: ${sorted.length} entries (Archive: ${fromArchive.length}, Booking: ${cleanedBooking.length})`);
+        
+        res.json({ success: true, data: sorted });
     } catch (error) {
         console.error('❌ Archived bookings fetch error:', error);
         res.status(500).json({ 

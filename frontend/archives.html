@@ -1281,7 +1281,7 @@
             console.log('Stats Force-Updated:', stats);
         }
         
-        // Load archives from both BookingArchive collection and main Booking collection
+        // Load archives from the deduplicated admin endpoint
         async function loadArchives() {
             const search = document.getElementById('searchInput').value;
             const reason = document.getElementById('reasonFilter').value;
@@ -1291,19 +1291,9 @@
                 const headers = { 'Content-Type': 'application/json' };
                 if (token) headers['Authorization'] = 'Bearer ' + token;
                 
-                console.log('📥 Loading archives from:', API_BASE);
-                
-                // First, fetch ALL data without filters for accurate stats calculation
-                // Note: API_BASE already includes /api, so use relative path
-                const archiveUrlAll = API_BASE + '/bookings/archive?page=1&limit=1000';
-                console.log('📥 Fetching from archive collection:', archiveUrlAll);
-                const archiveResponseAll = await fetch(archiveUrlAll, { headers: headers });
-                const archiveResultAll = await archiveResponseAll.json();
-                console.log('📊 Archive collection result:', archiveResultAll);
-                
-                // Use constants.js endpoint for admin archived bookings (already includes /api)
+                // Use the deduplicated admin endpoint ONLY
                 const adminUrlAll = CONSTANTS.API.ARCHIVES?.LIST || (API_BASE + '/admin/archived-bookings');
-                console.log('📥 Fetching from admin endpoint:', adminUrlAll);
+                console.log('📥 Fetching deduplicated data from:', adminUrlAll);
                 const adminResponseAll = await fetch(adminUrlAll, { headers: headers });
                 
                 // Check for auth errors
@@ -1318,23 +1308,40 @@
                 const adminResultAll = await adminResponseAll.json();
                 console.log('📊 Admin archived bookings result:', adminResultAll);
                 
-                // Combine ALL data for stats calculation
-                let allDataForStats = [];
-                if (archiveResultAll.success) {
-                    allDataForStats = [...archiveResultAll.data];
-                }
-                if (adminResultAll.success) {
-                    const adminBookings = adminResultAll.data.map(b => ({ ...b, _source: 'main' }));
-                    allDataForStats = [...allDataForStats, ...adminBookings];
+                if (!adminResultAll.success) {
+                    throw new Error(adminResultAll.message || 'Failed to fetch archives');
                 }
                 
-                // Update stat cards with total counts (不受搜索影响)
+                // Use deduplicated data directly
+                let allDataForStats = adminResultAll.data || [];
+                
+                // Client-side deduplication as final safety net
+                // Create a Map keyed by unique identifier
+                const uniqueMap = new Map();
+                allDataForStats.forEach(item => {
+                    // Generate unique key: referenceNumber or name+phone+date
+                    let key = item.referenceNumber;
+                    if (!key || key === 'N/A') {
+                        key = `${(item.name || '').toLowerCase()}:${(item.phone || '').replace(/\D/g, '')}:${item.date || ''}`;
+                    }
+                    // Only add if key doesn't exist OR this item has valid archivedAt
+                    if (!uniqueMap.has(key)) {
+                        uniqueMap.set(key, item);
+                    } else if (item.archivedAt && uniqueMap.get(key).archivedAt === null) {
+                        // Replace if current item has valid archivedAt and existing doesn't
+                        uniqueMap.set(key, item);
+                    }
+                });
+                
+                allDataForStats = Array.from(uniqueMap.values());
+                
+                // Update stat cards
                 updateStatCardsFromData(allDataForStats);
                 
-                // Store full data for client-side filtering
+                // Store for client-side filtering
                 fullArchivesData = allDataForStats;
                 
-                // Apply filters and render table (client-side filtering)
+                // Apply filters and render
                 applyFilters();
                 
                 // FORCE UPDATE STATS at the absolute end (after all rendering)
@@ -1366,22 +1373,79 @@
                 return;
             }
             
+            // Client-side deduplication as final safety net
+            // Include ALL items, even without archivedAt
+            const uniqueMap = new Map();
+            data.forEach(item => {
+                // Generate unique key
+                let key = item.referenceNumber;
+                if (!key || key === 'N/A') {
+                    key = `${(item.name || '').toLowerCase()}:${(item.phone || '').replace(/\D/g, '')}:${item.date || ''}`;
+                }
+                
+                // Always add item (later items with same key replace earlier ones)
+                uniqueMap.set(key, item);
+            });
+            
+            const dedupedData = Array.from(uniqueMap.values());
+            
             let html = '';
             const restoreText = currentLanguage === 'ar' ? 'استعادة' : 'Restore';
             const restoreIcon = currentLanguage === 'ar' ? 'fa-undo' : 'fa-rotate-left';
             
-            for (let i = 0; i < data.length; i++) {
-                const archive = data[i];
+            for (let i = 0; i < dedupedData.length; i++) {
+                const archive = dedupedData[i];
+                
+                // Debug: Log booking data to console
+                console.log('Booking:', archive.referenceNumber, 'archivedAt:', archive.archivedAt, 'cancelledAt:', archive.cancelledAt, 'updatedAt:', archive.updatedAt);
+                
+                // Debug: Log full booking object to see all fields
+                console.log('Full Booking Object:', archive);
+                
+                // Ultimate fallback for ARCHIVED/CANCELLED date (NOT booking date)
+                const allDateFields = [
+                    archive.archivedAt,
+                    archive.cancelledAt,
+                    archive.updatedAt
+                ];
+                
+                // Find first valid date from any field
+                let rawDate = null;
+                for (const field of allDateFields) {
+                    if (field && typeof field === 'object') {
+                        if (field instanceof Date && !isNaN(field.getTime())) {
+                            rawDate = field;
+                            break;
+                        }
+                        // Handle MongoDB $date wrapper
+                        if (field.$date) {
+                            const d = new Date(field.$date);
+                            if (!isNaN(d.getTime())) {
+                                rawDate = d;
+                                break;
+                            }
+                        }
+                    } else if (field && (typeof field === 'string' || typeof field === 'number')) {
+                        const d = new Date(field);
+                        if (!isNaN(d.getTime())) {
+                            rawDate = d;
+                            break;
+                        }
+                    }
+                }
+                
+                const formattedDate = rawDate 
+                    ? rawDate.toLocaleString('en-GB', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit', hour12:true }) 
+                    : '<span class="date-na">N/A</span>';
+                
+                console.log('Found rawDate:', rawDate, 'formattedDate:', formattedDate);
                 
                 // Determine status from different possible fields
                 const status = archive.status || archive.archiveReason || 'Cancelled';
                 
-                // Determine archived date from different possible fields
-                const archivedDate = archive.archivedAt || archive.updatedAt || archive.cancelledAt || archive.createdAt;
-                
-                // Determine who archived it
-                const archivedBy = archive.archivedBy || archive.cancelledBy || archive.updatedBy || 'System';
-                
+                // Determine who archived it with proper fallback
+                const archivedBy = archive.archivedBy || archive.cancelledBy || archive.updatedBy || 'Staff';
+                    
                 html += '<tr>';
                 html += '<td class="ref-cell"><span class="ref-number">' + escapeHtml(archive.referenceNumber || 'N/A') + '</span></td>';
                 
@@ -1392,12 +1456,23 @@
                 html += '<td class="date-cell">' + formatDate(archive.date) + '</td>';
                 html += '<td class="guests-cell"><span class="guests-count">' + (archive.guests || archive.numberOfSeats || 1) + '</span></td>';
                 html += '<td class="status-cell">' + getStatusBadge(status) + '</td>';
-                html += '<td class="archived-date-cell">' + formatDateTime(archivedDate) + '</td>';
+                
+                // Show Cancellation Date for cancelled bookings, otherwise show Archived Date
+                let dateLabel = currentLanguage === 'ar' ? 'تاريخ الأرشفة' : 'Archived';
+                if (status === 'Cancelled' || status === 'No-Show') {
+                    dateLabel = currentLanguage === 'ar' ? 'تاريخ الإلغاء' : 'Cancelled';
+                } else if (status === 'Arrived') {
+                    dateLabel = currentLanguage === 'ar' ? 'تاريخ الوصول' : 'Arrived';
+                } else if (status === 'Expired') {
+                    dateLabel = currentLanguage === 'ar' ? 'تاريخ الانتهاء' : 'Expired';
+                }
+                html += '<td class="archived-date-cell" title="' + dateLabel + '">' + formattedDate + '</td>';
                 html += '<td class="performed-by-cell"><span class="admin-name">' + escapeHtml(archivedBy) + '</span></td>';
                 html += '<td class="actions-cell"><button class="btn-restore" onclick="restoreBooking(\'' + archive._id + '\')"><i class="fas ' + restoreIcon + '"></i> ' + restoreText + '</button></td>';
                 html += '</tr>';
             }
-            tbody.innerHTML = html;
+            
+            tbody.innerHTML = html || '<tr><td colspan="8" class="empty-state"><i class="fas fa-folder-open"></i><p>' + emptyMsg + '</p></td></tr>';
         }
         
         // Get status badge HTML (handles both status and archiveReason)

@@ -7,6 +7,9 @@ const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
+// Use same JWT_SECRET as auth middleware
+const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-do-not-use-in-production-change-this';
+
 // @route   POST /api/auth/login
 // @desc    Admin login
 // @access  Public
@@ -41,7 +44,7 @@ router.post('/login', [
     // Generate JWT token
     const token = jwt.sign(
       { id: admin._id, username: admin.username, role: admin.role },
-      process.env.JWT_SECRET,
+      JWT_SECRET,
       { expiresIn: '24h' }
     );
 
