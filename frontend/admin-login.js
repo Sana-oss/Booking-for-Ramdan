@@ -3,23 +3,11 @@
  * نظام تسجيل دخول آمن باستخدام JWT Token
  */
 
-// Get the correct API base URL
-const getApiUrl = () => {
-    // If running on localhost with different ports, use explicit localhost:5000
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:5000';
-    }
-    // For network access, use relative path
-    return '';
-};
+// Using relative API paths for Cloudflare Tunnel compatibility
+const LOGIN_URL = '/api/auth/login';
+const ME_URL = '/api/auth/me';
 
-// Override CONSTANTS.API.AUTH with explicit URL for development
-const API_BASE = getApiUrl();
-const LOGIN_URL = API_BASE ? `${API_BASE}/api/auth/login` : '/api/auth/login';
-const ME_URL = API_BASE ? `${API_BASE}/api/auth/me` : '/api/auth/me';
-
-console.log('🔐 API Base URL:', API_BASE || '(relative)');
-console.log('🔐 Login URL:', LOGIN_URL);
+console.log('🔐 Using relative API paths');
 
 document.addEventListener('DOMContentLoaded', () => {
     // التحقق من وجود Token صالح - إذا كان موجوداً، توجيه للوحة التحكم
@@ -93,7 +81,6 @@ async function handleLogin(e) {
     setLoadingState(submitBtn, true);
     
     try {
-        // Debug: Log the login URL being called
         console.log('🔐 Attempting login to:', LOGIN_URL);
         
         // إرسال طلب تسجيل الدخول للـ Backend

@@ -4,22 +4,11 @@
  * مع التحقق من الصحة على جانب العميل
  */
 
-// Get the correct API base URL
-const getApiUrl = () => {
-    // If running on localhost with different ports, use explicit localhost:5000
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:5000';
-    }
-    // For network access, use relative path
-    return '';
-};
+// Using relative API paths for Cloudflare Tunnel compatibility
+const BOOKINGS_URL = '/api/bookings';
+const AVAILABILITY_URL = (date) => `/api/bookings/availability/${date}`;
 
-// Build dynamic API URLs
-const API_BASE = getApiUrl();
-const BOOKINGS_URL = API_BASE ? `${API_BASE}/api/bookings` : '/api/bookings';
-const AVAILABILITY_URL = (date) => API_BASE ? `${API_BASE}/api/bookings/availability/${date}` : `/api/bookings/availability/${date}`;
-
-console.log('📋 Booking API URL:', BOOKINGS_URL);
+console.log('📋 Using relative API paths');
 
 document.addEventListener('DOMContentLoaded', () => {
     const bookingForm = document.getElementById('bookingForm');

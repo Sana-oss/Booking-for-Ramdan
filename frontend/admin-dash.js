@@ -3,22 +3,16 @@
  * المحرك التشغيلي: إدارة الحجوزات، البحث الذكي، تصدير التقارير، وتأمين الجلسة
  */
 
-// Get the correct API base URL
-const getApiUrl = () => {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:5000';
-    }
-    return '';
-};
+// Using relative API paths for Cloudflare Tunnel compatibility
+const BOOKINGS_URL = '/api/bookings';
+const BOOKING_STATUS_URL = (id) => `/api/bookings/${id}`;
+const BOOKING_ARCHIVE_URL = (id) => `/api/bookings/archive/${id}`;
+const BOOKING_DELETE_URL = (id) => `/api/bookings/${id}`;
+const AUTH_ME_URL = '/api/auth/me';
+const CAPACITY_URL = '/api/admin/capacity';
+const ANALYTICS_URL = '/api/admin/analytics';
 
-const API_BASE = getApiUrl();
-const BOOKINGS_URL = API_BASE ? `${API_BASE}/api/bookings` : '/api/bookings';
-const BOOKING_STATUS_URL = (id) => API_BASE ? `${API_BASE}/api/bookings/${id}` : `/api/bookings/${id}`;
-const BOOKING_ARCHIVE_URL = (id) => API_BASE ? `${API_BASE}/api/bookings/archive/${id}` : `/api/bookings/archive/${id}`;
-const BOOKING_DELETE_URL = (id) => API_BASE ? `${API_BASE}/api/bookings/${id}` : `/api/bookings/${id}`;
-const AUTH_ME_URL = API_BASE ? `${API_BASE}/api/auth/me` : '/api/auth/me';
-const CAPACITY_URL = API_BASE ? `${API_BASE}/api/admin/capacity` : '/api/admin/capacity';
-const ANALYTICS_URL = API_BASE ? `${API_BASE}/api/admin/analytics` : '/api/admin/analytics';
+console.log('📊 Using relative API paths');
 
 let allBookings = []; // قاعدة البيانات المؤقتة في المتصفح
 let statusChart = null;

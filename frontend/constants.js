@@ -6,72 +6,65 @@
  */
 
 // =====================================================
-// API CONFIGURATION - Easy Switch Between Local/Production
+// API CONFIGURATION - Using Relative Paths for Cloudflare Tunnel
 // =====================================================
 const API_CONFIG = {
-    local: 'http://localhost:5000',
-    production: 'https://your-production-domain.com',
-    // Get current API base URL based on environment
-    get current() {
-        const hostname = window.location.hostname;
-        return hostname === 'localhost' || hostname === '127.0.0.1' 
-            ? this.local 
-            : this.production;
-    },
-    // Get API version prefix
-    version: '/api',
-    // Full API base URL
-    get baseUrl() {
-        return `${this.current}${this.version}`;
+    // Using relative paths - works with any domain/tunnel
+    baseUrl: '/api',
+    
+    // Individual endpoints using relative paths
+    endpoints: {
+        bookings: '/api/bookings',
+        auth: {
+            login: '/api/auth/login',
+            me: '/api/auth/me',
+            logout: '/api/auth/logout'
+        },
+        admin: {
+            users: '/api/admin/users',
+            analytics: '/api/admin/analytics',
+            capacity: '/api/admin/capacity',
+            archivedBookings: '/api/admin/archived-bookings'
+        },
+        bookingsRestore: (id) => `/api/bookings/restore/${id}`
     }
 };
 
-// API_BASE_URL - detect the correct URL for API calls
-// For browser: use current hostname and port
-// For server-side rendering: use localhost:5000 as default
-const getApiBaseUrl = () => {
-    if (typeof window !== 'undefined') {
-        // Browser environment - use API_CONFIG for easy switching
-        return API_CONFIG.baseUrl;
-    }
-    // Server-side or Node.js environment
-    return 'http://localhost:5000/api';
-};
-
-const API_BASE_URL = getApiBaseUrl();
+// Backward compatibility aliases
+const API_BASE_URL = API_CONFIG.baseUrl;
 
 const CONSTANTS = {
     // 1. روابط السيرفر (API Endpoints)
     API: {
         BASE: API_BASE_URL,
-        BOOKINGS: API_BASE_URL ? `${API_BASE_URL}/bookings` : '/api/bookings',
+        BOOKINGS: API_CONFIG.endpoints.bookings,
         // دالة ديناميكية لجلب رابط عنصر محدد (تحديث أو حذف)
-        ITEM: (id) => API_BASE_URL ? `${API_BASE_URL}/bookings/${id}` : `/api/bookings/${id}`,
+        ITEM: (id) => `/api/bookings/${id}`,
         // تحديث حالة الحجز
-        STATUS: (id) => API_BASE_URL ? `${API_BASE_URL}/bookings/${id}` : `/api/bookings/${id}`,
+        STATUS: (id) => `/api/bookings/${id}`,
         // التحقق من التوافر
-        AVAILABILITY: (date) => API_BASE_URL ? `${API_BASE_URL}/bookings/availability/${date}` : `/api/bookings/availability/${date}`,
+        AVAILABILITY: (date) => `/api/bookings/availability/${date}`,
         // إنشاء حجز بواسطة الأدمن
-        ADMIN_CREATE: API_BASE_URL ? `${API_BASE_URL}/bookings/admin` : '/api/bookings/admin',
+        ADMIN_CREATE: '/api/bookings/admin',
         // مسارات المصادقة (Authentication)
         AUTH: {
-            LOGIN: API_BASE_URL ? `${API_BASE_URL}/auth/login` : '/api/auth/login',
-            ME: API_BASE_URL ? `${API_BASE_URL}/auth/me` : '/api/auth/me',
-            LOGOUT: API_BASE_URL ? `${API_BASE_URL}/auth/logout` : '/api/auth/logout'
+            LOGIN: API_CONFIG.endpoints.auth.login,
+            ME: API_CONFIG.endpoints.auth.me,
+            LOGOUT: API_CONFIG.endpoints.auth.logout
         },
         // مسارات إدارة المستخدمين (Users Management - Admin Only)
         USERS: {
-            LIST: API_BASE_URL ? `${API_BASE_URL}/admin/users` : '/api/admin/users',
-            CREATE: API_BASE_URL ? `${API_BASE_URL}/admin/users` : '/api/admin/users',
-            DELETE: (id) => API_BASE_URL ? `${API_BASE_URL}/admin/users/${id}` : `/api/admin/users/${id}`
+            LIST: API_CONFIG.endpoints.admin.users,
+            CREATE: API_CONFIG.endpoints.admin.users,
+            DELETE: (id) => `${API_CONFIG.endpoints.admin.users}/${id}`
         },
         // Analytics Dashboard (Admin Only)
-        ANALYTICS: API_BASE_URL ? `${API_BASE_URL}/admin/analytics` : '/api/admin/analytics',
+        ANALYTICS: API_CONFIG.endpoints.admin.analytics,
         
         // Archives Management (Admin Only)
         ARCHIVES: {
-            LIST: API_BASE_URL ? `${API_BASE_URL}/admin/archived-bookings` : '/api/admin/archived-bookings',
-            RESTORE: (id) => API_BASE_URL ? `${API_BASE_URL}/bookings/restore/${id}` : `/api/bookings/restore/${id}`
+            LIST: API_CONFIG.endpoints.admin.archivedBookings,
+            RESTORE: API_CONFIG.endpoints.bookingsRestore
         }
     },
 
@@ -126,4 +119,4 @@ const ENDPOINTS = {
 Object.freeze(CONSTANTS);
 Object.freeze(ENDPOINTS);
 
-console.log("✅ Constants.js loaded successfully");
+console.log("✅ Constants.js loaded successfully - using relative API paths");

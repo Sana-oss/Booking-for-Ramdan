@@ -3,16 +3,10 @@
  * Luxury Booking Status Tracking Page
  */
 
-// API Configuration
-const getApiUrl = () => {
-    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
-        return 'http://localhost:5000';
-    }
-    return '';
-};
+// Using relative API paths for Cloudflare Tunnel compatibility
+const BOOKING_ITEM_URL = (id) => `/api/bookings/${id}`;
 
-const API_BASE = getApiUrl();
-const BOOKING_ITEM_URL = (id) => API_BASE ? `${API_BASE}/api/bookings/${id}` : `/api/bookings/${id}`;
+console.log('🔍 Using relative API paths');
 
 let countdownInterval = null;
 

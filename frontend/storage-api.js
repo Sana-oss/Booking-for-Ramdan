@@ -5,7 +5,8 @@
 
 class StorageAPI {
     constructor() {
-        this.baseUrl = 'http://localhost:5000/api';
+        // Using relative API paths for Cloudflare Tunnel compatibility
+        this.baseUrl = '/api';
     }
 
     /**
