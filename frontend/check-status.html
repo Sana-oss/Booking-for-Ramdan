@@ -23,6 +23,13 @@
            Corporate Identity Implementation
            ========================================= */
         
+        :root {
+            /* Corinthia Tripoli Brand Colors */
+            --honey-gold: #D4AF37;
+            --anvil-dark: #2C2C2C;
+            --haze-light: #F5F5F5;
+        }
+        
         /* =========================================
            DOWNLOADABLE DIGITAL PASS TEMPLATE
            Hidden off-screen until capture
@@ -33,19 +40,38 @@
             top: 0;
             width: 400px;
             background: var(--white);
-            border: 3px solid var(--corinthia-honey);
+            border: 3px solid var(--honey-gold);
             border-radius: 2px;
             padding: 0;
             text-align: center;
             box-sizing: border-box;
             font-family: var(--font-body);
-            color: var(--corinthia-anvil);
+            color: var(--anvil-dark);
+        }
+        
+        /* Pass Logo - Top of Booking Pass */
+        #downloadablePass .pass-logo-container {
+            padding: 30px 25px 20px;
+            background: var(--anvil-dark);
+        }
+        
+        #downloadablePass #passLogo {
+            display: block;
+            width: 160px;
+            margin: 0 auto 20px auto;
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
+        }
+        
+        #downloadablePass .pass-logo-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--honey-gold), transparent);
+            margin: 0 40px;
         }
         
         #downloadablePass .pass-header {
-            background: var(--corinthia-anvil);
+            background: var(--anvil-dark);
             padding: 25px 20px 20px;
-            border-bottom: 2px solid var(--corinthia-honey);
+            border-bottom: 2px solid var(--honey-gold);
         }
         
         #downloadablePass .pass-logo {
@@ -54,13 +80,13 @@
         
         #downloadablePass .pass-logo img {
             height: 50px;
-            filter: drop-shadow(0 0 10px var(--honey-glow));
+            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
         }
         
         #downloadablePass .pass-title {
             font-family: var(--font-heading-en);
             font-size: 1.1rem;
-            color: var(--corinthia-honey);
+            color: var(--honey-gold);
             letter-spacing: 2px;
             margin: 0;
             text-transform: uppercase;
@@ -75,13 +101,13 @@
         
         #downloadablePass .pass-divider {
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--corinthia-honey), transparent);
+            background: linear-gradient(90deg, transparent, var(--honey-gold), transparent);
             margin: 15px 30px;
         }
         
         #downloadablePass .pass-ref {
-            background: rgba(254, 163, 0, 0.1);
-            border: 1px solid rgba(254, 163, 0, 0.5);
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.5);
             padding: 20px;
             margin: 15px 20px;
         }
@@ -89,7 +115,7 @@
         #downloadablePass .pass-ref-label {
             font-family: var(--font-body);
             font-size: 0.7rem;
-            color: var(--corinthia-honey);
+            color: var(--honey-gold);
             letter-spacing: 2px;
             text-transform: uppercase;
             margin-bottom: 8px;
@@ -99,9 +125,9 @@
             font-family: var(--font-numeric);
             font-size: 2rem;
             font-weight: 600;
-            color: var(--corinthia-anvil);
+            color: var(--anvil-dark);
             letter-spacing: 3px;
-            text-shadow: 0 0 20px rgba(254, 163, 0, 0.3);
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
         }
         
         #downloadablePass .pass-details {
@@ -130,7 +156,7 @@
         #downloadablePass .pass-detail-value {
             font-family: var(--font-numeric);
             font-size: 0.95rem;
-            color: var(--corinthia-anvil);
+            color: var(--anvil-dark);
             font-weight: 600;
         }
         
@@ -151,19 +177,16 @@
             border: 1px solid #2ecc71;
         }
         
+        #downloadablePass .pass-status.cancelled {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid #e74c3c;
+        }
+        
         #downloadablePass .pass-status-badge {
             font-family: var(--font-body);
             font-size: 0.9rem;
             font-weight: 700;
             letter-spacing: 1px;
-        }
-        
-        #downloadablePass .pass-status.pending .pass-status-badge {
-            color: #f39c12;
-        }
-        
-        #downloadablePass .pass-status.confirmed .pass-status-badge {
-            color: #2ecc71;
         }
         
         #downloadablePass .pass-qr {
@@ -173,15 +196,15 @@
         #downloadablePass .pass-qr-box {
             width: 80px;
             height: 80px;
-            background: rgba(254, 163, 0, 0.1);
-            border: 2px solid var(--corinthia-honey);
+            background: rgba(212, 175, 55, 0.1);
+            border: 2px solid var(--honey-gold);
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: var(--font-heading-en);
             font-size: 0.7rem;
-            color: var(--corinthia-honey);
+            color: var(--honey-gold);
             text-align: center;
             line-height: 1.2;
         }
@@ -189,7 +212,7 @@
         #downloadablePass .pass-footer {
             background: rgba(16, 24, 32, 0.05);
             padding: 18px 20px;
-            border-top: 1px solid rgba(254, 163, 0, 0.3);
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
         }
         
         #downloadablePass .pass-footer-text {
@@ -201,12 +224,13 @@
         }
         
         #downloadablePass .pass-footer-text strong {
-            color: var(--corinthia-honey);
+            color: var(--honey-gold);
         }
         
+        /* Main Styles */
         body {
             font-family: var(--font-body);
-            background: var(--corinthia-haze);
+            background: var(--haze-light);
             min-height: 100vh;
             margin: 0;
             display: flex;
@@ -216,77 +240,26 @@
             position: relative;
         }
         
-        /* Main Glassmorphism Card */
+        /* Anti-Flicker */
         .main-card {
             max-width: 500px;
             width: 100%;
             background: var(--white);
-            border: 3px solid var(--corinthia-clay);
-            border-radius: 2px;
-            padding: 50px 40px;
+            border: 1px solid var(--corinthia-clay);
+            border-radius: 4px;
+            padding: 40px 30px;
             text-align: center;
             position: relative;
-            box-shadow: 0 20px 60px var(--anvil-shadow);
+            box-shadow: 0 10px 50px rgba(44, 44, 44, 0.15);
+            /* Anti-flicker */
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
         }
         
-        .main-card::before,
-        .main-card::after {
-            content: '';
-            position: absolute;
-            width: 60px;
-            height: 60px;
-            border-color: var(--corinthia-honey);
-            border-style: solid;
-            opacity: 0.6;
-        }
-        
-        .main-card::before {
-            top: 15px;
-            left: 15px;
-            border-width: 2px 0 0 2px;
-        }
-        
-        .main-card::after {
-            bottom: 15px;
-            right: 15px;
-            border-width: 0 2px 2px 0;
-        }
-        
-        /* Notification Bell */
-        .notification-bell {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: var(--corinthia-honey);
-            border: 1px solid var(--corinthia-honey);
-            color: var(--corinthia-anvil);
-            width: 44px;
-            height: 44px;
-            border-radius: 2px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.1rem;
-            transition: var(--transition);
-            z-index: 10;
-        }
-        
-        .notification-bell:hover {
-            background: var(--corinthia-anvil);
-            color: var(--corinthia-honey);
-        }
-        
-        .notification-bell .badge {
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            background: #e74c3c;
-            color: var(--white);
-            font-size: 0.65rem;
-            padding: 3px 6px;
-            border-radius: 10px;
-            font-weight: 600;
+        .main-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         /* Language Toggle */
@@ -295,31 +268,42 @@
             top: 20px;
             left: 20px;
             background: var(--white);
-            border: 1px solid var(--corinthia-honey);
-            color: var(--corinthia-honey);
+            border: 1px solid var(--honey-gold);
+            color: var(--honey-gold);
             padding: 10px 16px;
-            border-radius: 2px;
+            border-radius: 4px;
             cursor: pointer;
             font-family: var(--font-body);
             font-weight: 600;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             z-index: 10;
         }
         
         .lang-toggle:hover {
-            background: var(--corinthia-honey);
-            color: var(--corinthia-anvil);
+            background: var(--honey-gold);
+            color: var(--anvil-dark);
         }
         
         /* Logo */
         .card-logo {
             margin-bottom: 25px;
-            padding-top: 20px;
         }
         
         .card-logo img {
-            height: 70px;
-            filter: drop-shadow(0 0 20px var(--honey-glow));
+            height: 60px;
+            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+        }
+        
+        /* Result Logo - Logo at top of result card */
+        .result-logo {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .result-logo img {
+            height: 50px;
+            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
         }
         
         /* Title */
@@ -328,17 +312,16 @@
         }
         
         .page-title h1 {
-            font-family: var(--font-heading-en);
-            font-size: 1.6rem;
-            font-weight: 400;
-            color: var(--corinthia-anvil);
+            font-family: var(--font-arabic);
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: var(--anvil-dark);
             margin-bottom: 8px;
-            letter-spacing: 1px;
         }
         
         .page-title p {
-            color: rgba(16, 24, 32, 0.7);
-            font-size: 0.95rem;
+            color: rgba(44, 44, 44, 0.7);
+            font-size: 0.9rem;
             font-family: var(--font-body);
         }
         
@@ -356,50 +339,49 @@
         .search-input {
             flex: 1;
             background: var(--white);
-            border: 2px solid var(--corinthia-anvil);
-            border-radius: 2px;
-            padding: 18px 20px;
-            color: var(--corinthia-anvil);
+            border: 2px solid var(--corinthia-clay);
+            border-radius: 4px;
+            padding: 16px 20px;
+            color: var(--anvil-dark);
             font-family: var(--font-numeric);
             font-size: 1rem;
             text-align: center;
             letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 500;
-            transition: var(--transition);
+            transition: all 0.3s ease;
         }
         
         .search-input:focus {
             outline: none;
-            border-color: var(--corinthia-honey);
-            box-shadow: 0 0 20px var(--honey-glow);
+            border-color: var(--honey-gold);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
         }
         
         .search-input::placeholder {
-            color: rgba(16, 24, 32, 0.4);
+            color: rgba(44, 44, 44, 0.4);
             letter-spacing: 1px;
         }
         
         .search-btn {
-            background: var(--corinthia-honey);
-            color: var(--corinthia-anvil);
-            border: 2px solid var(--corinthia-honey);
-            border-radius: 2px;
-            padding: 18px 25px;
+            background: var(--honey-gold);
+            color: var(--anvil-dark);
+            border: 2px solid var(--honey-gold);
+            border-radius: 4px;
+            padding: 16px 24px;
             cursor: pointer;
             font-family: var(--font-body);
             font-weight: 700;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
         .search-btn:hover {
-            background: var(--corinthia-anvil);
-            color: var(--corinthia-honey);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px var(--anvil-shadow);
+            background: var(--anvil-dark);
+            color: var(--honey-gold);
+            border-color: var(--anvil-dark);
         }
         
         /* Status Timeline */
@@ -419,7 +401,7 @@
             left: 25px;
             right: 25px;
             height: 2px;
-            background: rgba(16, 24, 32, 0.2);
+            background: rgba(44, 44, 44, 0.2);
         }
         
         .timeline-step {
@@ -433,26 +415,45 @@
         .step-icon {
             width: 40px;
             height: 40px;
-            border-radius: 2px;
+            border-radius: 4px;
             background: var(--white);
-            border: 2px solid rgba(16, 24, 32, 0.2);
+            border: 2px solid rgba(44, 44, 44, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1rem;
-            color: rgba(16, 24, 32, 0.5);
-            transition: var(--transition);
+            color: rgba(44, 44, 44, 0.5);
+            transition: all 0.3s ease;
             margin-bottom: 10px;
         }
         
         .step-icon.active {
-            background: var(--corinthia-honey);
-            border-color: var(--corinthia-honey);
-            color: var(--corinthia-anvil);
-            box-shadow: 0 0 20px var(--honey-glow);
+            background: var(--honey-gold);
+            border-color: var(--honey-gold);
+            color: var(--anvil-dark);
         }
         
-        /* Status Messages */
+        .step-icon.current {
+            background: rgba(212, 175, 55, 0.2);
+            border-color: var(--honey-gold);
+            color: var(--honey-gold);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(212, 175, 55, 0); }
+        }
+        
+        .step-label {
+            font-family: var(--font-arabic);
+            font-size: 0.75rem;
+            color: rgba(44, 44, 44, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Result Section */
         .result-section {
             display: none;
             margin-top: 30px;
@@ -465,142 +466,161 @@
         }
         
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
         .result-card {
-            background: rgba(16, 24, 32, 0.02);
-            border: 1px solid rgba(16, 24, 32, 0.1);
-            padding: 30px;
+            background: rgba(44, 44, 44, 0.02);
+            border: 1px solid var(--corinthia-clay);
+            padding: 25px;
             text-align: center;
         }
         
-        .result-title {
-            font-family: var(--font-heading-en);
-            font-size: 1.2rem;
-            color: var(--corinthia-anvil);
-            margin-bottom: 15px;
-            font-weight: 400;
-        }
-        
-        .result-value {
-            font-family: var(--font-numeric);
-            font-size: 2.5rem;
-            font-weight: 600;
-            color: var(--corinthia-honey);
-            margin-bottom: 10px;
-        }
-        
-        .result-status {
-            display: inline-block;
-            padding: 8px 20px;
-            border-radius: 2px;
-            font-family: var(--font-body);
-            font-weight: 600;
-            letter-spacing: 1px;
+        /* Guest Details */
+        .guest-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
             margin-bottom: 20px;
         }
         
-        .result-status.pending {
+        .guest-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(175, 169, 160, 0.3);
+        }
+        
+        .guest-row:last-child {
+            border-bottom: none;
+        }
+        
+        .guest-label {
+            font-family: var(--font-arabic);
+            font-size: 0.85rem;
+            color: var(--corinthia-clay);
+        }
+        
+        .guest-value {
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            color: var(--anvil-dark);
+            font-weight: 500;
+        }
+        
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+        }
+        
+        .status-badge i {
+            font-size: 1.1rem;
+        }
+        
+        .status-pending {
             background: rgba(243, 156, 18, 0.15);
-            color: #f39c12;
+            border: 1px solid #f39c12;
+            color: #d35400;
         }
         
-        .result-status.success {
+        .status-confirmed {
             background: rgba(39, 174, 96, 0.15);
-            color: #2ecc71;
+            border: 1px solid #2ecc71;
+            color: #27ae60;
         }
         
+        .status-cancelled {
+            background: rgba(231, 76, 60, 0.15);
+            border: 1px solid #e74c3c;
+            color: #c0392b;
+        }
+        
+        /* Status Message */
+        .status-message {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: rgba(44, 44, 44, 0.7);
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+        
+        /* Action Buttons */
         .result-actions {
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        .result-btn {
-            padding: 12px 24px;
-            border-radius: 2px;
-            font-family: var(--font-body);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            border: none;
-        }
-        
-        .result-btn.primary {
-            background: var(--corinthia-honey);
-            color: var(--corinthia-anvil);
-            border: 2px solid var(--corinthia-honey);
-        }
-        
-        .result-btn.primary:hover {
-            background: var(--corinthia-anvil);
-            color: var(--corinthia-honey);
-            border-color: var(--corinthia-anvil);
-        }
-        
-        .result-btn.secondary {
-            background: transparent;
-            color: var(--corinthia-anvil);
-            border: 2px solid var(--corinthia-anvil);
-        }
-        
-        .result-btn.secondary:hover {
-            background: var(--corinthia-anvil);
-            color: var(--white);
-        }
-        
-        /* Step Labels */
-        .step-label {
-            font-family: var(--font-body);
-            font-size: 0.75rem;
-            color: rgba(16, 24, 32, 0.6);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        /* QR Code Placeholder */
-        .qr-placeholder-small {
-            width: 80px;
-            height: 80px;
-            border: 2px solid var(--corinthia-honey);
-            padding: 8px;
-            background: var(--white);
-            margin: 0 auto 15px;
-            display: flex;
             flex-direction: column;
+            gap: 10px;
+            margin-top: 25px;
+        }
+        
+        .action-btn {
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 3px;
+            gap: 8px;
+            padding: 14px 24px;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
         
-        .qr-placeholder-small i {
-            font-size: 1.5rem;
-            color: var(--corinthia-anvil);
+        .action-btn.primary {
+            background: var(--honey-gold);
+            color: var(--anvil-dark);
+            border-color: var(--honey-gold);
         }
         
-        .qr-placeholder-small span {
-            font-size: 0.5rem;
-            color: var(--corinthia-anvil);
-            text-align: center;
-            line-height: 1.1;
+        .action-btn.primary:hover {
+            background: var(--anvil-dark);
+            color: var(--honey-gold);
+            border-color: var(--anvil-dark);
+        }
+        
+        .action-btn.secondary {
+            background: transparent;
+            color: var(--anvil-dark);
+            border-color: var(--corinthia-clay);
+        }
+        
+        .action-btn.secondary:hover {
+            border-color: var(--honey-gold);
+            color: var(--honey-gold);
+        }
+        
+        /* Error Message */
+        .error-message {
+            display: none;
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid #e74c3c;
+            border-radius: 4px;
+            padding: 15px;
+            margin-top: 20px;
+            color: #c0392b;
+            font-family: var(--font-body);
+        }
+        
+        .error-message.show {
+            display: block;
         }
         
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 500px) {
             .main-card {
-                padding: 40px 20px;
+                padding: 30px 20px;
             }
             
             .page-title h1 {
@@ -614,27 +634,18 @@
             .search-btn {
                 justify-content: center;
             }
-            
-            .result-value {
-                font-size: 2rem;
-            }
         }
     </style>
 </head>
 <body>
-
+    
     <!-- Language Toggle -->
     <button class="lang-toggle" onclick="toggleLanguage()">
         <span id="langText">العربية</span>
     </button>
-
-    <!-- Notification Bell -->
-    <button class="notification-bell" onclick="showHelpInfo()">
-        <i class="fas fa-question-circle"></i>
-    </button>
-
+    
     <!-- Main Card -->
-    <div class="main-card">
+    <div class="main-card" id="mainCard">
         <!-- Logo -->
         <div class="card-logo">
             <img src="new-logo.svg" alt="Corinthia Hotel Tripoli Logo">
@@ -642,92 +653,113 @@
         
         <!-- Title -->
         <div class="page-title">
-            <h1 data-i18n="check_status">تتبع حالة الحجز</h1>
-            <p data-i18n="enter_booking_id">أدخل رقم الحجز للتحقق من الحالة</p>
+            <h1>تتبع حالة الحجز</h1>
+            <p>أدخل الرقم المرجعي للتحقق من حالة الحجز</p>
         </div>
         
         <!-- Search Section -->
-        <div class="search-section">
+        <div class="search-section" id="searchSection">
             <div class="search-input-wrapper">
-                <input type="text" id="bookingID" class="search-input" placeholder="RMD12345" maxlength="10">
+                <input type="text" id="bookingID" class="search-input" placeholder="CRT-XXXX" maxlength="10">
                 <button class="search-btn" onclick="performTrack()">
                     <i class="fas fa-search"></i>
-                    <span data-i18n="track">تتبع</span>
+                    <span>تتبع</span>
                 </button>
             </div>
         </div>
         
-        <!-- Status Timeline -->
-        <div class="status-timeline">
-            <div class="timeline-step" id="step1">
-                <div class="step-icon"><i class="fas fa-file-alt"></i></div>
-                <span class="step-label" data-i18n="pending">قيد التقديم</span>
-            </div>
-            <div class="timeline-step" id="step2">
-                <div class="step-icon"><i class="fas fa-check"></i></div>
-                <span class="step-label" data-i18n="confirmed">تم التأكيد</span>
-            </div>
-            <div class="timeline-step" id="step3">
-                <div class="step-icon"><i class="fas fa-calendar-check"></i></div>
-                <span class="step-label" data-i18n="completed">منجز</span>
-            </div>
+        <!-- Error Message -->
+        <div class="error-message" id="errorMessage">
+            <p>تعذر العثور على بيانات الحجز، يرجى المحاولة لاحقاً</p>
         </div>
         
         <!-- Result Section -->
         <div id="resultSection" class="result-section">
-            <div class="result-card">
-                <h2 class="result-title" data-i18n="booking_details">تفاصيل الحجز</h2>
-                
-                <div class="result-value" id="bookingReference">RMD12345</div>
-                
-                <div class="result-status" id="bookingStatus">
-                    <span data-i18n="pending">قيد التقديم</span>
+            
+            <!-- Logo at Top of Result Card -->
+            <div class="result-logo">
+                <img src="new-logo.svg" alt="Corinthia Hotel Tripoli Logo">
+            </div>
+            
+            <!-- Guest Details -->
+            <div class="guest-details">
+                <div class="guest-row">
+                    <span class="guest-label">الاسم</span>
+                    <span class="guest-value" id="checkGuestName">----</span>
                 </div>
-                
-                <div class="result-actions">
-                    <button class="result-btn primary" onclick="saveBookingPass()">
-                        <i class="fas fa-download"></i>
-                        <span data-i18n="download_pass">تحميل بطاقة الحجز</span>
-                    </button>
-                    <button class="result-btn secondary" onclick="printBookingPass()">
-                        <i class="fas fa-print"></i>
-                        <span data-i18n="print_pass">طباعة</span>
-                    </button>
+                <div class="guest-row">
+                    <span class="guest-label">التاريخ</span>
+                    <span class="guest-value" id="checkDate">----</span>
                 </div>
+            </div>
+            
+            <!-- Status Badge -->
+            <div class="status-badge status-pending" id="checkStatusBadge">
+                <i class="fas fa-clock" id="statusIcon"></i>
+                <span id="statusText">بانتظار التأكيد</span>
+            </div>
+            
+            <!-- Status Message -->
+            <div class="status-message" id="statusMessage"></div>
+            
+            <!-- Status Timeline -->
+            <div class="status-timeline">
+                <div class="timeline-step" id="step1">
+                    <div class="step-icon"><i class="fas fa-file-alt"></i></div>
+                    <span class="step-label">قيد التقديم</span>
+                </div>
+                <div class="timeline-step" id="step2">
+                    <div class="step-icon"><i class="fas fa-check"></i></div>
+                    <span class="step-label">تم التأكيد</span>
+                </div>
+                <div class="timeline-step" id="step3">
+                    <div class="step-icon"><i class="fas fa-calendar-check"></i></div>
+                    <span class="step-label">منجز</span>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="result-actions" id="actionButtons">
+                <!-- Buttons will be dynamically shown based on status -->
+            </div>
+            
+            <!-- Reference Number -->
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(175, 169, 160, 0.3);">
+                <div style="font-family: var(--font-body); font-size: 0.7rem; color: var(--honey-gold); text-transform: uppercase; letter-spacing: 1px;">الرقم المرجعي</div>
+                <div style="font-family: var(--font-numeric); font-size: 1.5rem; font-weight: 600; color: var(--anvil-dark); margin-top: 5px;" id="checkBookingID">----</div>
             </div>
         </div>
     </div>
-
+    
     <!-- Downloadable Pass Template (Hidden) -->
     <div id="downloadablePass">
-        <div class="pass-header">
-            <div class="pass-logo">
-                <img src="new-logo.svg" alt="Corinthia Hotel Tripoli Logo">
-            </div>
-            <h2 class="pass-title">La Valette Restaurant</h2>
-            <p class="pass-subtitle">Ramadan 2026 - Booking Pass</p>
+        <!-- Pass Logo - Top of Booking Pass -->
+        <div class="pass-logo-container">
+            <img id="passLogo" src="new-logo.svg" alt="Corinthia Hotel Tripoli Logo">
         </div>
-        <div class="pass-divider"></div>
-        <div class="pass-ref">
+        <div class="pass-logo-divider"></div>
+        
+        <!-- Guest Details Section -->
+        <div style="padding: 25px 20px 20px;">
             <p class="pass-ref-label">Booking Reference</p>
-            <p class="pass-ref-number" id="passReference">RMD12345</p>
+            <p class="pass-ref-number" id="passReference">----</p>
         </div>
         <div class="pass-details">
             <div class="pass-detail-row">
                 <span class="pass-detail-label">Guest Name</span>
-                <span class="pass-detail-value" id="passGuestName">John Smith</span>
+                <span class="pass-detail-value" id="passGuestName">----</span>
             </div>
             <div class="pass-detail-row">
                 <span class="pass-detail-label">Date</span>
-                <span class="pass-detail-value" id="passDate">15 March 2026</span>
+                <span class="pass-detail-value" id="passDate">----</span>
             </div>
             <div class="pass-detail-row">
                 <span class="pass-detail-label">Guests</span>
                 <span class="pass-detail-value" id="passGuests">2</span>
             </div>
         </div>
-        <div class="pass-status confirmed" id="passStatusBox">
-            <span class="pass-status-badge" id="passStatusText">Confirmed</span>
+        <div class="pass-status pending" id="passStatusBox">
+            <span class="pass-status-badge" id="passStatusText">PENDING</span>
         </div>
         <div class="pass-qr">
             <div class="pass-qr-box">
@@ -736,142 +768,15 @@
         </div>
         <div class="pass-footer">
             <p class="pass-footer-text">
-                <strong>Corinthia Tripoli Hotel</strong><br>
-                La Valette Restaurant<br>
-                رمضانيات فاخرة في قلب طرابلس
+                Scan to follow our restaurants on <strong>Facebook</strong>
             </p>
         </div>
     </div>
-
-    <script>
-        let currentLang = 'ar';
-        
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            document.getElementById('langText').textContent = currentLang === 'ar' ? 'العربية' : 'English';
-            
-            // Update direction
-            document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-            
-            // Update page language
-            document.documentElement.lang = currentLang;
-            
-            // Toggle language text
-            const elements = document.querySelectorAll('[data-i18n]');
-            elements.forEach(el => {
-                const key = el.getAttribute('data-i18n');
-                if (translations[currentLang][key]) {
-                    el.textContent = translations[currentLang][key];
-                }
-            });
-        }
-        
-        const translations = {
-            ar: {
-                check_status: 'تتبع حالة الحجز',
-                enter_booking_id: 'أدخل رقم الحجز للتحقق من الحالة',
-                track: 'تتبع',
-                pending: 'قيد التقديم',
-                confirmed: 'تم التأكيد',
-                completed: 'منجز',
-                booking_details: 'تفاصيل الحجز',
-                download_pass: 'تحميل بطاقة الحجز',
-                print_pass: 'طباعة'
-            },
-            en: {
-                check_status: 'Check Booking Status',
-                enter_booking_id: 'Enter booking ID to check status',
-                track: 'Track',
-                pending: 'Pending',
-                confirmed: 'Confirmed',
-                completed: 'Completed',
-                booking_details: 'Booking Details',
-                download_pass: 'Download Pass',
-                print_pass: 'Print'
-            }
-        };
-        
-        function performTrack() {
-            const bookingID = document.getElementById('bookingID').value.trim();
-            if (!bookingID) {
-                alert('Please enter a booking ID');
-                return;
-            }
-            
-            // Simulate API call
-            setTimeout(() => {
-                const resultSection = document.getElementById('resultSection');
-                resultSection.classList.add('show');
-                
-                // Update status timeline
-                document.getElementById('step1').classList.add('active');
-                document.getElementById('step2').classList.add('active');
-                document.getElementById('step3').classList.add('active');
-                
-                // Update digital pass
-                document.getElementById('passReference').textContent = bookingID;
-                document.getElementById('passGuestName').textContent = 'John Smith';
-                document.getElementById('passDate').textContent = '15 March 2026';
-                document.getElementById('passGuests').textContent = '2';
-                
-                // Update result
-                document.getElementById('bookingReference').textContent = bookingID;
-                const statusElement = document.getElementById('bookingStatus');
-                statusElement.textContent = 'Confirmed';
-                statusElement.className = 'result-status success';
-                
-                // Update pass status
-                const passStatusBox = document.getElementById('passStatusBox');
-                const passStatusText = document.getElementById('passStatusText');
-                passStatusBox.className = 'pass-status confirmed';
-                passStatusText.textContent = 'Confirmed';
-            }, 1000);
-        }
-        
-        function saveBookingPass() {
-            const pass = document.getElementById('downloadablePass');
-            html2canvas(pass).then(canvas => {
-                const link = document.createElement('a');
-                link.href = canvas.toDataURL('image/png');
-                link.download = 'booking-pass.png';
-                link.click();
-            });
-        }
-        
-        function printBookingPass() {
-            const pass = document.getElementById('downloadablePass');
-            html2canvas(pass).then(canvas => {
-                const popup = window.open('', '_blank');
-                popup.document.write(`
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <title>Booking Pass</title>
-                        <style>
-                            body { margin: 0; padding: 40px; text-align: center; }
-                            img { max-width: 100%; height: auto; }
-                        </style>
-                    </head>
-                    <body>
-                        <img src="${canvas.toDataURL('image/png')}" alt="Booking Pass">
-                    </body>
-                    </html>
-                `);
-                popup.document.close();
-                popup.focus();
-                popup.print();
-            });
-        }
-        
-        function showHelpInfo() {
-            alert('For assistance, please contact +218 91 010 0708');
-        }
-        
-        document.getElementById('bookingID').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                performTrack();
-            }
-        });
-    </script>
+    
+    <!-- Scripts -->
+    <script src="i18n.js"></script>
+    <script src="storage.js"></script>
+    <script src="storage-api.js"></script>
+    <script src="check-status.js"></script>
 </body>
 </html>
