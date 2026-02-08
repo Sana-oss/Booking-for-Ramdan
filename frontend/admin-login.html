@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Royal Staff Portal | Corinthia Hotel</title>
     
-    <!-- Premium English Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <!-- Luxury Design System -->
     <link rel="stylesheet" href="luxury-design-system.css">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         /* Admin Login Specific Styles - English/LTR Only */
@@ -19,7 +18,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: var(--spacing-xl);
+            padding: 40px 20px;
             position: relative;
             background-image: url('lobby.jpg');
             background-size: cover;
@@ -36,9 +35,9 @@
             right: 0;
             bottom: 0;
             background: linear-gradient(135deg, 
-                rgba(10, 10, 15, 0.9) 0%, 
-                rgba(26, 26, 46, 0.85) 50%, 
-                rgba(10, 10, 15, 0.95) 100%);
+                rgba(0, 33, 71, 0.95) 0%, 
+                rgba(0, 33, 71, 0.9) 50%, 
+                rgba(0, 33, 71, 0.95) 100%);
             backdrop-filter: blur(3px);
         }
         
@@ -51,13 +50,13 @@
         
         .admin-logo-section {
             text-align: center;
-            margin-bottom: var(--spacing-xl);
+            margin-bottom: 40px;
         }
         
         .admin-logo-section img {
             height: 80px;
-            filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.3));
-            transition: transform var(--transition-premium);
+            filter: drop-shadow(0 0 20px var(--gold-glow));
+            transition: transform var(--transition);
         }
         
         .admin-logo-section img:hover {
@@ -65,34 +64,35 @@
         }
         
         .admin-login-title {
-            font-family: 'Playfair Display', serif;
+            font-family: var(--font-heading-en);
             font-size: 2.2rem;
-            margin-bottom: var(--spacing-xs);
+            color: var(--gold);
+            margin-bottom: 15px;
             text-shadow: 0 0 30px var(--gold-glow);
             text-align: left !important;
         }
         
         .admin-login-subtitle {
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-body);
             font-size: 1rem;
-            color: var(--text-muted);
-            margin-bottom: var(--spacing-xl);
+            color: rgba(249, 247, 242, 0.7);
+            margin-bottom: 40px;
             text-align: left !important;
         }
         
         .admin-form-group {
-            margin-bottom: var(--spacing-lg);
+            margin-bottom: 30px;
         }
         
         .admin-form-group label {
             display: block;
-            color: var(--cream-white);
+            color: var(--cream);
             font-weight: 600;
-            margin-bottom: var(--spacing-sm);
+            margin-bottom: 12px;
             font-size: 0.95rem;
             letter-spacing: 0.5px;
             text-align: left !important;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-body);
         }
         
         .admin-input-wrapper {
@@ -105,7 +105,7 @@
             right: auto;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--corinthia-gold);
+            color: var(--gold);
             font-size: 1.1rem;
             pointer-events: none;
         }
@@ -113,41 +113,41 @@
         .admin-input {
             width: 100%;
             padding: 18px 24px 18px 55px;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-body);
             font-size: 1rem;
-            color: var(--cream-white);
+            color: var(--cream);
             background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(197, 160, 89, 0.3);
-            border-radius: var(--radius-md);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            border-radius: 0;
             outline: none;
-            transition: var(--transition-premium);
+            transition: var(--transition);
             direction: ltr !important;
             text-align: left !important;
         }
         
         .admin-input:focus {
-            border-color: var(--corinthia-gold);
+            border-color: var(--gold);
             background: rgba(255, 255, 255, 0.08);
-            box-shadow: 0 0 30px rgba(197, 160, 89, 0.15);
+            box-shadow: 0 0 30px var(--gold-glow);
         }
         
         .admin-input::placeholder {
-            color: var(--text-muted);
-            font-family: 'Poppins', sans-serif;
+            color: rgba(249, 247, 242, 0.4);
+            font-family: var(--font-body);
         }
         
         .admin-error-message {
             background: rgba(231, 76, 60, 0.15);
-            border: 1px solid var(--danger-red);
-            color: var(--danger-red);
-            padding: var(--spacing-md);
-            border-radius: var(--radius-md);
-            margin: var(--spacing-lg) 0;
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 20px;
+            border-radius: 0;
+            margin: 30px 0;
             text-align: center;
             font-size: 0.95rem;
             display: none;
             animation: shakeError 0.5s ease;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-body);
         }
         
         .admin-error-message.show {
@@ -163,27 +163,27 @@
         .admin-submit-btn {
             width: 100%;
             padding: 20px;
-            margin-top: var(--spacing-md);
+            margin-top: 20px;
             font-size: 1.1rem;
-            font-family: 'Poppins', sans-serif;
+            font-family: var(--font-body);
         }
         
         .admin-back-link {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: var(--spacing-sm);
-            color: var(--text-muted);
+            gap: 12px;
+            color: rgba(249, 247, 242, 0.7);
             text-decoration: none;
-            margin-top: var(--spacing-xl);
+            margin-top: 40px;
             font-size: 0.95rem;
-            transition: var(--transition-medium);
-            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+            font-family: var(--font-body);
             direction: ltr !important;
         }
         
         .admin-back-link:hover {
-            color: var(--corinthia-gold);
+            color: var(--gold);
         }
         
         .admin-loading-spinner {
@@ -212,9 +212,9 @@
 <body>
     
     <div class="admin-login-wrapper">
-        <div class="luxury-glass-card admin-login-card">
+        <div class="luxury-card admin-login-card">
             <div class="admin-logo-section">
-                <img src="logo-gold.svg" alt="Corinthia Hotel Logo" style="height: 80px; filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.5)); transition: transform var(--transition-premium);">
+                <img src="new-logo.svg" alt="Corinthia Hotel Logo" style="height: 80px; filter: drop-shadow(0 0 20px var(--gold-glow)); transition: transform var(--transition);">
             </div>
 
             <h1 class="admin-login-title">Royal Staff Portal</h1>
@@ -249,7 +249,7 @@
                     Invalid username or password
                 </div>
 
-                <button type="submit" class="btn-gold admin-submit-btn" id="loginSubmitBtn">
+                <button type="submit" class="luxury-btn admin-submit-btn" id="loginSubmitBtn">
                     <span class="admin-btn-text">SECURE ACCESS</span>
                     <span class="admin-loading-spinner"></span>
                     <i class="fas fa-shield-alt"></i>

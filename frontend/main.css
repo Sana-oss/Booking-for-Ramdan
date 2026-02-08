@@ -1,330 +1,227 @@
-/* CORINTHIA ROYAL RESTAURANT - MASTER STYLESHEET (FINAL LUXURY EDITION)
-   Theme: Luxury Black & Gold - Muted Champagne Gold
- */
+/* =========================================
+    CORINTHIA TRIPOLI - LUXURY RAMADAN UI
+    Corporate Identity Implementation
+    ========================================= */
 
-:root {
-    --gold: #c5a059;
-    --gold-light: #d4af37;
-    --gold-gradient: linear-gradient(135deg, #c5a059 0%, #a38146 100%);
-    --gold-glow: rgba(197, 160, 89, 0.3);
-    --glass-border: rgba(197, 160, 89, 0.4);
-    --deep-black: rgba(10, 10, 10, 0.98);
-    --glass-bg: rgba(20, 20, 20, 0.85);
-    --pure-white: #ffffff;
-    --text-muted: #b0b0b0;
-}
+@import url('luxury-design-system.css');
 
-/* 1. General Settings */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+/* =========================================
+    BODY & LAYOUT
+    ========================================= */
 
 body.user-view {
-    font-family: 'Cairo', sans-serif;
+    background: var(--corinthia-haze);
+    font-family: var(--font-body);
+    color: var(--corinthia-anvil);
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
-                url('co.jpg') no-repeat center center fixed;
-    background-size: cover;
+    position: relative;
     overflow-x: hidden;
-    padding: 20px;
 }
 
-body.lang-en {
-    font-family: 'Playfair Display', serif;
-}
+/* =========================================
+    LANGUAGE TOGGLE
+    ========================================= */
 
-/* ============================================
-   LANGUAGE FLAG TOGGLE - ELEGANT & VISIBLE
-   ============================================ */
 .language-toggle-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 10000;
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(197, 160, 89, 0.5);
-    padding: 8px 20px;
-    border-radius: 25px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-}
-
-.language-toggle-container:hover {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: var(--gold);
-    box-shadow: 0 6px 25px rgba(197, 160, 89, 0.3);
-}
-
-body.lang-en .language-toggle-container {
-    right: auto;
-    left: 20px;
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 1000;
 }
 
 .lang-toggle-item {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 12px;
-    border-radius: 18px;
-    transition: all 0.3s ease;
-    opacity: 0.6;
-}
-
-.lang-toggle-item.active {
-    opacity: 1;
-    background: rgba(197, 160, 89, 0.2);
-    box-shadow: 0 0 15px rgba(197, 160, 89, 0.3);
+    background: var(--white);
+    border: 2px solid var(--corinthia-honey);
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: var(--transition);
+    color: var(--corinthia-anvil);
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-radius: 2px;
 }
 
 .lang-toggle-item:hover {
-    opacity: 0.9;
+    background: var(--corinthia-honey);
+    color: var(--white);
 }
 
-.lang-toggle-item span {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--pure-white);
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+.lang-toggle-item.active {
+    background: var(--corinthia-anvil);
+    color: var(--corinthia-honey);
+    border-color: var(--corinthia-anvil);
 }
 
-.lang-toggle-item.active span {
-    color: var(--gold);
-    text-shadow: 0 0 10px rgba(197, 160, 89, 0.5);
-}
+/* =========================================
+    HERO SECTION
+    ========================================= */
 
-.lang-toggle-item img,
-.lang-toggle-item i {
-    font-size: 1.1rem;
-    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.5));
-}
-
-/* ============================================
-   LUXURY GLASSMOPHISM CARD DESIGN
-   ============================================ */
-.luxury-glass-card {
-    background: rgba(0, 0, 0, 0.65);
-    border: 1px solid var(--glass-border);
-    border-radius: 30px;
-    padding: 50px 40px;
-    width: 100%;
-    max-width: 520px;
-    box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6),
-                0 0 40px rgba(197, 160, 89, 0.1),
-                inset 0 0 60px rgba(0, 0, 0, 0.3);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+.luxury-hero {
     text-align: center;
-    position: relative;
-    animation: luxuryFadeIn 0.8s ease-out;
-}
-
-@keyframes luxuryFadeIn {
-    from { opacity: 0; transform: translateY(30px) scale(0.95); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.luxury-logo-area {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 25px;
-}
-
-.luxury-logo-img {
-    width: 160px;
-    height: auto;
-    filter: drop-shadow(0 0 25px rgba(197, 160, 89, 0.5));
-    animation: logoGlow 3s ease-in-out infinite alternate;
-}
-
-@keyframes logoGlow {
-    from { filter: drop-shadow(0 0 20px rgba(197, 160, 89, 0.4)); }
-    to { filter: drop-shadow(0 0 35px rgba(197, 160, 89, 0.7)); }
-}
-
-.luxury-welcome {
-    margin-bottom: 35px;
+    padding: 60px 20px 40px;
 }
 
 .luxury-greeting {
-    color: var(--gold);
-    font-family: 'Playfair Display', serif;
-    font-size: 1.4rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-    letter-spacing: 3px;
-    text-transform: uppercase;
+    font-family: var(--font-arabic);
+    font-size: 1.5rem;
+    color: var(--corinthia-honey);
+    margin-bottom: 15px;
+    letter-spacing: 2px;
 }
 
 .luxury-title {
-    color: var(--pure-white);
-    font-family: 'Cairo', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin-bottom: 12px;
-    line-height: 1.4;
-}
-
-body.lang-en .luxury-title {
-    font-family: 'Playfair Display', serif;
-    font-weight: 600;
+    font-family: var(--font-heading-en);
+    font-size: 2.8rem;
+    color: var(--corinthia-anvil);
+    margin-bottom: 15px;
+    line-height: 1.2;
+    font-weight: 400;
 }
 
 .luxury-subtitle {
-    color: rgba(255, 255, 255, 0.7);
-    font-family: 'Cairo', sans-serif;
-    font-size: 1rem;
-    font-weight: 300;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    color: rgba(16, 24, 32, 0.7);
+    max-width: 600px;
+    margin: 0 auto 30px;
+    line-height: 1.6;
+}
+
+.luxury-tagline {
+    font-family: var(--font-heading-en);
+    font-size: 0.9rem;
+    color: var(--corinthia-honey);
     letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
-body.lang-en .luxury-subtitle {
-    font-family: 'Cairo', sans-serif;
-    font-weight: 300;
+/* =========================================
+    INVITATION CARD BOOKING FORM
+    ========================================= */
+
+.luxury-glass-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background: var(--white);
+    border: 3px solid var(--corinthia-clay);
+    padding: 50px 40px;
+    position: relative;
+    box-shadow: 0 20px 60px var(--anvil-shadow);
 }
 
-/* ============================================
-   LUXURY INPUT FIELDS WITH BOTTOM BORDER
-   ============================================ */
+.luxury-glass-card::before,
+.luxury-glass-card::after {
+    content: '';
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    border-color: var(--corinthia-honey);
+    border-style: solid;
+    opacity: 0.6;
+}
+
+.luxury-glass-card::before {
+    top: 15px;
+    left: 15px;
+    border-width: 2px 0 0 2px;
+}
+
+.luxury-glass-card::after {
+    bottom: 15px;
+    right: 15px;
+    border-width: 0 2px 2px 0;
+}
+
+/* Logo */
+.luxury-logo-area {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-top: 40px;
+}
+
+.luxury-logo-img {
+    height: 80px;
+    width: auto;
+    max-width: 280px;
+    filter: drop-shadow(0 0 10px var(--honey-glow));
+}
+
+/* Form */
 .luxury-form {
     display: flex;
     flex-direction: column;
     gap: 25px;
 }
 
-.luxury-input-row {
-    display: flex;
-    gap: 20px;
-}
-
 .luxury-input-group {
     position: relative;
-    padding-top: 15px;
 }
 
 .luxury-input-icon {
     position: absolute;
-    top: 18px;
-    left: 15px;
-    color: var(--gold);
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--corinthia-honey);
     font-size: 1.1rem;
     z-index: 2;
-    transition: all 0.3s ease;
-}
-
-body.lang-en .luxury-input-icon {
-    left: auto;
-    right: 15px;
 }
 
 .luxury-input {
     width: 100%;
-    padding: 14px 45px 14px 15px;
-    background: rgba(255, 255, 255, 0.05);
-    border: none;
-    border-radius: 8px;
-    color: var(--pure-white);
-    font-family: 'Cairo', sans-serif;
+    padding: 16px 20px 16px 50px;
+    font-family: var(--font-body);
     font-size: 1rem;
-    font-weight: 400;
-    transition: all 0.3s ease;
-}
-
-body.lang-en .luxury-input {
-    padding: 14px 15px 14px 45px;
-}
-
-.luxury-input::placeholder {
-    color: rgba(255, 255, 255, 0.3);
-    font-weight: 300;
+    background: var(--white);
+    border: 2px solid var(--corinthia-anvil);
+    color: var(--corinthia-anvil);
+    transition: var(--transition);
+    border-radius: 2px;
 }
 
 .luxury-input:focus {
     outline: none;
-    background: rgba(255, 255, 255, 0.08);
-}
-
-.luxury-input:focus + .luxury-border,
-.luxury-input:not(:placeholder-shown) + .luxury-border {
-    width: 100%;
-    opacity: 1;
-}
-
-.luxury-input:focus ~ .luxury-input-icon {
-    color: var(--gold-light);
-    transform: scale(1.1);
+    border-color: var(--corinthia-honey);
+    box-shadow: 0 0 0 3px var(--honey-glow);
 }
 
 .luxury-label {
     position: absolute;
-    top: -5px;
-    left: 15px;
-    color: var(--gold);
-    font-family: 'Cairo', sans-serif;
-    font-size: 0.75rem;
-    font-weight: 600;
+    left: 50px;
+    top: -10px;
+    background: var(--white);
+    padding: 0 8px;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    color: var(--corinthia-honey);
     text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+    z-index: 3;
 }
 
-body.lang-en .luxury-label {
-    left: auto;
-    right: 15px;
+.luxury-input-row {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 15px;
 }
 
-.luxury-input:focus ~ .luxury-label,
-.luxury-input:not(:placeholder-shown) ~ .luxury-label {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-.luxury-border {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
-    transform: translateX(-50%);
-    transition: all 0.4s ease;
-    opacity: 0;
-    box-shadow: 0 0 10px var(--gold-glow);
-}
-
-body.lang-en .luxury-border {
-    left: auto;
-    right: 50%;
-    transform: translateX(50%);
-}
-
-/* ============================================
-   LUXURY GROUP TOGGLE SWITCH
-   ============================================ */
 .luxury-group-option {
     display: flex;
     align-items: center;
-    justify-content: center;
     gap: 15px;
-    padding: 10px 0;
+    padding: 15px 20px;
+    background: rgba(16, 24, 32, 0.02);
+    border: 1px solid rgba(16, 24, 32, 0.1);
 }
 
 .luxury-switch {
     position: relative;
-    width: 52px;
-    height: 28px;
+    width: 48px;
+    height: 24px;
 }
 
 .luxury-switch input {
@@ -340,495 +237,343 @@ body.lang-en .luxury-border {
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(212, 175, 55, 0.3);
-    border-radius: 28px;
-    transition: all 0.3s ease;
+    background-color: #ddd;
+    transition: var(--transition);
+    border-radius: 24px;
 }
 
-.luxury-slider::before {
+.luxury-slider:before {
     position: absolute;
     content: "";
-    height: 20px;
-    width: 20px;
+    height: 18px;
+    width: 18px;
     left: 3px;
     bottom: 3px;
-    background: var(--gold);
+    background-color: var(--white);
+    transition: var(--transition);
     border-radius: 50%;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .luxury-switch input:checked + .luxury-slider {
-    background: rgba(197, 160, 89, 0.3);
-    border-color: var(--gold);
+    background-color: var(--corinthia-honey);
 }
 
-.luxury-switch input:checked + .luxury-slider::before {
+.luxury-switch input:checked + .luxury-slider:before {
     transform: translateX(24px);
-    background: var(--gold-light);
 }
 
 .luxury-group-text {
-    color: var(--gold);
-    font-family: 'Cairo', sans-serif;
+    font-family: var(--font-body);
     font-size: 0.95rem;
+    color: var(--corinthia-anvil);
     font-weight: 500;
-    letter-spacing: 0.5px;
 }
 
-/* ============================================
-   LUXURY HERO BUTTON - CHAMPAGNE GOLD
-   ============================================ */
 .luxury-btn-hero {
     width: 100%;
-    padding: 18px 35px;
-    background: var(--gold-gradient);
-    border: none;
-    border-radius: 12px;
-    color: #1a1a1a;
-    font-family: 'Cairo', sans-serif;
-    font-size: 1.2rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 2px;
+    background: var(--corinthia-honey);
+    color: var(--corinthia-anvil);
+    border: 2px solid var(--corinthia-honey);
+    padding: 18px 30px;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    border-radius: 2px;
     cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    transition: all 0.4s ease;
-    box-shadow: 0 8px 25px rgba(197, 160, 89, 0.4);
-}
-
-body.lang-en .luxury-btn-hero {
-    font-family: 'Playfair Display', serif;
-    font-weight: 600;
-}
-
-.luxury-btn-hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-    transition: left 0.5s ease;
-}
-
-.luxury-btn-hero:hover::before {
-    left: 100%;
+    transition: var(--transition);
+    text-transform: uppercase;
+    margin-top: 10px;
 }
 
 .luxury-btn-hero:hover {
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 12px 35px rgba(197, 160, 89, 0.6);
-}
-
-.luxury-btn-hero:active {
-    transform: translateY(-1px) scale(1);
+    background: var(--corinthia-anvil);
+    color: var(--corinthia-honey);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px var(--anvil-shadow);
 }
 
 .btn-arrow-icon {
-    margin-right: 12px;
+    margin-right: 8px;
     transition: transform 0.3s ease;
-}
-
-body.lang-en .btn-arrow-icon {
-    margin-right: 0;
-    margin-left: 12px;
 }
 
 .luxury-btn-hero:hover .btn-arrow-icon {
     transform: translateX(-5px);
 }
 
-body.lang-en .luxury-btn-hero:hover .btn-arrow-icon {
-    transform: translateX(5px);
-}
-
-/* ============================================
-   LUXURY STATUS LINK
-   ============================================ */
 .luxury-status-link {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
-    gap: 10px;
+    gap: 8px;
+    padding: 12px 24px;
     margin-top: 25px;
-    color: rgba(255, 255, 255, 0.6);
-    font-family: 'Cairo', sans-serif;
-    font-size: 0.9rem;
     text-decoration: none;
-    padding: 12px 25px;
-    border: 1px solid rgba(212, 175, 55, 0.2);
-    border-radius: 30px;
-    background: rgba(255, 255, 255, 0.02);
-    transition: all 0.3s ease;
+    color: var(--corinthia-anvil);
+    background: rgba(16, 24, 32, 0.05);
+    border: 1px solid rgba(16, 24, 32, 0.1);
+    border-radius: 2px;
+    font-family: var(--font-body);
+    font-size: 0.9rem;
+    transition: var(--transition);
+    text-align: center;
+    justify-content: center;
 }
 
 .luxury-status-link:hover {
-    color: var(--gold);
-    border-color: var(--gold);
-    background: rgba(197, 160, 89, 0.1);
+    background: var(--corinthia-anvil);
+    color: var(--corinthia-honey);
+    border-color: var(--corinthia-anvil);
     transform: translateY(-2px);
 }
 
-/* ============================================
-   LUXURY FLATPICKR THEME
-   ============================================ */
-.flatpickr-calendar {
-    background: rgba(20, 20, 20, 0.98) !important;
-    border: 1px solid var(--glass-border) !important;
-    border-radius: 15px !important;
-    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8) !important;
-    backdrop-filter: blur(15px) !important;
-}
+/* =========================================
+    QR CODE SECTION
+    ========================================= */
 
-.flatpickr-day {
-    color: rgba(255, 255, 255, 0.8) !important;
-    border-color: rgba(212, 175, 55, 0.2) !important;
-}
-
-.flatpickr-day:hover {
-    background: rgba(197, 160, 89, 0.2) !important;
-}
-
-.flatpickr-day.selected,
-.flatpickr-day.startRange,
-.flatpickr-day.endRange,
-.flatpickr-day.selected:hover,
-.flatpickr-day.startRange:hover,
-.flatpickr-day.endRange:hover {
-    background: var(--gold) !important;
-    border-color: var(--gold) !important;
-    color: #1a1a1a !important;
-}
-
-.flatpickr-day.inRange {
-    background: rgba(197, 160, 89, 0.3) !important;
-    border-color: rgba(197, 160, 89, 0.5) !important;
-    color: var(--gold-light) !important;
-    box-shadow: -5px 0 0 rgba(197, 160, 89, 0.3), 5px 0 0 rgba(197, 160, 89, 0.3) !important;
-}
-
-.flatpickr-day.today {
-    border-color: var(--gold) !important;
-}
-
-.flatpickr-months .flatpickr-month {
-    background: rgba(197, 160, 89, 0.2) !important;
-    color: var(--gold) !important;
-}
-
-.flatpickr-current-month .flatpickr-monthDropdown-months {
-    color: var(--gold) !important;
-}
-
-.flatpickr-current-month input.cur-year {
-    color: var(--gold) !important;
-}
-
-span.flatpickr-weekday {
-    background: rgba(197, 160, 89, 0.1) !important;
-    color: var(--gold) !important;
-}
-
-.flatpickr-prev-month,
-.flatpickr-next-month {
-    color: var(--gold) !important;
-    fill: var(--gold) !important;
-}
-
-.flatpickr-prev-month:hover,
-.flatpickr-next-month:hover {
-    color: var(--gold-light) !important;
-}
-
-.numInputWrapper span {
-    border-color: rgba(212, 175, 55, 0.3) !important;
-}
-
-.numInputWrapper:hover {
-    background: rgba(197, 160, 89, 0.1) !important;
-}
-
-.flatpickr-input {
-    background: rgba(255, 255, 255, 0.05) !important;
-    border: 2px solid rgba(197, 160, 89, 0.3) !important;
-    border-radius: 10px !important;
-    color: #fff !important;
-    font-family: 'Cairo', sans-serif !important;
-    padding: 12px 15px !important;
-    transition: all 0.3s ease !important;
-}
-
-.flatpickr-input:focus {
-    outline: none !important;
-    border-color: var(--gold) !important;
-    box-shadow: 0 0 15px rgba(197, 160, 89, 0.3) !important;
-}
-
-.flatpickr-input::placeholder {
-    color: rgba(255, 255, 255, 0.4) !important;
-}
-
-body.lang-en .flatpickr-input {
-    text-align: left !important;
-}
-
-body[dir="rtl"] .flatpickr-input {
-    text-align: right !important;
-}
-
-/* ============================================
-   FLOATING PHONE BUTTON - CHAMPAGNE GOLD
-   ============================================ */
-.phone-float {
-    position: fixed !important;
-    bottom: 90px !important;
-    right: 20px !important;
-    left: auto !important;
-    width: 52px;
-    height: 52px;
-    background: var(--gold-gradient);
-    color: #1a1a1a !important;
-    border-radius: 50%;
+.qr-section {
     text-align: center;
-    font-size: 20px;
-    line-height: 52px;
-    box-shadow: 0 6px 20px rgba(197, 160, 89, 0.4);
-    z-index: 9999;
-    transition: all 0.3s ease;
+    padding: 50px 20px;
+    background: var(--corinthia-anvil);
+    color: var(--white);
+    margin-top: 60px;
+}
+
+.qr-image {
+    width: 120px;
+    height: 120px;
+    border: 2px solid var(--corinthia-honey);
+    padding: 8px;
+    background: var(--white);
+    margin-bottom: 20px;
+}
+
+.qr-text {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--white);
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.qr-text strong {
+    color: var(--corinthia-honey);
+    font-weight: 500;
+}
+
+/* =========================================
+    FLOATING BUTTONS
+    ========================================= */
+
+.phone-float,
+.whatsapp-float,
+.bell-float {
+    position: fixed;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-decoration: none;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 1000;
+}
+
+.phone-float {
+    background: var(--corinthia-honey);
+    color: var(--corinthia-anvil);
+    bottom: 130px;
+    right: 30px;
+    border: 2px solid var(--corinthia-honey);
 }
 
 .phone-float:hover {
-    transform: scale(1.08);
-    box-shadow: 0 10px 30px rgba(197, 160, 89, 0.6);
+    background: var(--corinthia-anvil);
+    color: var(--corinthia-honey);
+    transform: scale(1.1);
 }
 
-.phone-float i {
-    color: #1a1a1a;
-}
-
-/* ============================================
-   FLOATING WHATSAPP BUTTON - CHAMPAGNE GOLD
-   ============================================ */
 .whatsapp-float {
-    position: fixed !important;
-    bottom: 20px !important;
-    right: 20px !important;
-    left: auto !important;
-    width: 52px;
-    height: 52px;
-    background: var(--gold-gradient);
-    color: #1a1a1a !important;
-    border-radius: 50%;
-    text-align: center;
-    font-size: 24px;
-    line-height: 52px;
-    box-shadow: 0 6px 20px rgba(197, 160, 89, 0.4);
-    z-index: 9999;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
+    background: #25D366;
+    color: var(--white);
+    bottom: 60px;
+    right: 30px;
+    border: 2px solid #25D366;
 }
 
 .whatsapp-float:hover {
-    transform: scale(1.08);
-    box-shadow: 0 10px 30px rgba(197, 160, 89, 0.6);
+    background: #128C7E;
+    transform: scale(1.1);
 }
 
-.whatsapp-float i {
-    color: #1a1a1a;
-}
-
-/* ============================================
-   FLOATING BELL ICON - TRANSPARENT GLASS CIRCLE
-   ============================================ */
 .bell-float {
-    position: fixed !important;
-    bottom: 20px !important;
-    left: 20px !important;
-    right: auto !important;
-    width: 50px;
-    height: 50px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid var(--glass-border);
-    border-radius: 50%;
-    color: var(--gold);
-    font-size: 18px;
-    cursor: pointer;
-    z-index: 9998;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: var(--corinthia-honey);
+    color: var(--corinthia-anvil);
+    bottom: 200px;
+    right: 30px;
+    border: 2px solid var(--corinthia-honey);
 }
 
 .bell-float:hover {
-    background: rgba(0, 0, 0, 0.8);
-    border-color: var(--gold);
-    transform: scale(1.05);
+    background: var(--corinthia-anvil);
+    color: var(--corinthia-honey);
+    transform: scale(1.1);
 }
 
-.bell-float i {
-    font-weight: 300;
-}
+/* =========================================
+    INFO CARD
+    ========================================= */
 
-/* ============================================
-   INFO POPUP - GLASS CARD DESIGN
-   ============================================ */
 .info-popup {
     position: fixed;
-    bottom: 80px;
-    left: 20px;
+    bottom: 280px;
+    right: 95px;
+    background: var(--white);
+    border: 2px solid var(--corinthia-honey);
+    border-radius: 2px;
     width: 300px;
-    max-width: 90%;
-    background: rgba(0, 0, 0, 0.85);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    padding: 20px;
-    z-index: 9997;
-    display: none;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-    animation: popupFadeIn 0.3s ease-out;
-}
-
-@keyframes popupFadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+    padding: 25px;
+    box-shadow: 0 10px 40px var(--anvil-shadow);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: var(--transition);
+    z-index: 999;
 }
 
 .info-popup.show {
-    display: block;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
 }
 
 .info-popup-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 15px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(16, 24, 32, 0.1);
 }
 
 .info-popup-header span {
-    color: var(--gold);
-    font-family: 'Cairo', sans-serif;
-    font-size: 1rem;
-    font-weight: 600;
-}
-
-body.lang-en .info-popup-header span {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading-en);
+    font-size: 0.9rem;
+    color: var(--corinthia-anvil);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .info-popup-close {
-    background: transparent;
-    border: 1px solid var(--glass-border);
-    border-radius: 50%;
-    color: var(--gold);
-    font-size: 1rem;
+    background: none;
+    border: none;
+    color: var(--corinthia-anvil);
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: var(--transition);
     width: 24px;
     height: 24px;
-    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-    line-height: 1;
 }
 
 .info-popup-close:hover {
-    background: rgba(197, 160, 89, 0.2);
-    border-color: var(--gold);
+    opacity: 1;
+    transform: scale(1.1);
 }
 
 .info-popup-content {
-    padding: 5px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 .info-popup-item {
     display: flex;
     align-items: flex-start;
-    gap: 12px;
-    color: rgba(255, 255, 255, 0.8);
-    font-family: 'Cairo', sans-serif;
+    gap: 10px;
+    font-family: var(--font-body);
     font-size: 0.85rem;
-    line-height: 1.6;
-    margin-bottom: 12px;
+    color: rgba(16, 24, 32, 0.8);
+    line-height: 1.5;
 }
 
-body.lang-en .info-popup-item {
-    font-family: 'Cairo', sans-serif;
+/* =========================================
+    QR CODE PLACEHOLDER STYLES
+    ========================================= */
+
+.qr-placeholder {
+    width: 120px;
+    height: 120px;
+    border: 2px solid var(--corinthia-honey);
+    padding: 8px;
+    background: var(--white);
+    margin: 0 auto 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
 }
 
-.info-popup-item:last-child {
-    margin-bottom: 0;
+.qr-placeholder-icon {
+    font-size: 2rem;
+    color: var(--corinthia-anvil);
 }
 
-.info-popup-item i {
-    color: var(--gold);
-    font-size: 0.9rem;
-    margin-top: 2px;
-    flex-shrink: 0;
+.qr-placeholder-text {
+    font-size: 0.6rem;
+    color: var(--corinthia-anvil);
+    text-align: center;
+    line-height: 1.2;
 }
 
-/* ============================================
-   MOBILE RESPONSIVE
-   ============================================ */
-@media (max-width: 480px) {
-    .lang-flag-toggle {
-        top: 15px;
-        right: 15px;
-        padding: 6px 10px;
+/* =========================================
+    RESPONSIVE DESIGN
+    ========================================= */
+
+@media (max-width: 768px) {
+    .luxury-title {
+        font-size: 2rem;
     }
     
     .luxury-glass-card {
-        padding: 40px 25px;
-        border-radius: 25px;
+        padding: 30px 20px;
+    }
+    
+    .luxury-input-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .language-toggle-container {
+        top: 20px;
+        left: 20px;
+    }
+    
+    .phone-float,
+    .whatsapp-float,
+    .bell-float {
+        width: 50px;
+        height: 50px;
     }
     
     .phone-float {
-        bottom: 80px !important;
-        right: 15px !important;
-        width: 48px;
-        height: 48px;
-        font-size: 18px;
-        line-height: 48px;
+        bottom: 120px;
+        right: 20px;
     }
     
     .whatsapp-float {
-        bottom: 15px !important;
-        right: 15px !important;
-        width: 48px;
-        height: 48px;
-        font-size: 22px;
-        line-height: 48px;
+        bottom: 55px;
+        right: 20px;
     }
     
     .bell-float {
-        bottom: 15px !important;
-        left: 15px !important;
-        width: 46px;
-        height: 46px;
-        font-size: 16px;
-    }
-    
-    .info-popup {
-        bottom: 75px;
-        left: 15px;
-        width: 280px;
-        padding: 18px;
+        bottom: 185px;
+        right: 20px;
     }
 }

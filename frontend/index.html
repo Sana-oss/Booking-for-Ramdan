@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-i18n="hotelName">فندق كورنثيا | حجز الإفطار</title>
     
-    <!-- Google Fonts - Playfair Display for titles, Cairo for body -->
+    <!-- Google Fonts for fallback -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -13,34 +13,39 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <!-- Luxury Design System -->
+    <link rel="stylesheet" href="luxury-design-system.css">
+    
     <link rel="stylesheet" href="main.css">
 </head>
 <body class="user-view">
 
-    <!-- Language Switcher - Elegant Glass Container -->
+    <!-- Language Switcher - Luxury Style -->
     <div class="language-toggle-container" onclick="i18n.toggleLang()">
         <div class="lang-toggle-item active" id="langAr">
-            <span>🇸🇦 العربية</span>
+            <span> العربية</span>
         </div>
         <div class="lang-toggle-item" id="langEn">
-            <span>🇬🇧 English</span>
+            <span> English</span>
         </div>
     </div>
 
-    <!-- Main Luxury Glass Card -->
+    <!-- Hero Section -->
+    <div class="luxury-hero">
+        <p class="luxury-greeting" data-i18n="ramadan_greeting">رمضان مبارك</p>
+        <h1 class="luxury-title" data-i18n="title_home">تجربة رمضانية فاخرة في فندق كورنثيا</h1>
+        <p class="luxury-subtitle" data-i18n="subtitle_home">أهلاً بكم في قلب الفخامة بمدينة طرابلس</p>
+        <p class="luxury-tagline" data-i18n="tagline">Lavish Ramadan Iftar awaits you at La Valette Restaurant</p>
+    </div>
+
+    <!-- Invitation Style Booking Form -->
     <div class="luxury-glass-card">
         <!-- Logo Area -->
         <div class="luxury-logo-area">
-            <img src="logo-gold.svg" class="luxury-logo-img" alt="Corinthia Hotel Logo">
+            <img src="new-logo.svg" class="luxury-logo-img" alt="Corinthia Hotel Tripoli Logo">
         </div>
         
-        <!-- Welcome Section -->
-        <div class="luxury-welcome">
-            <p class="luxury-greeting" data-i18n="ramadan_greeting">رمضان مبارك</p>
-            <h1 class="luxury-title" data-i18n="title_home">تجربة رمضانية فاخرة في فندق كورنثيا</h1>
-            <p class="luxury-subtitle" data-i18n="subtitle_home">أهلاً بكم في قلب الفخامة بمدينة طرابلس</p>
-        </div>
-
         <!-- Booking Form -->
         <form id="bookingForm" class="luxury-form" novalidate>
             
@@ -49,22 +54,19 @@
                 <i class="fas fa-user luxury-input-icon"></i>
                 <input type="text" id="guestName" class="luxury-input" maxlength="100" pattern="^[a-zA-Z\s\u0600-\u06FF]+$" required placeholder data-i18n-attr="placeholder:placeholder_name">
                 <label class="luxury-label" data-i18n="label_name">الاسم الكامل</label>
-                <div class="luxury-border"></div>
             </div>
 
             <!-- Phone & Date Row -->
             <div class="luxury-input-row">
-                <div class="luxury-input-group" style="flex: 1.3;">
+                <div class="luxury-input-group">
                     <i class="fas fa-phone luxury-input-icon"></i>
                     <input type="tel" id="phone" class="luxury-input" placeholder data-i18n-attr="placeholder:placeholder_phone" required>
                     <label class="luxury-label" data-i18n="label_phone">رقم الهاتف</label>
-                    <div class="luxury-border"></div>
                 </div>
-                <div class="luxury-input-group" style="flex: 1;">
+                <div class="luxury-input-group">
                     <i class="fas fa-calendar-alt luxury-input-icon"></i>
                     <input type="text" id="bookingDate" class="luxury-input flatpickr-input" placeholder data-i18n-attr="placeholder:select_date" required>
                     <label class="luxury-label" data-i18n="label_date">التاريخ</label>
-                    <div class="luxury-border"></div>
                 </div>
             </div>
 
@@ -73,7 +75,6 @@
                 <i class="fas fa-users luxury-input-icon"></i>
                 <input type="number" id="guests" class="luxury-input" min="1" max="200" value="2" required>
                 <label class="luxury-label" data-i18n="label_people">عدد الضيوف</label>
-                <div class="luxury-border"></div>
             </div>
 
             <!-- Group Booking Toggle -->
@@ -97,6 +98,13 @@
             <i class="fas fa-search"></i>
             <span data-i18n="follow_up">متابعة حالة الحجز</span>
         </a>
+    </div>
+
+    <!-- QR Code Section -->
+    <div class="qr-section">
+        <!-- QR Code Placeholder SVG -->
+        <img src="images/qr-placeholder.svg" alt="Facebook QR Code" class="qr-image">
+        <p class="qr-text" data-i18n="qr_follow"><strong>Scan to follow our restaurants on Facebook</strong></p>
     </div>
 
     <!-- Phone Call Floating Button - Right Side (Above WhatsApp) -->

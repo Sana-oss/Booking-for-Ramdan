@@ -17,440 +17,422 @@
     
     <style>
         /* =========================================
-           CORINTHIA VIP INVITATION STYLE
+           CORINTHIA DIGITAL PASS - SMOOTH REVEAL
            ========================================= */
-        :root {
-            --corinthia-maroon: #4A0E0E;
-            --corinthia-gold: #D4AF37;
-            --corinthia-gold-light: #E5C558;
-            --corinthia-gold-dark: #B4922A;
-            --ivory: #FFFFF0;
-            --cream: #F5F5DC;
-            --dark-bg: #0D0D0D;
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html, body {
+            max-width: 100vw;
+            overflow-x: hidden;
         }
         
         body {
-            font-family: 'Cairo', sans-serif;
-            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--corinthia-maroon) 50%, #1a0a0a 100%);
+            font-family: var(--font-body);
+            background: var(--corinthia-haze);
             min-height: 100vh;
             margin: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 15px;
         }
         
-        /* Celebration Animation Background */
-        .celebration-bg {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 0;
-        }
-        
-        .gold-particle {
-            position: absolute;
-            width: 6px;
-            height: 6px;
-            background: var(--corinthia-gold);
-            border-radius: 50%;
-            animation: float 8s ease-in-out infinite;
-            opacity: 0.6;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
-            10% { opacity: 0.6; }
-            90% { opacity: 0.6; }
-            100% { transform: translateY(-100vh) rotate(720deg); opacity: 0; }
-        }
-        
-        /* VIP Invitation Card */
+        /* Main Card - Hidden initially */
         .vip-invitation-card {
-            max-width: 480px;
+            max-width: 400px;
             width: 100%;
-            background: linear-gradient(145deg, rgba(30, 30, 30, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%);
-            border: 2px solid var(--corinthia-gold);
-            border-radius: 20px;
-            padding: 40px 30px;
+            background: var(--white);
+            border: 1px solid var(--corinthia-clay);
+            border-radius: 4px;
+            padding: 25px;
             text-align: center;
             position: relative;
             z-index: 1;
-            box-shadow: 
-                0 0 60px rgba(212, 175, 55, 0.2),
-                0 20px 60px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 40px var(--anvil-shadow);
+            /* Start hidden for smooth reveal */
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
         }
         
-        .vip-invitation-card::before {
-            content: '';
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            right: 8px;
-            bottom: 8px;
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 16px;
-            pointer-events: none;
+        .vip-invitation-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* Loading Spinner */
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid var(--corinthia-honey);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
         
         /* Logo */
         .card-logo {
-            margin-bottom: 25px;
+            margin-bottom: 20px;
         }
         
         .card-logo img {
-            height: 70px;
-            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.4));
+            height: 50px;
+            filter: drop-shadow(0 0 10px var(--honey-glow));
         }
         
         /* Thank You Message */
         .thank-you-message {
-            margin-bottom: 30px;
+            margin-bottom: 20px;
         }
         
         .thank-you-message h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.8rem;
-            font-weight: 500;
-            color: var(--corinthia-gold);
-            margin-bottom: 10px;
-            letter-spacing: 1px;
+            font-family: var(--font-arabic);
+            font-size: 1.3rem;
+            font-weight: 400;
+            color: var(--corinthia-anvil);
+            margin-bottom: 5px;
         }
         
         .thank-you-message p {
-            color: var(--ivory);
-            font-size: 1rem;
-            line-height: 1.8;
-            opacity: 0.9;
+            color: rgba(16, 24, 32, 0.7);
+            font-size: 0.85rem;
         }
         
         /* Decorative Line */
         .decorative-line {
-            width: 80px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--corinthia-gold), transparent);
-            margin: 20px auto;
+            width: 50px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--corinthia-honey), transparent);
+            margin: 15px auto;
         }
         
-        /* Reference Number - Large & Clear */
+        /* Reference Section */
         .reference-section {
-            background: rgba(212, 175, 55, 0.08);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 12px;
-            padding: 25px;
-            margin: 25px 0;
+            background: rgba(254, 163, 0, 0.08);
+            border: 1px solid var(--corinthia-clay);
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
         }
         
         .reference-label {
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.85rem;
-            color: var(--corinthia-gold);
-            letter-spacing: 2px;
+            font-family: var(--font-body);
+            font-size: 0.7rem;
+            color: var(--corinthia-honey);
+            letter-spacing: 1px;
             text-transform: uppercase;
-            margin-bottom: 12px;
+            margin-bottom: 5px;
         }
         
         .reference-number {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.5rem;
+            font-family: var(--font-numeric);
+            font-size: 1.6rem;
             font-weight: 600;
-            color: var(--ivory);
-            letter-spacing: 4px;
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.3);
+            color: var(--corinthia-anvil);
+            letter-spacing: 2px;
         }
         
-        .reference-note {
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.5);
-            margin-top: 12px;
+        /* Guest Details */
+        .guest-details {
+            background: rgba(254, 163, 0, 0.05);
+            border: 1px solid var(--corinthia-clay);
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+            text-align: right;
         }
         
-        /* Elegant Payment Warning - Gold Styled */
-        .payment-warning {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0.05) 100%);
-            border: 2px solid var(--corinthia-gold);
-            border-radius: 12px;
-            padding: 25px;
-            margin: 25px 0;
-            position: relative;
-        }
-        
-        .payment-warning::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 20px;
-            right: 20px;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, var(--corinthia-gold), transparent);
-        }
-        
-        .payment-warning-header {
+        .guest-row {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            margin-bottom: 15px;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(175, 169, 160, 0.2);
         }
         
-        .payment-warning-header i {
-            font-size: 1.5rem;
-            color: var(--corinthia-gold);
+        .guest-row:last-child {
+            border-bottom: none;
         }
         
-        .payment-warning-header h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.2rem;
+        .guest-label {
+            font-family: var(--font-arabic);
+            font-size: 0.8rem;
+            color: var(--corinthia-clay);
+        }
+        
+        .guest-value {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: var(--corinthia-anvil);
             font-weight: 500;
-            color: var(--corinthia-gold);
-            margin: 0;
         }
         
-        .payment-warning-content {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.95rem;
-            line-height: 1.8;
-            margin-bottom: 15px;
-        }
-        
-        .payment-warning-content strong {
-            color: var(--corinthia-gold);
-        }
-        
-        .payment-countdown {
+        /* Status Badge */
+        .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 10px;
-            background: rgba(212, 175, 55, 0.2);
-            border: 1px solid var(--corinthia-gold);
-            border-radius: 8px;
-            padding: 12px 20px;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-family: var(--font-arabic);
+            font-size: 0.95rem;
+            margin: 15px 0;
         }
         
-        .payment-countdown i {
-            color: var(--corinthia-gold);
+        .status-badge i {
+            font-size: 1rem;
         }
         
-        .payment-countdown span {
-            color: var(--ivory);
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
+        /* Timer Section */
+        .timer-section {
+            display: none;
+            background: rgba(254, 163, 0, 0.05);
+            border: 1px solid var(--corinthia-clay);
+            border-radius: 4px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        
+        .timer-section.active {
+            display: block;
+        }
+        
+        .timer-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(254, 163, 0, 0.1);
+            border: 1px solid var(--corinthia-honey);
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin-top: 10px;
+        }
+        
+        .timer-display i {
+            color: var(--corinthia-honey);
+        }
+        
+        .timer-display span {
+            font-family: var(--font-numeric);
+            font-size: 1.2rem;
             font-weight: 600;
+            color: var(--corinthia-anvil);
         }
         
-        /* Action Button with Glow */
+        /* Action Buttons */
         .action-buttons {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-top: 30px;
-        }
-        
-        .btn-payment {
-            background: linear-gradient(135deg, var(--corinthia-gold) 0%, var(--corinthia-gold-dark) 100%);
-            color: #1a0a0a;
-            border: none;
-            padding: 18px 30px;
-            border-radius: 10px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             gap: 10px;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
-            text-decoration: none;
+            margin-top: 20px;
         }
         
-        .btn-payment:hover {
-            background: linear-gradient(135deg, var(--corinthia-gold-light) 0%, var(--corinthia-gold) 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.6);
-        }
-        
-        .btn-payment i {
-            font-size: 1.1rem;
-        }
-        
-        .btn-outline {
-            background: transparent;
-            color: var(--corinthia-gold);
-            border: 2px solid var(--corinthia-gold);
-            padding: 16px 30px;
-            border-radius: 10px;
-            font-family: 'Cairo', sans-serif;
-            font-size: 0.95rem;
-            font-weight: 600;
+        .btn-primary {
+            background: var(--corinthia-honey);
+            color: var(--corinthia-anvil);
+            border: 1px solid var(--corinthia-honey);
+            padding: 12px 20px;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             text-decoration: none;
         }
         
-        .btn-outline:hover {
-            background: rgba(212, 175, 55, 0.1);
-            border-color: var(--corinthia-gold-light);
+        .btn-primary:hover {
+            background: var(--corinthia-anvil);
+            color: var(--corinthia-honey);
+            border-color: var(--corinthia-anvil);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--corinthia-anvil);
+            border: 1px solid var(--corinthia-clay);
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+        
+        .btn-secondary:hover {
+            background: var(--corinthia-anvil);
+            color: var(--white);
+            border-color: var(--corinthia-anvil);
         }
         
         /* Language Toggle */
         .lang-toggle {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            background: rgba(212, 175, 55, 0.2);
-            border: 1px solid var(--corinthia-gold);
-            color: var(--corinthia-gold);
-            padding: 10px 16px;
-            border-radius: 8px;
+            top: 15px;
+            right: 15px;
+            background: var(--white);
+            border: 1px solid var(--corinthia-honey);
+            color: var(--corinthia-honey);
+            padding: 8px 12px;
+            border-radius: 4px;
             cursor: pointer;
-            font-family: 'Cairo', sans-serif;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            font-family: var(--font-body);
+            font-size: 0.8rem;
+            font-weight: 500;
+            transition: var(--transition);
             z-index: 100;
         }
         
         .lang-toggle:hover {
-            background: var(--corinthia-gold);
-            color: #1a0a0a;
+            background: var(--corinthia-honey);
+            color: var(--corinthia-anvil);
         }
         
         /* Contact Buttons */
         .contact-buttons {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 15px;
+            right: 15px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             z-index: 100;
         }
         
         .contact-btn {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
+            font-size: 1rem;
+            transition: var(--transition);
             text-decoration: none;
         }
         
         .contact-btn.phone {
-            background: var(--corinthia-gold);
-            color: #1a0a0a;
+            background: var(--corinthia-honey);
+            color: var(--corinthia-anvil);
         }
         
         .contact-btn.whatsapp {
-            background: rgba(212, 175, 55, 0.2);
-            border: 1px solid var(--corinthia-gold);
-            color: var(--corinthia-gold);
+            background: rgba(254, 163, 0, 0.2);
+            border: 1px solid var(--corinthia-honey);
+            color: var(--corinthia-honey);
         }
         
         .contact-btn:hover {
             transform: scale(1.1);
-            box-shadow: 0 5px 20px rgba(212, 175, 55, 0.4);
-        }
-        
-        /* Hidden booking card */
-        #bookingCard {
-            display: none !important;
         }
         
         /* Responsive */
         @media (max-width: 480px) {
             .vip-invitation-card {
-                padding: 30px 20px;
+                max-width: 100%;
+                padding: 20px;
             }
             
-            .reference-number {
-                font-size: 2rem;
+            .card-logo img {
+                height: 45px;
             }
             
             .thank-you-message h2 {
-                font-size: 1.5rem;
+                font-size: 1.1rem;
             }
             
-            .payment-warning {
-                padding: 20px;
+            .reference-number {
+                font-size: 1.4rem;
             }
         }
     </style>
 </head>
 <body class="user-view">
     
-    <!-- Celebration Background -->
-    <div class="celebration-bg" id="celebrationBg"></div>
-    
     <!-- Language Toggle -->
     <button class="lang-toggle" onclick="toggleLanguage()">
         <i class="fas fa-globe"></i> <span id="langLabel">EN</span>
     </button>
     
-    <!-- VIP Invitation Card -->
-    <div class="vip-invitation-card">
+    <!-- Main Card -->
+    <div class="vip-invitation-card" id="mainCard">
         <!-- Logo -->
         <div class="card-logo">
-            <img src="logo-gold.svg" alt="Corinthia Hotel">
+            <img src="new-logo.svg" alt="Corinthia Hotel Tripoli Logo">
         </div>
         
         <!-- Thank You Message -->
         <div class="thank-you-message">
-            <h2 data-ar="شكراً لاختياركم كورنثيا" data-en="Thank you for choosing Corinthia">شكراً لاختياركم كورنثيا</h2>
-            <p data-ar="تم استلام طلب الحجز بنجاح. نتطلع لاستضافتكم." data-en="Your reservation request has been received successfully. We look forward to welcoming you.">تم استلام طلب الحجز بنجاح. نتطلع لاستضافتكم.</p>
+            <h2 id="mainTitle">شكراً لاختياركم كورنثيا</h2>
+            <p id="mainSubtitle">تم استلام طلب الحجز بنجاح</p>
         </div>
         
         <div class="decorative-line"></div>
         
         <!-- Reference Number -->
         <div class="reference-section">
-            <div class="reference-label" data-ar="الرقم المرجعي" data-en="Reference Number">الرقم المرجعي</div>
-            <div class="reference-number" id="reservationNumber">----</div>
-            <div class="reference-note" data-ar="احتفظ بهذا الرقم لمتابعة حجزك" data-en="Save this number to track your booking">احتفظ بهذا الرقم لمتابعة حجزك</div>
+            <div class="reference-label">الرقم المرجعي</div>
+            <div class="reference-number" id="reservationNumber"></div>
         </div>
         
-        <!-- Elegant Payment Warning -->
-        <div class="payment-warning">
-            <div class="payment-warning-header">
-                <i class="fas fa-lock"></i>
-                <h3 data-ar="حالة الحجز: بانتظار الدفع" data-en="Booking Status: Pending Payment">حالة الحجز: بانتظار الدفع</h3>
+        <!-- Guest Details -->
+        <div class="guest-details">
+            <div class="guest-row">
+                <span class="guest-label">الاسم</span>
+                <span class="guest-value" id="guestName"></span>
             </div>
-            <div class="payment-warning-content">
-                <p id="paymentWarningText">
-                    <strong data-ar="لتأكيد حجزكم وضمان الطاولة،" data-en="To finalize your reservation and secure your table,">لتأكيد حجزكم وضمان الطاولة،</strong>
-                    <span data-ar="يرجى إتمام عملية الدفع خلال 24 ساعة. الحجوزات غير المدفوعة سيتم إلغاؤها تلقائياً." 
-                          data-en="please complete the payment within 24 hours. Unpaid reservations will be automatically cancelled.">
-                        يرجى إتمام عملية الدفع خلال 24 ساعة. الحجوزات غير المدفوعة سيتم إلغاؤها تلقائياً.
-                    </span>
-                </p>
+            <div class="guest-row">
+                <span class="guest-label">التاريخ</span>
+                <span class="guest-value" id="guestDate"></span>
             </div>
-            <div class="payment-countdown">
+            <div class="guest-row">
+                <span class="guest-label">الهاتف</span>
+                <span class="guest-value" id="guestPhone"></span>
+            </div>
+        </div>
+        
+        <!-- Status Badge -->
+        <div class="status-badge" id="statusBadge">
+            <i class="fas fa-clock" id="statusIcon"></i>
+            <span id="statusText"></span>
+        </div>
+        
+        <!-- Timer Section -->
+        <div class="timer-section" id="timerSection">
+            <div class="timer-display">
                 <i class="fas fa-clock"></i>
-                <span id="countdownTimer">23:59:59</span>
+                <span id="countdownDisplay"></span>
             </div>
         </div>
         
         <!-- Action Buttons -->
         <div class="action-buttons">
-            <a href="check-status.html" class="btn-payment">
+            <a href="check-status.html" class="btn-primary" id="primaryBtn">
                 <i class="fas fa-credit-card"></i>
-                <span data-ar="الانتقال للدفع / التحقق من الحالة" data-en="Go to Payment / Check Status">الانتقال للدفع / التحقق من الحالة</span>
+                <span>الانتقال للدفع</span>
             </a>
-            <a href="index.html" class="btn-outline">
+            <a href="index.html" class="btn-secondary">
                 <i class="fas fa-plus"></i>
-                <span data-ar="حجز جديد" data-en="New Booking">حجز جديد</span>
+                <span>حجز جديد</span>
             </a>
         </div>
     </div>
@@ -465,73 +447,23 @@
         </a>
     </div>
     
-    <!-- Hidden booking card for capture -->
-    <div id="bookingCard" class="booking-card" style="display: none;"></div>
-    
+    <!-- Scripts -->
     <script src="i18n.js"></script>
     <script src="success.js"></script>
     
     <script>
-        // Celebration Particles
-        function createCelebrationParticles() {
-            const container = document.getElementById('celebrationBg');
-            const colors = ['#D4AF37', '#E5C558', '#B4922A', '#F5F5DC'];
-            
-            for (let i = 0; i < 30; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'gold-particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 8 + 's';
-                particle.style.animationDuration = (Math.random() * 4 + 6) + 's';
-                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
-                container.appendChild(particle);
-            }
-        }
-        
-        // Initialize particles
-        createCelebrationParticles();
-        
-        // Language Toggle
+        // Simple language toggle
         let currentLang = 'ar';
         
         function toggleLanguage() {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             document.getElementById('langLabel').textContent = currentLang === 'ar' ? 'EN' : 'عربي';
             document.documentElement.lang = currentLang;
-            document.documentElement.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
             
-            // Update text content
-            document.querySelectorAll('[data-ar][data-en]').forEach(el => {
-                el.textContent = currentLang === 'ar' ? el.getAttribute('data-ar') : el.getAttribute('data-en');
-            });
+            if (typeof updateLanguageText === 'function') {
+                updateLanguageText();
+            }
         }
-        
-        // Countdown Timer (24 hours from now)
-        function startCountdown() {
-            const expiryTime = new Date().getTime() + (24 * 60 * 60 * 1000);
-            
-            setInterval(function() {
-                const now = new Date().getTime();
-                const distance = expiryTime - now;
-                
-                if (distance < 0) {
-                    document.getElementById('countdownTimer').textContent = '00:00:00';
-                    return;
-                }
-                
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                
-                document.getElementById('countdownTimer').textContent = 
-                    String(hours).padStart(2, '0') + ':' +
-                    String(minutes).padStart(2, '0') + ':' +
-                    String(seconds).padStart(2, '0');
-            }, 1000);
-        }
-        
-        // Start countdown on load
-        startCountdown();
     </script>
 </body>
 </html>
