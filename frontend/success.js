@@ -1,9 +1,10 @@
 /**
  * CORINTHIA HOTEL - SUCCESS PAGE SCRIPT
+ * Synced with success.html UI
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🚀 Page initializing...');
+    console.log('🚀 Success page initializing...');
     
     // Get booking ID from URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -15,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         i18n.init();
     }
     
-    // Initialize data from localStorage
+    // Initialize data from localStorage as fallback
     let bookingData = {
         name: localStorage.getItem('bookingName') || '',
         phone: localStorage.getItem('bookingPhone') || '',
@@ -26,50 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
         status: 'pending'
     };
     
-    // DOM Elements
-    const refEl = document.getElementById('reservationNumber');
-    const nameEl = document.getElementById('guestName');
-    const dateEl = document.getElementById('guestDate');
-    const phoneEl = document.getElementById('guestPhone');
-    const badge = document.getElementById('statusBadge');
-    const icon = document.getElementById('statusIcon');
-    const text = document.getElementById('statusText');
-    const timerSection = document.getElementById('timerSection');
-    const displayEl = document.getElementById('countdownDisplay');
-    
-    // Update reference
-    if (refEl) {
-        refEl.textContent = bookingData.referenceNumber || bookingData.id || '----';
-    }
-    
-    // Update name
-    if (nameEl) {
-        nameEl.textContent = bookingData.name || '----';
-    }
-    
-    // Update date
-    if (dateEl && bookingData.date) {
-        try {
-            const dateObj = new Date(bookingData.date);
-            dateEl.textContent = dateObj.toLocaleDateString('ar-EG', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        } catch (e) {
-            dateEl.textContent = bookingData.date;
-        }
-    } else if (dateEl) {
-        dateEl.textContent = '----';
-    }
-    
-    // Update phone
-    if (phoneEl) {
-        phoneEl.textContent = bookingData.phone || '----';
-    }
-    
-    // Initialize status badge
-    updateStatusBadge('pending');
+    // Populate UI with initial data (even before API call)
+    populateGuestDetails(bookingData);
     
     // Fetch from API if ID exists
     if (bookingId) {
@@ -77,9 +36,67 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchBookingData(bookingId);
     } else {
         console.log('💾 Using localStorage data');
+        // Show card immediately with localStorage data
+        revealCard();
         startCountdownWithFallback();
     }
 });
+
+// ============================================
+// POPULATE GUEST DETAILS
+// ============================================
+
+function populateGuestDetails(data) {
+    // Reference number
+    const refEl = document.getElementById('reservationNumber');
+    if (refEl) {
+        refEl.textContent = data.referenceNumber || data.id || '----';
+    }
+    
+    // Guest name
+    const nameEl = document.getElementById('guestName');
+    if (nameEl) {
+        nameEl.textContent = data.name || '----';
+    }
+    
+    // Date
+    const dateEl = document.getElementById('guestDate');
+    if (dateEl && data.date) {
+        try {
+            const dateObj = new Date(data.date);
+            dateEl.textContent = dateObj.toLocaleDateString('ar-EG', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        } catch (e) {
+            dateEl.textContent = data.date;
+        }
+    } else if (dateEl) {
+        dateEl.textContent = '----';
+    }
+    
+    // Phone
+    const phoneEl = document.getElementById('guestPhone');
+    if (phoneEl) {
+        phoneEl.textContent = data.phone || '----';
+    }
+}
+
+// ============================================
+// REVEAL CARD (Anti-Flicker)
+// ============================================
+
+function revealCard() {
+    const card = document.getElementById('mainCard');
+    if (card) {
+        // Small delay to ensure DOM is ready
+        setTimeout(() => {
+            card.classList.add('visible');
+            console.log('✨ Card revealed');
+        }, 100);
+    }
+}
 
 // ============================================
 // FETCH BOOKING DATA
@@ -95,156 +112,125 @@ async function fetchBookingData(id) {
             
             console.log('✅ API Response:', booking);
             
-            // Update DOM
-            const refEl = document.getElementById('reservationNumber');
-            const nameEl = document.getElementById('guestName');
-            const dateEl = document.getElementById('guestDate');
-            const phoneEl = document.getElementById('guestPhone');
+            // Populate guest details
+            populateGuestDetails(booking);
             
-            if (refEl) refEl.textContent = booking.referenceNumber || booking.id;
-            if (nameEl) nameEl.textContent = booking.name;
-            if (phoneEl) phoneEl.textContent = booking.phone;
-            
-            if (dateEl && booking.date) {
-                try {
-                    const dateObj = new Date(booking.date);
-                    dateEl.textContent = dateObj.toLocaleDateString('ar-EG', {
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric'
-                    });
-                } catch (e) {
-                    dateEl.textContent = booking.date;
-                }
-            }
-            
-            // Update status
-            updateStatusBadge(booking.status);
-            
-            // Handle countdown
-            const timerSection = document.getElementById('timerSection');
-            
-            if (booking.status === 'pending') {
-                if (booking.expiresAt) {
-                    if (timerSection) timerSection.classList.add('active');
-                    startCountdown(booking.expiresAt);
-                } else {
-                    if (timerSection) timerSection.classList.add('active');
-                    startCountdownWithFallback();
-                }
-            } else {
-                if (timerSection) timerSection.classList.remove('active');
-            }
+            // Update UI by status
+            updateUIByStatus(booking);
         }
     } catch (error) {
         console.error('❌ API Error:', error);
-        updateStatusBadge('pending');
+        // Fallback to pending state
+        revealCard();
+        updateUIByStatus({ status: 'pending' });
         startCountdownWithFallback();
     }
 }
 
 // ============================================
-// STATUS BADGE
+// UPDATE UI BY STATUS
 // ============================================
 
-function updateStatusBadge(status) {
+function updateUIByStatus(data) {
+    const status = data.status || 'pending';
+    const lang = (typeof i18n !== 'undefined' && i18n.currentLang === 'en') ? 'en' : 'ar';
+    
+    // DOM Elements
     const badge = document.getElementById('statusBadge');
     const icon = document.getElementById('statusIcon');
     const text = document.getElementById('statusText');
-    const timerSection = document.getElementById('timerSection');
+    const messageText = document.getElementById('statusMessageText');
     const title = document.getElementById('mainTitle');
     const subtitle = document.getElementById('mainSubtitle');
     const btn = document.getElementById('primaryBtn');
     const btnSpan = btn ? btn.querySelector('span') : null;
+    const timerContainer = document.getElementById('timerContainer');
     
-    const lang = (typeof i18n !== 'undefined' && i18n.currentLang === 'en') ? 'en' : 'ar';
+    // Remove all status classes
+    badge.classList.remove('status-pending', 'status-confirmed', 'status-cancelled');
     
-    switch (status) {
+    switch (status.toLowerCase()) {
         case 'confirmed':
-            if (badge) {
-                badge.style.background = 'rgba(39, 174, 96, 0.15)';
-                badge.style.border = '1px solid #27ae60';
-                badge.style.color = '#27ae60';
-            }
-            if (icon) {
-                icon.className = 'fas fa-check-circle';
-                icon.style.color = '#27ae60';
-            }
-            if (text) {
-                text.textContent = lang === 'ar' ? 'تم تأكيد الحجز ✓' : 'Booking Confirmed ✓';
-            }
-            if (timerSection) timerSection.classList.remove('active');
-            if (title) {
-                title.textContent = lang === 'ar' ? 'مرحباً بكم في كورنثيا' : 'Welcome to Corinthia';
-                title.style.color = '#27ae60';
-            }
-            if (subtitle) {
-                subtitle.textContent = lang === 'ar' 
-                    ? 'حجزكم مضمون - نراكم قريباً' 
-                    : 'Your booking is guaranteed - See you soon';
-            }
+            // Green badge, hide timer
+            badge.classList.add('status-confirmed');
+            icon.className = 'fas fa-check-circle';
+            text.textContent = lang === 'ar' ? 'تم تأكيد الحجز ✓' : 'Booking Confirmed ✓';
+            timerContainer.classList.remove('active');
+            
+            // Title and message
+            title.textContent = lang === 'ar' ? 'مرحباً بكم في كورنثيا' : 'Welcome to Corinthia';
+            messageText.textContent = lang === 'ar' 
+                ? 'حجزكم مضمون - نراكم قريباً' 
+                : 'Your booking is guaranteed - See you soon';
+            
+            // Button
             if (btnSpan) {
                 btnSpan.textContent = lang === 'ar' ? 'عرض تفاصيل الحجز' : 'View Booking Details';
             }
+            btn.href = 'check-status.html';
+            
+            // Reveal card
+            revealCard();
             break;
             
         case 'cancelled':
         case 'expired':
-            if (badge) {
-                badge.style.background = 'rgba(231, 76, 60, 0.15)';
-                badge.style.border = '1px solid #e74c3c';
-                badge.style.color = '#e74c3c';
-            }
-            if (icon) {
-                icon.className = 'fas fa-times-circle';
-                icon.style.color = '#e74c3c';
-            }
-            if (text) {
-                text.textContent = lang === 'ar' ? 'تم إلغاء الحجز' : 'Booking Cancelled';
-            }
-            if (timerSection) timerSection.classList.remove('active');
-            if (title) {
-                title.textContent = lang === 'ar' ? 'نأسف لهذا الأمر' : 'We apologize';
-                title.style.color = '#e74c3c';
-            }
-            if (subtitle) {
-                subtitle.textContent = lang === 'ar' 
-                    ? 'تم إلغاء الحجز لعدم إتمام الدفع' 
-                    : 'Booking cancelled due to non-payment';
-            }
+            // Red badge, hide timer
+            badge.classList.add('status-cancelled');
+            icon.className = 'fas fa-times-circle';
+            text.textContent = lang === 'ar' ? 'تم إلغاء الحجز' : 'Booking Cancelled';
+            timerContainer.classList.remove('active');
+            
+            // Title and message
+            title.textContent = lang === 'ar' ? 'نأسف لهذا الأمر' : 'We apologize';
+            messageText.textContent = lang === 'ar' 
+                ? 'تم إلغاء الحجز لعدم إتمام الدفع' 
+                : 'Booking cancelled due to non-payment';
+            
+            // Button
             if (btnSpan) {
                 btnSpan.textContent = lang === 'ar' ? 'إعادة الحجز' : 'Book Again';
             }
+            btn.href = 'index.html';
+            
+            // Reveal card
+            revealCard();
             break;
             
         default:
         case 'pending':
-            if (badge) {
-                badge.style.background = 'rgba(254, 163, 0, 0.1)';
-                badge.style.border = '1px solid var(--corinthia-honey)';
-                badge.style.color = 'var(--corinthia-anvil)';
-            }
-            if (icon) {
-                icon.className = 'fas fa-clock';
-                icon.style.color = 'var(--corinthia-honey)';
-            }
-            if (text) {
-                text.textContent = lang === 'ar' ? 'بانتظار التأكيد' : 'Pending Confirmation';
-            }
-            if (title) {
-                title.textContent = lang === 'ar' ? 'شكراً لاختياركم كورنثيا' : 'Thank you for choosing Corinthia';
-                title.style.color = 'var(--corinthia-anvil)';
-            }
-            if (subtitle) {
-                subtitle.textContent = lang === 'ar' 
-                    ? 'تم استلام طلب الحجز بنجاح' 
-                    : 'Your reservation request has been received';
-            }
+            // Gold badge, show timer
+            badge.classList.add('status-pending');
+            icon.className = 'fas fa-clock';
+            text.textContent = lang === 'ar' ? 'بانتظار التأكيد' : 'Pending Confirmation';
+            
+            // Title and message
+            title.textContent = lang === 'ar' ? 'شكراً لاختياركم كورنثيا' : 'Thank you for choosing Corinthia';
+            messageText.textContent = lang === 'ar' 
+                ? 'تم استلام طلب الحجز بنجاح' 
+                : 'Your reservation request has been received';
+            
+            // Button
             if (btnSpan) {
                 btnSpan.textContent = lang === 'ar' ? 'الانتقال للدفع' : 'Go to Payment';
             }
+            btn.href = 'check-status.html';
+            
+            // Handle countdown
+            if (data.expiresAt) {
+                timerContainer.classList.add('active');
+                startCountdown(data.expiresAt);
+            } else {
+                timerContainer.classList.add('active');
+                startCountdownWithFallback();
+            }
+            
+            // Reveal card
+            revealCard();
             break;
     }
+    
+    console.log('🎨 UI updated for status:', status);
 }
 
 // ============================================
@@ -261,14 +247,9 @@ function startCountdownWithFallback() {
 
 function startCountdown(expiresAtISO) {
     const displayEl = document.getElementById('countdownDisplay');
-    const timerSection = document.getElementById('timerSection');
-    
-    if (timerSection) {
-        timerSection.classList.add('active');
-    }
     
     if (displayEl) {
-        displayEl.innerHTML = '<i class="fas fa-clock" style="color: var(--corinthia-honey)"></i> <span>--:--:--</span>';
+        displayEl.textContent = '--:--:--';
     }
     
     if (countdownInterval) {
@@ -302,11 +283,14 @@ function updateCountdown(expirationTime) {
     const diff = expirationTime - now;
     
     if (diff <= 0) {
-        displayEl.innerHTML = '<span style="color: #e74c3c">00:00:00</span>';
+        displayEl.textContent = '00:00:00';
+        
         if (countdownInterval) {
             clearInterval(countdownInterval);
         }
-        updateStatusBadge('cancelled');
+        
+        // Auto-trigger cancelled state
+        updateUIByStatus({ status: 'cancelled' });
         return;
     }
     
@@ -315,5 +299,12 @@ function updateCountdown(expirationTime) {
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
     
     const timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    displayEl.innerHTML = `<i class="fas fa-clock" style="color: var(--corinthia-honey)"></i> <span>${timeStr}</span>`;
+    displayEl.textContent = timeStr;
 }
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', () => {
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+    }
+});

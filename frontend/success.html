@@ -9,16 +9,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- html2canvas Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    
     <!-- Luxury Design System -->
     <link rel="stylesheet" href="luxury-design-system.css">
     
     <style>
         /* =========================================
-           CORINTHIA DIGITAL PASS
+           CORINTHIA DIGITAL PASS - CORINTHIA TRIPOLI
            ========================================= */
+        
+        :root {
+            /* Corinthia Tripoli Brand Colors */
+            --honey-gold: #D4AF37;
+            --anvil-dark: #2C2C2C;
+            --haze-light: #F5F5F5;
+        }
         
         * {
             box-sizing: border-box;
@@ -29,40 +33,50 @@
         html, body {
             max-width: 100vw;
             overflow-x: hidden;
+            background: var(--haze-light);
         }
         
         body {
             font-family: var(--font-body);
-            background: var(--corinthia-haze);
             min-height: 100vh;
-            margin: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
+            padding: 20px;
         }
         
+        /* Anti-Flicker: Start hidden */
         .vip-invitation-card {
-            max-width: 400px;
+            max-width: 420px;
             width: 100%;
             background: var(--white);
             border: 1px solid var(--corinthia-clay);
             border-radius: 4px;
-            padding: 25px;
+            padding: 30px;
             text-align: center;
             position: relative;
             z-index: 1;
-            box-shadow: 0 10px 40px var(--anvil-shadow);
+            box-shadow: 0 10px 50px rgba(44, 44, 44, 0.15);
+            /* Anti-flicker: Start hidden */
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+        }
+        
+        /* Reveal class */
+        .vip-invitation-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         
         /* Logo */
         .card-logo {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
         
         .card-logo img {
-            height: 50px;
-            filter: drop-shadow(0 0 10px var(--honey-glow));
+            height: 60px;
+            filter: drop-shadow(0 2px 8px rgba(212, 175, 55, 0.3));
         }
         
         /* Thank You Message */
@@ -72,149 +86,232 @@
         
         .thank-you-message h2 {
             font-family: var(--font-arabic);
-            font-size: 1.3rem;
-            font-weight: 400;
-            color: var(--corinthia-anvil);
-            margin-bottom: 5px;
+            font-size: 1.4rem;
+            font-weight: 500;
+            color: var(--anvil-dark);
+            margin-bottom: 8px;
         }
         
         .thank-you-message p {
-            color: rgba(16, 24, 32, 0.7);
-            font-size: 0.85rem;
+            color: rgba(44, 44, 44, 0.7);
+            font-size: 0.9rem;
+        }
+        
+        /* Status Message */
+        .status-message {
+            min-height: 24px;
+            margin-bottom: 15px;
+            font-family: var(--font-arabic);
+            font-size: 0.95rem;
+            color: var(--honey-gold);
         }
         
         /* Decorative Line */
         .decorative-line {
-            width: 50px;
+            width: 60px;
             height: 1px;
-            background: linear-gradient(90deg, transparent, var(--corinthia-honey), transparent);
-            margin: 15px auto;
+            background: linear-gradient(90deg, transparent, var(--honey-gold), transparent);
+            margin: 20px auto;
         }
         
         /* Reference Section */
         .reference-section {
-            background: rgba(254, 163, 0, 0.08);
-            border: 1px solid var(--corinthia-clay);
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid rgba(212, 175, 55, 0.3);
             border-radius: 4px;
-            padding: 15px;
-            margin: 15px 0;
+            padding: 18px;
+            margin: 20px 0;
         }
         
         .reference-label {
             font-family: var(--font-body);
             font-size: 0.7rem;
-            color: var(--corinthia-honey);
-            letter-spacing: 1px;
+            color: var(--honey-gold);
+            letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 5px;
+            margin-bottom: 6px;
         }
         
         .reference-number {
             font-family: var(--font-numeric);
-            font-size: 1.6rem;
+            font-size: 1.8rem;
             font-weight: 600;
-            color: var(--corinthia-anvil);
-            letter-spacing: 2px;
+            color: var(--anvil-dark);
+            letter-spacing: 3px;
         }
         
-        /* Guest Details */
+        /* Guest Details - Clean Vertical Flexbox */
         .guest-details {
-            background: rgba(254, 163, 0, 0.05);
+            background: rgba(212, 175, 55, 0.05);
             border: 1px solid var(--corinthia-clay);
             border-radius: 4px;
-            padding: 15px;
-            margin: 15px 0;
-            text-align: right;
+            padding: 18px;
+            margin: 20px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
         
         .guest-row {
             display: flex;
             justify-content: space-between;
-            padding: 6px 0;
+            align-items: center;
+            padding-bottom: 12px;
             border-bottom: 1px solid rgba(175, 169, 160, 0.2);
         }
         
         .guest-row:last-child {
+            padding-bottom: 0;
             border-bottom: none;
         }
         
         .guest-label {
             font-family: var(--font-arabic);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             color: var(--corinthia-clay);
         }
         
         .guest-value {
             font-family: var(--font-body);
-            font-size: 0.85rem;
-            color: var(--corinthia-anvil);
+            font-size: 0.9rem;
+            color: var(--anvil-dark);
             font-weight: 500;
+            text-align: right;
         }
         
         /* Status Badge */
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
             border-radius: 4px;
             font-family: var(--font-arabic);
-            font-size: 0.95rem;
-            margin: 15px 0;
+            font-size: 1rem;
+            font-weight: 500;
+            margin: 20px 0;
+            transition: all 0.3s ease;
         }
         
         .status-badge i {
-            font-size: 1rem;
+            font-size: 1.1rem;
         }
         
-        /* Timer Section */
-        .timer-section {
+        /* Status States */
+        .status-pending {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--honey-gold);
+            color: var(--anvil-dark);
+        }
+        
+        .status-pending i {
+            color: var(--honey-gold);
+        }
+        
+        .status-confirmed {
+            background: rgba(39, 174, 96, 0.12);
+            border: 1px solid #27ae60;
+            color: #27ae60;
+        }
+        
+        .status-confirmed i {
+            color: #27ae60;
+        }
+        
+        .status-cancelled {
+            background: rgba(231, 76, 60, 0.12);
+            border: 1px solid #e74c3c;
+            color: #e74c3c;
+        }
+        
+        .status-cancelled i {
+            color: #e74c3c;
+        }
+        
+        /* Timer Container */
+        #timerContainer {
             display: none;
-            background: rgba(254, 163, 0, 0.05);
+            margin: 20px 0;
+        }
+        
+        #timerContainer.active {
+            display: block;
+        }
+        
+        .timer-section {
+            background: rgba(212, 175, 55, 0.05);
             border: 1px solid var(--corinthia-clay);
             border-radius: 4px;
-            padding: 15px;
-            margin: 15px 0;
+            padding: 18px;
         }
         
-        .timer-section.active {
-            display: block;
+        .timer-label {
+            font-family: var(--font-arabic);
+            font-size: 0.8rem;
+            color: var(--corinthia-clay);
+            margin-bottom: 10px;
         }
         
         .timer-display {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            background: rgba(254, 163, 0, 0.1);
-            border: 1px solid var(--corinthia-honey);
+            justify-content: center;
+            gap: 10px;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--honey-gold);
             border-radius: 4px;
-            padding: 10px 20px;
-            margin-top: 10px;
+            padding: 12px 24px;
         }
         
         .timer-display i {
-            color: var(--corinthia-honey);
+            color: var(--honey-gold);
         }
         
         .timer-display span {
             font-family: var(--font-numeric);
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 600;
-            color: var(--corinthia-anvil);
+            color: var(--anvil-dark);
+            min-width: 80px;
         }
         
         /* Action Buttons */
         .action-buttons {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
+            gap: 12px;
+            margin-top: 25px;
         }
         
         .btn-primary {
-            background: var(--corinthia-honey);
-            color: var(--corinthia-anvil);
-            border: 1px solid var(--corinthia-honey);
+            background: var(--honey-gold);
+            color: var(--anvil-dark);
+            border: 1px solid var(--honey-gold);
+            padding: 14px 20px;
+            border-radius: 4px;
+            font-family: var(--font-body);
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        
+        .btn-primary:hover {
+            background: var(--anvil-dark);
+            color: var(--honey-gold);
+            border-color: var(--anvil-dark);
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--anvil-dark);
+            border: 1px solid var(--corinthia-clay);
             padding: 12px 20px;
             border-radius: 4px;
             font-family: var(--font-body);
@@ -225,72 +322,48 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            transition: var(--transition);
-            text-decoration: none;
-        }
-        
-        .btn-primary:hover {
-            background: var(--corinthia-anvil);
-            color: var(--corinthia-honey);
-            border-color: var(--corinthia-anvil);
-        }
-        
-        .btn-secondary {
-            background: transparent;
-            color: var(--corinthia-anvil);
-            border: 1px solid var(--corinthia-clay);
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-family: var(--font-body);
-            font-size: 0.85rem;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: var(--transition);
+            transition: all 0.3s ease;
             text-decoration: none;
         }
         
         .btn-secondary:hover {
-            background: var(--corinthia-anvil);
+            background: var(--anvil-dark);
             color: var(--white);
-            border-color: var(--corinthia-anvil);
+            border-color: var(--anvil-dark);
         }
         
         /* Contact Buttons */
         .contact-buttons {
             position: fixed;
-            bottom: 15px;
-            right: 15px;
+            bottom: 20px;
+            right: 20px;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
             z-index: 100;
         }
         
         .contact-btn {
-            width: 40px;
-            height: 40px;
+            width: 44px;
+            height: 44px;
             border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1rem;
-            transition: var(--transition);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
             text-decoration: none;
         }
         
         .contact-btn.phone {
-            background: var(--corinthia-honey);
-            color: var(--corinthia-anvil);
+            background: var(--honey-gold);
+            color: var(--anvil-dark);
         }
         
         .contact-btn.whatsapp {
-            background: rgba(254, 163, 0, 0.2);
-            border: 1px solid var(--corinthia-honey);
-            color: var(--corinthia-honey);
+            background: rgba(212, 175, 55, 0.2);
+            border: 1px solid var(--honey-gold);
+            color: var(--honey-gold);
         }
         
         .contact-btn:hover {
@@ -305,15 +378,19 @@
             }
             
             .card-logo img {
-                height: 45px;
+                height: 50px;
             }
             
             .thank-you-message h2 {
-                font-size: 1.1rem;
+                font-size: 1.2rem;
             }
             
             .reference-number {
-                font-size: 1.4rem;
+                font-size: 1.5rem;
+            }
+            
+            .timer-display span {
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -333,41 +410,47 @@
             <p id="mainSubtitle">تم استلام طلب الحجز بنجاح</p>
         </div>
         
+        <!-- Status Message -->
+        <div class="status-message" id="statusMessageText"></div>
+        
         <div class="decorative-line"></div>
         
         <!-- Reference Number -->
         <div class="reference-section">
             <div class="reference-label">الرقم المرجعي</div>
-            <div class="reference-number" id="reservationNumber"></div>
+            <div class="reference-number" id="reservationNumber">----</div>
         </div>
         
-        <!-- Guest Details -->
+        <!-- Guest Details - Clean Vertical Flexbox -->
         <div class="guest-details">
             <div class="guest-row">
                 <span class="guest-label">الاسم</span>
-                <span class="guest-value" id="guestName"></span>
+                <span class="guest-value" id="guestName">----</span>
             </div>
             <div class="guest-row">
                 <span class="guest-label">التاريخ</span>
-                <span class="guest-value" id="guestDate"></span>
+                <span class="guest-value" id="guestDate">----</span>
             </div>
             <div class="guest-row">
                 <span class="guest-label">الهاتف</span>
-                <span class="guest-value" id="guestPhone"></span>
+                <span class="guest-value" id="guestPhone">----</span>
             </div>
         </div>
         
         <!-- Status Badge -->
-        <div class="status-badge" id="statusBadge">
+        <div class="status-badge status-pending" id="statusBadge">
             <i class="fas fa-clock" id="statusIcon"></i>
-            <span id="statusText"></span>
+            <span id="statusText">بانتظار التأكيد</span>
         </div>
         
-        <!-- Timer Section -->
-        <div class="timer-section" id="timerSection">
-            <div class="timer-display">
-                <i class="fas fa-clock"></i>
-                <span id="countdownDisplay"></span>
+        <!-- Timer Container -->
+        <div id="timerContainer">
+            <div class="timer-section">
+                <div class="timer-label">الوقت المتبقي لإتمام الحجز</div>
+                <div class="timer-display">
+                    <i class="fas fa-clock"></i>
+                    <span id="countdownDisplay">--:--:--</span>
+                </div>
             </div>
         </div>
         
