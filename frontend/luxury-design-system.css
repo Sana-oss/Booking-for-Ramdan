@@ -42,7 +42,7 @@
 
 :root {
     /* Primary Brand Colors */
-    --corinthia-honey: #FEA300;      /* Primary Action Color */
+    --corinthia-honey: #FFA300;      /* Primary Action Color */
     --corinthia-anvil: #101820;      /* Primary Text & Dark Backgrounds */
     --corinthia-limestone: #D7D2CB;  /* Section Backgrounds */
     --corinthia-haze: #D9D9D6;       /* Main Page Background */
@@ -56,7 +56,7 @@
     --font-body: 'GT America LC Extended', sans-serif;
     
     /* Utility Colors */
-    --honey-glow: rgba(254, 163, 0, 0.2);
+    --honey-glow: rgba(255, 163, 0, 0.2);
     --anvil-shadow: rgba(16, 24, 32, 0.1);
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }

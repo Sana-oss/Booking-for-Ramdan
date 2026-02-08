@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
+    <!-- QR Code Generator Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
     <!-- html2canvas Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
@@ -23,214 +26,10 @@
            Corporate Identity Implementation
            ========================================= */
         
-        :root {
-            /* Corinthia Tripoli Brand Colors */
-            --honey-gold: #D4AF37;
-            --anvil-dark: #2C2C2C;
-            --haze-light: #F5F5F5;
-        }
-        
-        /* =========================================
-           DOWNLOADABLE DIGITAL PASS TEMPLATE
-           Hidden off-screen until capture
-           ========================================= */
-        #downloadablePass {
-            position: fixed;
-            left: -9999px;
-            top: 0;
-            width: 400px;
-            background: var(--white);
-            border: 3px solid var(--honey-gold);
-            border-radius: 2px;
-            padding: 0;
-            text-align: center;
-            box-sizing: border-box;
-            font-family: var(--font-body);
-            color: var(--anvil-dark);
-        }
-        
-        /* Pass Logo - Top of Booking Pass */
-        #downloadablePass .pass-logo-container {
-            padding: 30px 25px 20px;
-            background: var(--anvil-dark);
-        }
-        
-        #downloadablePass #passLogo {
-            display: block;
-            width: 160px;
-            margin: 0 auto 20px auto;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.5));
-        }
-        
-        #downloadablePass .pass-logo-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--honey-gold), transparent);
-            margin: 0 40px;
-        }
-        
-        #downloadablePass .pass-header {
-            background: var(--anvil-dark);
-            padding: 25px 20px 20px;
-            border-bottom: 2px solid var(--honey-gold);
-        }
-        
-        #downloadablePass .pass-logo {
-            margin-bottom: 15px;
-        }
-        
-        #downloadablePass .pass-logo img {
-            height: 50px;
-            filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.3));
-        }
-        
-        #downloadablePass .pass-title {
-            font-family: var(--font-heading-en);
-            font-size: 1.1rem;
-            color: var(--honey-gold);
-            letter-spacing: 2px;
-            margin: 0;
-            text-transform: uppercase;
-        }
-        
-        #downloadablePass .pass-subtitle {
-            font-family: var(--font-body);
-            font-size: 0.8rem;
-            color: rgba(255, 255, 255, 0.7);
-            margin-top: 5px;
-        }
-        
-        #downloadablePass .pass-divider {
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--honey-gold), transparent);
-            margin: 15px 30px;
-        }
-        
-        #downloadablePass .pass-ref {
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.5);
-            padding: 20px;
-            margin: 15px 20px;
-        }
-        
-        #downloadablePass .pass-ref-label {
-            font-family: var(--font-body);
-            font-size: 0.7rem;
-            color: var(--honey-gold);
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-        }
-        
-        #downloadablePass .pass-ref-number {
-            font-family: var(--font-numeric);
-            font-size: 2rem;
-            font-weight: 600;
-            color: var(--anvil-dark);
-            letter-spacing: 3px;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
-        }
-        
-        #downloadablePass .pass-details {
-            padding: 0 25px;
-            text-align: right;
-        }
-        
-        #downloadablePass .pass-detail-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(16, 24, 32, 0.15);
-        }
-        
-        #downloadablePass .pass-detail-row:last-child {
-            border-bottom: none;
-        }
-        
-        #downloadablePass .pass-detail-label {
-            font-family: var(--font-body);
-            font-size: 0.85rem;
-            color: rgba(16, 24, 32, 0.6);
-        }
-        
-        #downloadablePass .pass-detail-value {
-            font-family: var(--font-numeric);
-            font-size: 0.95rem;
-            color: var(--anvil-dark);
-            font-weight: 600;
-        }
-        
-        #downloadablePass .pass-status {
-            margin: 20px 20px 15px;
-            padding: 15px;
-            border-radius: 2px;
-            text-align: center;
-        }
-        
-        #downloadablePass .pass-status.pending {
-            background: rgba(243, 156, 18, 0.15);
-            border: 1px solid #f39c12;
-        }
-        
-        #downloadablePass .pass-status.confirmed {
-            background: rgba(39, 174, 96, 0.15);
-            border: 1px solid #2ecc71;
-        }
-        
-        #downloadablePass .pass-status.cancelled {
-            background: rgba(231, 76, 60, 0.15);
-            border: 1px solid #e74c3c;
-        }
-        
-        #downloadablePass .pass-status-badge {
-            font-family: var(--font-body);
-            font-size: 0.9rem;
-            font-weight: 700;
-            letter-spacing: 1px;
-        }
-        
-        #downloadablePass .pass-qr {
-            margin: 15px 0;
-        }
-        
-        #downloadablePass .pass-qr-box {
-            width: 80px;
-            height: 80px;
-            background: rgba(212, 175, 55, 0.1);
-            border: 2px solid var(--honey-gold);
-            margin: 0 auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-family: var(--font-heading-en);
-            font-size: 0.7rem;
-            color: var(--honey-gold);
-            text-align: center;
-            line-height: 1.2;
-        }
-        
-        #downloadablePass .pass-footer {
-            background: rgba(16, 24, 32, 0.05);
-            padding: 18px 20px;
-            border-top: 1px solid rgba(212, 175, 55, 0.3);
-        }
-        
-        #downloadablePass .pass-footer-text {
-            font-family: var(--font-body);
-            font-size: 0.75rem;
-            color: rgba(16, 24, 32, 0.7);
-            line-height: 1.6;
-            margin: 0;
-        }
-        
-        #downloadablePass .pass-footer-text strong {
-            color: var(--honey-gold);
-        }
-        
         /* Main Styles */
         body {
             font-family: var(--font-body);
-            background: var(--haze-light);
+            background: var(--corinthia-haze);
             min-height: 100vh;
             margin: 0;
             display: flex;
@@ -250,7 +49,7 @@
             padding: 40px 30px;
             text-align: center;
             position: relative;
-            box-shadow: 0 10px 50px rgba(44, 44, 44, 0.15);
+            box-shadow: 0 10px 50px var(--anvil-shadow);
             /* Anti-flicker */
             opacity: 0;
             transform: translateY(10px);
@@ -268,20 +67,20 @@
             top: 20px;
             left: 20px;
             background: var(--white);
-            border: 1px solid var(--honey-gold);
-            color: var(--honey-gold);
+            border: 1px solid var(--corinthia-honey);
+            color: var(--corinthia-honey);
             padding: 10px 16px;
             border-radius: 4px;
             cursor: pointer;
             font-family: var(--font-body);
             font-weight: 600;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             z-index: 10;
         }
         
         .lang-toggle:hover {
-            background: var(--honey-gold);
-            color: var(--anvil-dark);
+            background: var(--corinthia-honey);
+            color: var(--white);
         }
         
         /* Logo */
@@ -291,19 +90,19 @@
         
         .card-logo img {
             height: 60px;
-            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
+            filter: drop-shadow(0 0 20px var(--honey-glow));
         }
         
         /* Result Logo - Logo at top of result card */
         .result-logo {
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+            border-bottom: 1px solid rgba(255, 163, 0, 0.3);
         }
         
         .result-logo img {
             height: 50px;
-            filter: drop-shadow(0 0 15px rgba(212, 175, 55, 0.4));
+            filter: drop-shadow(0 0 15px var(--honey-glow));
         }
         
         /* Title */
@@ -315,12 +114,12 @@
             font-family: var(--font-arabic);
             font-size: 1.5rem;
             font-weight: 500;
-            color: var(--anvil-dark);
+            color: var(--corinthia-anvil);
             margin-bottom: 8px;
         }
         
         .page-title p {
-            color: rgba(44, 44, 44, 0.7);
+            color: rgba(16, 24, 32, 0.7);
             font-size: 0.9rem;
             font-family: var(--font-body);
         }
@@ -342,46 +141,46 @@
             border: 2px solid var(--corinthia-clay);
             border-radius: 4px;
             padding: 16px 20px;
-            color: var(--anvil-dark);
+            color: var(--corinthia-anvil);
             font-family: var(--font-numeric);
             font-size: 1rem;
             text-align: center;
             letter-spacing: 2px;
             text-transform: uppercase;
             font-weight: 500;
-            transition: all 0.3s ease;
+            transition: var(--transition);
         }
         
         .search-input:focus {
             outline: none;
-            border-color: var(--honey-gold);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+            border-color: var(--corinthia-honey);
+            box-shadow: 0 0 20px var(--honey-glow);
         }
         
         .search-input::placeholder {
-            color: rgba(44, 44, 44, 0.4);
+            color: rgba(16, 24, 32, 0.4);
             letter-spacing: 1px;
         }
         
         .search-btn {
-            background: var(--honey-gold);
-            color: var(--anvil-dark);
-            border: 2px solid var(--honey-gold);
+            background: var(--corinthia-honey);
+            color: var(--corinthia-anvil);
+            border: 2px solid var(--corinthia-honey);
             border-radius: 4px;
             padding: 16px 24px;
             cursor: pointer;
             font-family: var(--font-body);
             font-weight: 700;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 8px;
         }
         
         .search-btn:hover {
-            background: var(--anvil-dark);
-            color: var(--honey-gold);
-            border-color: var(--anvil-dark);
+            background: var(--corinthia-anvil);
+            color: var(--corinthia-honey);
+            border-color: var(--corinthia-anvil);
         }
         
         /* Status Timeline */
@@ -401,7 +200,7 @@
             left: 25px;
             right: 25px;
             height: 2px;
-            background: rgba(44, 44, 44, 0.2);
+            background: rgba(16, 24, 32, 0.2);
         }
         
         .timeline-step {
@@ -417,38 +216,38 @@
             height: 40px;
             border-radius: 4px;
             background: var(--white);
-            border: 2px solid rgba(44, 44, 44, 0.2);
+            border: 2px solid rgba(16, 24, 32, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1rem;
-            color: rgba(44, 44, 44, 0.5);
-            transition: all 0.3s ease;
+            color: rgba(16, 24, 32, 0.5);
+            transition: var(--transition);
             margin-bottom: 10px;
         }
         
         .step-icon.active {
-            background: var(--honey-gold);
-            border-color: var(--honey-gold);
-            color: var(--anvil-dark);
+            background: var(--corinthia-honey);
+            border-color: var(--corinthia-honey);
+            color: var(--corinthia-anvil);
         }
         
         .step-icon.current {
-            background: rgba(212, 175, 55, 0.2);
-            border-color: var(--honey-gold);
-            color: var(--honey-gold);
+            background: rgba(255, 163, 0, 0.2);
+            border-color: var(--corinthia-honey);
+            color: var(--corinthia-honey);
             animation: pulse 2s infinite;
         }
         
         @keyframes pulse {
-            0%, 100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.4); }
-            50% { box-shadow: 0 0 0 8px rgba(212, 175, 55, 0); }
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 163, 0, 0.4); }
+            50% { box-shadow: 0 0 0 8px rgba(255, 163, 0, 0); }
         }
         
         .step-label {
             font-family: var(--font-arabic);
             font-size: 0.75rem;
-            color: rgba(44, 44, 44, 0.6);
+            color: rgba(16, 24, 32, 0.6);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
@@ -471,7 +270,7 @@
         }
         
         .result-card {
-            background: rgba(44, 44, 44, 0.02);
+            background: rgba(16, 24, 32, 0.02);
             border: 1px solid var(--corinthia-clay);
             padding: 25px;
             text-align: center;
@@ -506,7 +305,7 @@
         .guest-value {
             font-family: var(--font-body);
             font-size: 0.9rem;
-            color: var(--anvil-dark);
+            color: var(--corinthia-anvil);
             font-weight: 500;
         }
         
@@ -529,9 +328,9 @@
         }
         
         .status-pending {
-            background: rgba(243, 156, 18, 0.15);
-            border: 1px solid #f39c12;
-            color: #d35400;
+            background: rgba(255, 163, 0, 0.15);
+            border: 1px solid #FFA300;
+            color: #CC8200;
         }
         
         .status-confirmed {
@@ -550,7 +349,7 @@
         .status-message {
             font-family: var(--font-body);
             font-size: 0.85rem;
-            color: rgba(44, 44, 44, 0.7);
+            color: rgba(16, 24, 32, 0.7);
             margin-bottom: 20px;
             line-height: 1.6;
         }
@@ -559,46 +358,85 @@
         .result-actions {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            margin-top: 25px;
+            gap: 15px;
+            margin-top: 35px;
+            padding: 0 10px;
         }
         
-        .action-btn {
+        /* Base Button Styles */
+        .action-btn,
+        .result-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 14px 24px;
-            border-radius: 4px;
+            gap: 10px;
+            padding: 16px 32px;
             font-family: var(--font-body);
-            font-weight: 700;
-            font-size: 0.9rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
+            transition: var(--transition);
+            text-decoration: none;
+            border-radius: 2px;
         }
         
-        .action-btn.primary {
-            background: var(--honey-gold);
-            color: var(--anvil-dark);
-            border-color: var(--honey-gold);
+        /* Primary Button - Download Receipt (Gold) */
+        .action-btn.primary,
+        .result-btn.primary {
+            background: var(--corinthia-honey);
+            color: var(--white);
+            border: 2px solid var(--corinthia-honey);
+            box-shadow: 0 4px 15px var(--honey-glow);
         }
         
-        .action-btn.primary:hover {
-            background: var(--anvil-dark);
-            color: var(--honey-gold);
-            border-color: var(--anvil-dark);
+        .action-btn.primary:hover,
+        .result-btn.primary:hover {
+            background: #CC8200;
+            border-color: #CC8200;
+            box-shadow: 0 6px 25px var(--honey-glow);
+            transform: translateY(-2px);
         }
         
-        .action-btn.secondary {
+        .action-btn.primary .fas,
+        .result-btn.primary .fas {
+            color: var(--white);
+            font-size: 1.1em;
+        }
+        
+        /* Secondary Button - New Booking (Ghost) */
+        .action-btn.secondary,
+        .result-btn.secondary {
             background: transparent;
-            color: var(--anvil-dark);
-            border-color: var(--corinthia-clay);
+            color: var(--corinthia-honey);
+            border: 2px solid var(--corinthia-honey);
+            box-shadow: none;
         }
         
-        .action-btn.secondary:hover {
-            border-color: var(--honey-gold);
-            color: var(--honey-gold);
+        .action-btn.secondary:hover,
+        .result-btn.secondary:hover {
+            background: rgba(255, 163, 0, 0.1);
+            border-color: var(--corinthia-honey);
+            box-shadow: none;
+        }
+        
+        .action-btn.secondary .fas,
+        .result-btn.secondary .fas {
+            color: var(--corinthia-honey);
+            font-size: 1.1em;
+        }
+        
+        /* Responsive Button Adjustments */
+        @media (max-width: 500px) {
+            .result-actions {
+                padding: 0 5px;
+            }
+            
+            .action-btn,
+            .result-btn {
+                padding: 14px 24px;
+                font-size: 0.9rem;
+            }
         }
         
         /* Error Message */
@@ -731,44 +569,49 @@
         </div>
     </div>
     
-    <!-- Downloadable Pass Template (Hidden) -->
-    <div id="downloadablePass">
-        <!-- Pass Logo - Top of Booking Pass -->
-        <div class="pass-logo-container">
-            <img id="passLogo" src="new-logo.svg" alt="Corinthia Hotel Tripoli Logo">
+    <!-- Downloadable Pass Template (Hidden, positioned off-screen for capture) -->
+    <div id="downloadablePass" style="position: fixed; left: -9999px; top: 0; width: 400px; background: #FFFFFF; border: 2px solid #D4AF37; padding: 0; text-align: center; font-family: Arial, sans-serif;">
+        <!-- Elegant White Header with Graphical Crest -->
+        <div style="padding: 35px 25px 25px; background: #FFFFFF; text-align: center;">
+            <!-- Graphical Crest Logo - Centered and Elegant -->
+            <img id="passLogo" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMTMzLjg2IDU2Ni45MyI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI5LjYuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDkpICAtLT4KICA8cG9seWdvbiBwb2ludHM9IjQ3Ny4wNyA0MzcuNjUgNDg0LjYzIDQzNy42NSA0ODQuNjMgNDYxLjAyIDQ4OC4wNSA0NjEuMDIgNDg4LjA1IDQzNy42NSA0OTUuNjQgNDM3LjY1IDQ5NS42NCA0MzQuMzQgNDc3LjA3IDQzNC4zNCA0NzcuMDcgNDM3LjY1Ii8+CiAgPHBhdGggZD0iTTUyMi4yOCw0NDYuNDhjMS4wMy0xLjM1LDEuNTQtMi44OSwxLjU0LTQuNjIsMC0yLjI4LS43OC00LjEtMi4zMy01LjQ3LTEuNTUtMS4zNy0zLjYzLTIuMDUtNi4yNC0yLjA1aC03LjkzdjI2LjY4aDMuNDJ2LTExLjY1aDIuOTNsOC45MSwxMS42NWg0LjEzbC05LjI0LTExLjg4YzIuMTgtLjQzLDMuNzgtMS4zMiw0LjgxLTIuNjdaTTUxMC43NSw0NDYuMzN2LTguODNoNC4yOGMxLjczLDAsMy4wNC4zOCwzLjkzLDEuMTUuODkuNzYsMS4zMywxLjg2LDEuMzMsMy4yOXMtLjQ1LDIuNDktMS4zMywzLjI1Yy0uODkuNzYtMi4yLDEuMTUtMy45MywxLjE1aC00LjI4WiIvPgogIDxyZWN0IHg9IjUzOC4xIiB5PSI0MzQuMzQiIHdpZHRoPSIzLjQyIiBoZWlnaHQ9IjI2LjY4Ii8+CiAgPHBhdGggZD0iTTU3MC40Niw0MzYuNTRjLTEuNjgtMS40Ny0zLjkyLTIuMi02LjczLTIuMmgtNy41NXYyNi42OGgzLjQydi0xMC4zN2g0LjEzYzIuODEsMCw1LjA1LS43NCw2LjczLTIuMjIsMS42OC0xLjQ4LDIuNTItMy40NiwyLjUyLTUuOTRzLS44NC00LjQ5LTIuNTItNS45NlpNNTY3Ljk4LDQ0Ni4yYy0xLC44Ni0yLjQ2LDEuMy00LjM2LDEuM2gtNC4wMnYtMTBoNC4wMmMxLjksMCwzLjM2LjQzLDQuMzYsMS4zLDEsLjg2LDEuNSwyLjEsMS41LDMuN3MtLjUsMi44NC0xLjUsMy43WiIvPgogIDxwYXRoIGQ9Ik01OTcuMDcsNDM0LjA0Yy0zLjgzLDAtNy4wNywxLjMxLTkuNywzLjkzLTIuNjMsMi42Mi0zLjk1LDUuODYtMy45NSw5LjcxczEuMzIsNy4xLDMuOTUsOS43MWMyLjYzLDIuNjIsNS44NiwzLjkzLDkuNywzLjkzczcuMDctMS4zMSw5LjctMi45M2MyLjYzLTIuNjIsMy45NS01Ljg2LDMuOTUtOS43MXMtMS4zMi03LjEtMy45NS05LjcxYy0yLjYzLTIuNjItNS44Ni0zLjkzLTkuNy0zLjkzWm02MDQuMzIsNDU1LjA3Yy0xLjkzLDEuOTktNC4zNSwyLjk5LTcuMjUsMi45OXMtNS4zMi0xLTcuMjUtMi45OWMtMS45My0xLjk5LTIuODktNC40NS0yLjg5LTcuMzhzLjk2LTUuMzksMi44OS03LjM4YzEuOTMtMS45OSw0LjM1LTIuOTksNy4yNS0yLjk5czUuMzIsMSw3LjI1LDIuOTljMS45MywxLjk5LDIuODksNC40NSwyLjg5LDcuMzhzLS45Niw1LjM5LTIuODksNy4zOFoiLz4KICA8cG9seWdvbiBwb2ludHM9IjYyNi45NSA0MzQuMzQgNjIzLjUzIDQzNC4zNCA2MjMuNTMgNDYxLjAyIDYzOC42MiA0NjEuMDIgNjM4LjYyIDQ1Ny42OCA2MjYuOTUgNDU3LjY4IDYyNi45NSA0MzQuMzQiLz4KICA8cmVjdCB4PSI2NTAuNCIgeT0iNDM0LjM0IiB3aWR0aD0iMy40MiIgaGVpZ2h0PSIyNi42OCIvPgogIDxwb2x5Z29uIHBvaW50cz0iNjA1LjI2IDI4NC4wNCA2MDUuMjQgMjg0LjA0IDU5NC4xNiAyODQuMDYgNTk0LjE2IDI4NC4zNCA2MDIuMzUgMjg5LjQ1IDYwMi4zNSAzNTUuNDcgNjAxLjk0IDM1NS40NiA1NDEuOTYgMjg2LjU2IDUzOS40OSAyODMuODUgNTM0LjA3IDI4My44NCA1MzQuMDcgMjgzLjg0IDUzNC4wNiAyODMuODQgNTIyLjk3IDI4My44NyA1MjIuOTcgMjg0LjE0IDUzMS4yMyAyOTIuNDggNTMxLjIzIDM2OC45NCA1MjMuMDIgMzc0LjA2IDUyMi4wMiAzNzQuMzMgNTMyLjE0IDM3NC4zNSA1MzIuMTYgMzc0LjM1IDU0My4yNCAzNzQuMzIgNTQzLjI0IDM3NC4wNSA1MzUuMDUgMzY4LjkzIDUzNS4wNSAyOTcuNCA1MzUuNTMgMjk3LjM4IDYwNi4yIDM3Ny44MiA2MDYuMTggMzU1LjU3IDYwNi4xNyAzNTUuNTcgNjA2LjE3IDI4OS40NSA2MTQuMzggMjg0LjMzIDYxNC4zNyAyODQuMDUgNjA1LjI2IDI4NC4wNCIvPgogIDxwYXRoIGQ9Ik05OTEuNjgsMzY5LjExYy00LjUyLTEwLjc4LTM1LjUxLTg1LjA4LTM1LjUxLTg1LjA4aC0xMS4wN2w0LjM1LDEwLjg2Yy01Ljc3LDE1LjAyLTExLjQ0LDI5LjgtMTcuMTUsNDQuNTUtMi45Nyw3LjY4LTcuODgsMjAuNjgtMTEuNTQsMjkuNzJsLTguMTMsNS4wOHYuMjdzMTEuMzUuMDEsMTEuMzUuMDFoLjAybDExLjEtLjAydi0uMjdzLTguMTgtNS4xLTguMTgtNS4xYzIuNDMtNi41Miw2LjQ2LTE3LjQxLDguNDEtMjIuNy40OC0xLjMxLDEuMS0xLjkzLDIuNjItMS45Miw5Ljg2LjA3LDE5LjcyLjA2LDI5LjU4LDAsMS40NywwLDIxNC41MiwyLjY1LDEuODgsMS40OSwzLjk1LDMuMTksNy44Myw0LjcyLDExLjc3Ljc3LDEuOTcsMS41NywzLjkyLDIuMjgsNS45Mi4xOS41NCwxLjA4LDIuODcsMS45MSw1LjA0bC04LjIxLDUuMTN2LjI3czExLjM1LjAxLDExLjM1LjAxaC4wMmwxNy42My0uMDJ2LjI3cy04LjE5LTUuMTItOC4xOS01LjEyWlptOTcuMTcsMzQxLjc2YzUtMTIuMDYsOS45Ni0yNS45OSwxNC45MS0zOC45My4yLDAsLjM5LDAsLjU5LDAsNS4xNywxMi45MSwxMC4zNCwyNS44MywxNS41OSwzOC45NGgtMzEuMDhaIi8+CiAgPHBhdGggZD0iTTg3OS4xNywyODkuNDlsOC4xNS01LjA5di0uMjdzLTEwLjIyLS4wMS0xMC4yMi0uMDFoLTEuMTJsLTE2LjA1LjAydi4yN3M4LjE1LDUuMDksOC4xNSw1LjA5YzAsNC4zNSwwLDExLjA4LDAsMTIuMDguMDIsMTQuNTcuMDIsMjkuMTQsMCw0My43LDAsNC41NC0uMDIsMTYuNy0uMDMsMjMuNjhsLTguMTUsNS4wN3YuMjdzMTAuMjIuMDEsMTAuMjIuMDFoMS4xMmwxNi4wNC0uMDJ2LjI3cy04LjE1LTUuMDktOC4xNS01LjA5YzAtNy42LDAtMTkuODQsMC0yNC44MSwwLTE0LjMsMC0yOC42LDAtNDIuOTEsMC0xLjA0LDAtNy4zLDAtMTEuNzVaIi8+CiAgPHBhdGggZD0iTTQwNy4yMiwzMzEuMTFjNi44My0yLjM1LDEyLjYyLTUuOTksMTUuNzctMTIuODUsNy4yNy0xNS44Ni0yLjI4LTMyLjc4LTE5Ljc1LTMzLjg2LTcuMDctLjQ0LTE0LjE3LS41Mi0yMS4yNy0uNTItLjgxLDAtMS44MSwwLTIuODYsMGgtNS4zOHMwLDAsMCwwaDBsLTExLjA4LjAydi4yN3M4LjEzLDUuMDcsOC4xMyw1LjA3bC0uMTUsNy4wMS4yNSw3My4wNmgtLjE5cy03Ljk5LDUuMTQtNy45OSw1LjE0di4yN3M5Ljk4LjAxLDkuOTguMDFoMS40MWwxNi4wNC0uMDJ2LjI3cy04LjIyLTUuMTMtOC4yMi01LjEzbC0uMS02LjQxcy0uMDgtMTkuMzQtLjA3LTI5LjAxYzAtLjI5LS4wMi0xLjItLjAyLTEuMiwwLDAsNi4zNy4wOCw3Ljk1LjA4bDM3LjUsNDIuMDQsMTUuMy0uMDUtMzguMjUtNDIuODhjMS4xOS0uMjIsMi4xNy0uNDgsMy4wMi0uNzdaTTM4MS43NSwzMjkuMjN2LTQyLjUycy41MywwLC41MywwYzYuMDEuMDIsMTIuNDEtLjMzLDE3LjgsMS4zNiw4LjEsMi41NSwxMy4wMSw5LjU1LDEzLjU0LDE5LjQxLjcxLDEzLjEyLTguNDgsMjEuNzYtMjIuMjEsMjEuODYtMi40MS4wMi05LjY2LS4xMi05LjY2LS4xMloiLz4KICA8cGF0aCBkPSJNMjkyLjMzLDI4MC45NWMtMjcuOTktLjA3LTUwLjIyLDIyLjA4LTUwLjI1LDUwLjA2LS4wMSwyNywyMS40NCw0OC4wOSw0OC40NSw0OC41OCwzMS44MS41OCw1MS40Ni0yNC41Miw1MS40NS00OC44NCwwLTI3LjU4LTIyLjA2LTQ5Ljc0LTQ5LjY1LTQ5LjgxWm0zMS40Niw3Ni4wOGMtNS4xNCwxMS4zLTE0Ljg4LDE2LjgxLTI3LjA5LDE3Ljk4LTE4LjY2LDEuNzgtMzAuNDMtOS43OC0zNi43LTIyLjg3LTMuNi03LjUxLTUuMzEtMTUuMjItNS4yNC0yMy41Ni4yLTcuODEsMS4xLTEyLjYzLDIuOTMtMTguNDUsNS4yLTE2LjUyLDE5LjQ4LTI1LjYsMzYuNzgtMjQuMDgsMTAuOC45NSwxOS4xOSw2LjE2LDI1LjA5LDE0Ljk0LDExLjk1LDE3Ljc4LDEzLDM2Ljc2LDQuMjMsNTYuMDRaIi8+CiAgPHBhdGggZD0iTTIxOS41MywzNTYuNzVjLTIuNjMsMi43Ni01LjA1LDUuNzctNy45NSw4LjIyLTE5LjgxLDE2Ljc1LTUzLjM5LDEyLjUtNjIuNTUtMTcuNjEtNC4zNS0xNC4yOS0zLjA2LTI4LjQ5LDMuMjctNDIuMDMsNC4zOC05LjM3LDEwLjktMTUuMzIsMjEuODEtMTguMjEsNS4wMi0xLjMzLDEwLjUyLTEuMTcsMTUuNzItLjc2LDM1LjI3LDExLjU4LDEuNzIsMjIuMjIsNi4xNmw2Ljg4LDE0LjkuNDYtLjAzLjE0LTE4LjU0aDBjLTEyLjg1LTQuODctMjAuMDYtNi4yOS0yOC4wNi03LjI5LTE2Ljk1LTIuMTItMzEuODcsMi4wNy00My41MSwxNS0xMC41MywxMS43LTE1LjA0LDI1Ljc2LTEzLjc4LDQxLjM2LDEuMywxNi4xMiw5LjQ3LDI4LjAzLDIzLjgsMzUuNjEsNi4xLDMuMjMsMTIuNjksNC45OCwxOS41Myw1LjY5LDE2LjE3LDEuNjgsMzAuNjUtMi4wOSw0Mi42OS0xMy40OS41MS0uNDksMS4yNS0xLjA5LDEuMjgtMS42Ny4xMy0yLjk3LjA2LTUuOTUuMDYtOS41Ni0uOTcsMS4xLTEuNDcsMS43MS0yLjAxLDIuMjhaIi8+CiAgPHBhdGggZD0iTTgxOC41NywyODkuMzlsOC4xMS01LjA2di0uMjNzLTEwLjIyLS4wMS0xMC4yMi0uMDFoLTEuMTJsLTE2LjA0LjAydi4yN3M4LjE5LDUuMTEsOC4xOSw1LjExYzAsNC4yOCwwLDExLjc2LDAsMTIuODEsMCw4LjIzLDAsMTYuNDYsMCwyNC43aC01Ni4zN2MwLTguODQsMC0xNy42OCwwLTI2LjUyLS45OSwwLTYuNjMsMC0xMWw4LjE3LTUuMTF2LjI3cy0xMC4yMi0uMDEtMTAuMjItLjAxaC0xLjEybC0xNi4wNC4wMnYuMjdzOC4xMyw1LjA3LDguMTMsNS4wN2MwLDQuMzQsMCwxMC40MiwwLDExLjM2LjAyLDE0LjU3LjAyLDI5LjE0LDAsNDMuNzAsMCw0LjctLjAyLDE3LjYtLjAzLDI0LjQzbC04LjEyLDUuMDd2LjI3czEwLjIyLjAxLDEwLjIyLjAxaDEuMTJsMTYuMDUtLjAydi4yN3MtOC4xNy01LjEtOC4xNy01LjFjMC03LjUzLDAtMjAuNCwwLTI1LjUzLDAtNC4yNSwwLTguNTEsMC0xMi43Nmg1Ni4zN2MwLDUuMTIsMCwxMC4yNiwwLDE1LjM4LDAsNC4zNy0uMDIsMTUuODMtLjAyLDIyLjkxbC04LjE5LDUuMTF2LjI3czEwLjIyLjAxLDEwLjIyLjAxaDEuMTJsMTYuMDUtLjAydi4yN3MtOC4xMS01LjA2LTguMTEtNS4wNmMwLTcuNjIsMC0xOS4yNywwLTI0LjA5LDAtMTQuMywwLTI4LjYsMC00Mi45MSwwLTEuMTEsMC04LjA2LDAtMTIuNTJaIi8+CiAgPHBhdGggZD0iTTcwMC4wNywyODQuMDNoMHMtNTguMDMsMC01OC4wMywwaC01LjkzbC0xLjM5LDE2LjcuMjcuMDMsMTAuMjQtMTMuNWgyMy4wOWMwLDMuOTksMCwxMi42NywwLDEzLjguMDIsMTQuNTcuMDIsMjkuMTQsMCw0My43MSwwLDQuNjQtLjAyLDE3LjI2LS4wMywyNC4xNWwtOC4xNSw1LjA3di4yN3MxMC4yMi4wMSwxMC4yMi4wMWgxLjEybDE2LjA0LS4wMnYuMjdzLTguMTUtNS4wOS04LjE1LTUuMDljMC03LjU2LDAtMjAuMiwwLTI1LjI4LDAtMTQuMywwLTI4LjYsMC00Mi45MSwwLTEuMTksMC05LjEyLDAtMTMuNDZoMjMuMDhsMTAuMjMsMTMuNTIuMjctLjAzLTEuMzktMTYuN2gtMTEuNTNaIi8+CiAgPHBhdGggZD0iTTQ5My4zNywzNzQuMzJ2LS4yN3MtOC4xNS01LjA5LTguMTUtNS4wOWMwLTcuNiwwLTE5Ljg0LDAtMjQuODEsMC0xNC4zLDAtMjguNiwwLTQyLjkxLDAtMS4wNCwwLTcuMywwLTExLjc1bDguMTUtNS4wOHYuMjdzLTEwLjIyLS4wMS0xMC4yMi0uMDFoLTEuMTJsLTE2LjA1LjAydi4yN3M4LjE1LDUuMDksOC4xNSw1LjA5YzAsNC4zNSwwLDExLjA4LDAsMTIuMDguMDIsMTQuNTcuMDIsMjkuMTQsMCw0My43MSwwLDQuNTQtLjAyLDE2LjctLjAzLDIzLjY4bC04LjE1LDUuMDd2LjI3czEwLjIyLjAxLDEwLjIyLjAxaDEuMTJsMTYuMDUtLjAyWiIvPgogIDxwYXRoIGQ9Ik01NDAuNTEsMTMzLjA4YzIuNDQuMjcsNC44My0uMzIsNi4yMi0xLjU2LDMuMjUtMi44OCwzLTYuMDUsMS44LTcuODktMS4wMS0xLjU1LTMuMS0yLjc0LTUuNDctMi4wNCwxLjYuMzgsMi44NiwxLjQ5LDMuMjMsMi45NC4zNiwxLjQtLjIxLDIuNzUtMS41NCwzLjYyLS45Ny42NC0yLjQxLjg1LTMuNzUuNTQtMS4wOS0uMjUtMi42My0uOTQtMy43My0yLjgxLTIuMDQtMy4xLTEuMzgtNy45OCwxLjQ4LTEwLjg3LDIuNjktMi45OSw3LjQyLTIuNywxMS41MS0xLjc1LDIuOSwxLjgyLDYuNjMsNi4xOCw2LjYzLDEwLjYzVjk3LjI5aDcuMDFjMC00Ljc0LjAxLTg2LC4wMS05Ny4zLDAtNy4zNi00LjMtMTMuOTQtMTAuOTUtMTYuNzYtNi4zMy0yLjk5LTE0LjUtMS4zMS0xOC42MiwzLjgxLTQuNDQsNS4wMi00Ljk1LDEyLjktMS4xNiwxNy45MywyLjMzLDMuMjMsNS41OSw0LjA0LDcuMzMsNC4yM1oiLz4KPC9zdmc+" alt="Corinthia Hotel Tripoli" style="width: 120px; display: block; margin: 0 auto;">
         </div>
-        <div class="pass-logo-divider"></div>
         
-        <!-- Guest Details Section -->
-        <div style="padding: 25px 20px 20px;">
-            <p class="pass-ref-label">Booking Reference</p>
-            <p class="pass-ref-number" id="passReference">----</p>
+        <!-- Reference Number -->
+        <div style="padding: 15px 25px 10px; background: #FFFFFF; border-bottom: 1px solid rgba(212, 175, 55, 0.3);">
+            <p id="passReference" style="font-family: Arial, sans-serif; font-size: 22px; font-weight: bold; color: #2C2C2C; margin: 0; letter-spacing: 2px;">----</p>
         </div>
-        <div class="pass-details">
-            <div class="pass-detail-row">
-                <span class="pass-detail-label">Guest Name</span>
-                <span class="pass-detail-value" id="passGuestName">----</span>
+        
+        <!-- Guest Details - Aligned -->
+        <div style="padding: 20px 30px; background: #FFFFFF;">
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(16, 24, 32, 0.1);">
+                <span style="font-family: Arial, sans-serif; font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 1px;">Guest Name</span>
+                <span id="passGuestName" style="font-family: Arial, sans-serif; font-size: 14px; color: #2C2C2C; font-weight: 600; text-align: right;">----</span>
             </div>
-            <div class="pass-detail-row">
-                <span class="pass-detail-label">Date</span>
-                <span class="pass-detail-value" id="passDate">----</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(16, 24, 32, 0.1);">
+                <span style="font-family: Arial, sans-serif; font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 1px;">Date</span>
+                <span id="passDate" style="font-family: Arial, sans-serif; font-size: 14px; color: #2C2C2C; font-weight: 600;">----</span>
             </div>
-            <div class="pass-detail-row">
-                <span class="pass-detail-label">Guests</span>
-                <span class="pass-detail-value" id="passGuests">2</span>
-            </div>
-        </div>
-        <div class="pass-status pending" id="passStatusBox">
-            <span class="pass-status-badge" id="passStatusText">PENDING</span>
-        </div>
-        <div class="pass-qr">
-            <div class="pass-qr-box">
-                <i class="fas fa-qrcode"></i>
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: none;">
+                <span style="font-family: Arial, sans-serif; font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 1px;">Guests</span>
+                <span id="passGuests" style="font-family: Arial, sans-serif; font-size: 14px; color: #2C2C2C; font-weight: 600;">2</span>
             </div>
         </div>
-        <div class="pass-footer">
-            <p class="pass-footer-text">
-                Scan to follow our restaurants on <strong>Facebook</strong>
+        
+        <!-- Status Badge -->
+        <div id="passStatusBox" style="margin: 15px 30px; padding: 12px; border-radius: 2px; text-align: center; background: rgba(243, 156, 18, 0.15); border: 1px solid #f39c12;">
+            <span id="passStatusText" style="font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #d35400;">PENDING</span>
+        </div>
+        
+        <!-- QR Code Container -->
+        <div style="margin: 20px 0; text-align: center;">
+            <div id="passQRCode" style="display: inline-block; padding: 10px; background: #FFFFFF; border: 1px solid rgba(212, 175, 55, 0.3);"></div>
+        </div>
+        
+        <!-- Footer -->
+        <div style="background: #F5F5F5; padding: 18px 20px; border-top: 1px solid rgba(212, 175, 55, 0.3); text-align: center;">
+            <p style="font-family: Arial, sans-serif; font-size: 11px; color: #666; line-height: 1.6; margin: 0;">
+                Scan to follow our restaurants on <strong style="color: #D4AF37;">Facebook</strong>
             </p>
         </div>
     </div>

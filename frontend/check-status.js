@@ -360,40 +360,78 @@ function populateDownloadPass(booking) {
     statusBox.classList.remove('pending', 'confirmed', 'cancelled');
     
     if (statusLower === 'confirmed') {
-        statusBox.classList.add('confirmed');
+        statusBox.style.background = 'rgba(39, 174, 96, 0.15)';
+        statusBox.style.borderColor = '#2ecc71';
         statusText.textContent = 'CONFIRMED';
+        statusText.style.color = '#27ae60';
     } else if (statusLower === 'cancelled') {
-        statusBox.classList.add('cancelled');
+        statusBox.style.background = 'rgba(231, 76, 60, 0.15)';
+        statusBox.style.borderColor = '#e74c3c';
         statusText.textContent = 'CANCELLED';
+        statusText.style.color = '#c0392b';
     } else {
-        statusBox.classList.add('pending');
+        statusBox.style.background = 'rgba(243, 156, 18, 0.15)';
+        statusBox.style.borderColor = '#f39c12';
         statusText.textContent = 'PENDING';
+        statusText.style.color = '#d35400';
+    }
+    
+    // Generate Real QR Code using QRCode.js
+    generateQRCode(displayRef);
+}
+
+function generateQRCode(data) {
+    const qrContainer = document.getElementById('passQRCode');
+    
+    // Clear previous QR code
+    qrContainer.innerHTML = '';
+    
+    // Generate new QR code
+    if (typeof QRCode !== 'undefined') {
+        new QRCode(qrContainer, {
+            text: data || 'CRT-XXXX',
+            width: 100,
+            height: 100,
+            colorDark: '#2C2C2C',
+            colorLight: '#FFFFFF',
+            correctLevel: QRCode.CorrectLevel.H
+        });
+    } else {
+        // Fallback if QRCode library not loaded
+        qrContainer.innerHTML = '<div style="width:100px;height:100px;background:#f5f5f5;border:1px solid #D4AF37;display:flex;align-items:center;justify-content:center;font-size:10px;color:#666;">QR Code</div>';
     }
 }
 
 async function saveBookingPass() {
-    const passElement = document.getElementById('downloadablePass');
-    
-    if (!passElement) {
-        alert('Pass element not found');
+    const booking = currentBookingData;
+    if (!booking) {
+        alert('No booking data found');
         return;
     }
     
+    const passElement = document.getElementById('downloadablePass');
+    
     try {
+        // Use html2canvas to capture the pass
         const canvas = await html2canvas(passElement, {
             scale: 2,
-            backgroundColor: '#ffffff',
+            backgroundColor: '#FFFFFF',
             useCORS: true,
+            allowTaint: true,
             logging: false
         });
         
+        // Export to PNG
+        const displayRef = booking.referenceNumber || booking._id || booking.id || 'pass';
         const link = document.createElement('a');
         link.href = canvas.toDataURL('image/png');
-        link.download = `booking-pass-${currentBookingData?.referenceNumber || 'pass'}.png`;
+        link.download = `booking-pass-${displayRef}.png`;
         link.click();
-    } catch (err) {
-        console.error('Save pass error:', err);
-        alert('Failed to save pass. Please try again.');
+        
+        console.log('✅ Booking pass downloaded successfully');
+    } catch (error) {
+        console.error('❌ Error generating pass:', error);
+        alert('Error generating pass. Please try again.');
     }
 }
 
