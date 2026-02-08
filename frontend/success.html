@@ -17,7 +17,7 @@
     
     <style>
         /* =========================================
-           CORINTHIA DIGITAL PASS - SMOOTH REVEAL
+           CORINTHIA DIGITAL PASS
            ========================================= */
         
         * {
@@ -42,7 +42,6 @@
             padding: 15px;
         }
         
-        /* Main Card - Hidden initially */
         .vip-invitation-card {
             max-width: 400px;
             width: 100%;
@@ -54,30 +53,6 @@
             position: relative;
             z-index: 1;
             box-shadow: 0 10px 40px var(--anvil-shadow);
-            /* Start hidden for smooth reveal */
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.5s ease-out, transform 0.5s ease-out;
-        }
-        
-        .vip-invitation-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        
-        /* Loading Spinner */
-        .loading-spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid var(--corinthia-honey);
-            border-radius: 50%;
-            border-top-color: transparent;
-            animation: spin 0.8s linear infinite;
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
         }
         
         /* Logo */
@@ -284,29 +259,6 @@
             border-color: var(--corinthia-anvil);
         }
         
-        /* Language Toggle */
-        .lang-toggle {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            background: var(--white);
-            border: 1px solid var(--corinthia-honey);
-            color: var(--corinthia-honey);
-            padding: 8px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-family: var(--font-body);
-            font-size: 0.8rem;
-            font-weight: 500;
-            transition: var(--transition);
-            z-index: 100;
-        }
-        
-        .lang-toggle:hover {
-            background: var(--corinthia-honey);
-            color: var(--corinthia-anvil);
-        }
-        
         /* Contact Buttons */
         .contact-buttons {
             position: fixed;
@@ -367,11 +319,6 @@
     </style>
 </head>
 <body class="user-view">
-    
-    <!-- Language Toggle -->
-    <button class="lang-toggle" onclick="toggleLanguage()">
-        <i class="fas fa-globe"></i> <span id="langLabel">EN</span>
-    </button>
     
     <!-- Main Card -->
     <div class="vip-invitation-card" id="mainCard">
@@ -450,20 +397,5 @@
     <!-- Scripts -->
     <script src="i18n.js"></script>
     <script src="success.js"></script>
-    
-    <script>
-        // Simple language toggle
-        let currentLang = 'ar';
-        
-        function toggleLanguage() {
-            currentLang = currentLang === 'ar' ? 'en' : 'ar';
-            document.getElementById('langLabel').textContent = currentLang === 'ar' ? 'EN' : 'عربي';
-            document.documentElement.lang = currentLang;
-            
-            if (typeof updateLanguageText === 'function') {
-                updateLanguageText();
-            }
-        }
-    </script>
 </body>
 </html>
