@@ -1,6 +1,5 @@
 /**
  * CORINTHIA HOTEL - SUCCESS PAGE SCRIPT
- * Smooth Reveal + Live Status
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -10,6 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const bookingId = urlParams.get('id');
     const urlRef = urlParams.get('ref');
+    
+    // Initialize translation system
+    if (typeof i18n !== 'undefined') {
+        i18n.init();
+    }
     
     // Initialize data from localStorage
     let bookingData = {
@@ -22,113 +26,60 @@ document.addEventListener('DOMContentLoaded', () => {
         status: 'pending'
     };
     
-    // Initialize UI immediately
-    initializeUI();
-    
-    // Fetch from API if ID exists, otherwise use localStorage
-    if (bookingId) {
-        console.log('📡 Fetching from API...');
-        fetchBookingData(bookingId).then(() => {
-            // API response received, now show the card
-            revealCard();
-        });
-    } else {
-        console.log('💾 Using localStorage data...');
-        // Use localStorage data immediately
-        revealCard();
-    }
-});
-
-// ============================================
-// INITIALIZE UI
-// ============================================
-
-function initializeUI() {
-    // Initialize translation system
-    if (typeof i18n !== 'undefined') {
-        i18n.init();
-    }
-    
-    // Get booking data
-    const urlParams = new URLSearchParams(window.location.search);
-    const bookingId = urlParams.get('id');
-    const urlRef = urlParams.get('ref');
-    
-    let bookingData = {
-        name: localStorage.getItem('bookingName') || '',
-        phone: localStorage.getItem('bookingPhone') || '',
-        date: localStorage.getItem('bookingDate') || '',
-        id: bookingId || localStorage.getItem('bookingNumericId') || '',
-        referenceNumber: urlRef || localStorage.getItem('bookingReferenceNumber') || '',
-        expiresAt: null,
-        status: 'pending'
-    };
-    
-    // Populate UI with available data
-    populateUI(bookingData);
-    
-    // Initialize status badge
-    updateStatusBadge('pending');
-}
-
-// ============================================
-// POPULATE UI
-// ============================================
-
-function populateUI(data) {
-    console.log('📝 Populating UI with:', data);
-    
-    // Reference number
+    // DOM Elements
     const refEl = document.getElementById('reservationNumber');
-    if (refEl) {
-        const ref = data.referenceNumber || data.id || '----';
-        refEl.textContent = ref;
-    }
-    
-    // Guest name
     const nameEl = document.getElementById('guestName');
-    if (nameEl) {
-        nameEl.textContent = data.name || '----';
+    const dateEl = document.getElementById('guestDate');
+    const phoneEl = document.getElementById('guestPhone');
+    const badge = document.getElementById('statusBadge');
+    const icon = document.getElementById('statusIcon');
+    const text = document.getElementById('statusText');
+    const timerSection = document.getElementById('timerSection');
+    const displayEl = document.getElementById('countdownDisplay');
+    
+    // Update reference
+    if (refEl) {
+        refEl.textContent = bookingData.referenceNumber || bookingData.id || '----';
     }
     
-    // Date
-    const dateEl = document.getElementById('guestDate');
-    if (dateEl && data.date) {
+    // Update name
+    if (nameEl) {
+        nameEl.textContent = bookingData.name || '----';
+    }
+    
+    // Update date
+    if (dateEl && bookingData.date) {
         try {
-            const dateObj = new Date(data.date);
+            const dateObj = new Date(bookingData.date);
             dateEl.textContent = dateObj.toLocaleDateString('ar-EG', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
             });
         } catch (e) {
-            dateEl.textContent = data.date;
+            dateEl.textContent = bookingData.date;
         }
     } else if (dateEl) {
         dateEl.textContent = '----';
     }
     
-    // Phone
-    const phoneEl = document.getElementById('guestPhone');
+    // Update phone
     if (phoneEl) {
-        phoneEl.textContent = data.phone || '----';
+        phoneEl.textContent = bookingData.phone || '----';
     }
-}
-
-// ============================================
-// REVEAL CARD
-// ============================================
-
-function revealCard() {
-    const card = document.getElementById('mainCard');
-    if (card) {
-        // Small delay to ensure DOM is ready
-        setTimeout(() => {
-            card.classList.add('visible');
-            console.log('✨ Card revealed');
-        }, 100);
+    
+    // Initialize status badge
+    updateStatusBadge('pending');
+    
+    // Fetch from API if ID exists
+    if (bookingId) {
+        console.log('📡 Fetching from API:', bookingId);
+        fetchBookingData(bookingId);
+    } else {
+        console.log('💾 Using localStorage data');
+        startCountdownWithFallback();
     }
-}
+});
 
 // ============================================
 // FETCH BOOKING DATA
@@ -136,8 +87,6 @@ function revealCard() {
 
 async function fetchBookingData(id) {
     try {
-        console.log('🔄 Fetching booking:', id);
-        
         const response = await fetch(`/api/bookings/${id}`);
         const result = await response.json();
         
@@ -146,39 +95,49 @@ async function fetchBookingData(id) {
             
             console.log('✅ API Response:', booking);
             
-            // Update booking data
-            bookingData = {
-                name: booking.name || '',
-                phone: booking.phone || '',
-                date: booking.date || '',
-                id: id,
-                referenceNumber: booking.referenceNumber || id,
-                expiresAt: booking.expiresAt,
-                status: booking.status || 'pending'
-            };
+            // Update DOM
+            const refEl = document.getElementById('reservationNumber');
+            const nameEl = document.getElementById('guestName');
+            const dateEl = document.getElementById('guestDate');
+            const phoneEl = document.getElementById('guestPhone');
             
-            // Populate UI
-            populateUI(bookingData);
+            if (refEl) refEl.textContent = booking.referenceNumber || booking.id;
+            if (nameEl) nameEl.textContent = booking.name;
+            if (phoneEl) phoneEl.textContent = booking.phone;
+            
+            if (dateEl && booking.date) {
+                try {
+                    const dateObj = new Date(booking.date);
+                    dateEl.textContent = dateObj.toLocaleDateString('ar-EG', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                } catch (e) {
+                    dateEl.textContent = booking.date;
+                }
+            }
             
             // Update status
-            updateStatusBadge(bookingData.status);
+            updateStatusBadge(booking.status);
             
             // Handle countdown
-            if (bookingData.status === 'pending' && booking.expiresAt) {
-                startCountdown(booking.expiresAt);
-            } else if (bookingData.status === 'pending') {
-                startCountdownWithFallback();
-            } else {
-                // Hide timer for confirmed/cancelled
-                const timerSection = document.getElementById('timerSection');
-                if (timerSection) {
-                    timerSection.classList.remove('active');
+            const timerSection = document.getElementById('timerSection');
+            
+            if (booking.status === 'pending') {
+                if (booking.expiresAt) {
+                    if (timerSection) timerSection.classList.add('active');
+                    startCountdown(booking.expiresAt);
+                } else {
+                    if (timerSection) timerSection.classList.add('active');
+                    startCountdownWithFallback();
                 }
+            } else {
+                if (timerSection) timerSection.classList.remove('active');
             }
         }
     } catch (error) {
         console.error('❌ API Error:', error);
-        // On error, show pending state with fallback
         updateStatusBadge('pending');
         startCountdownWithFallback();
     }
@@ -189,8 +148,6 @@ async function fetchBookingData(id) {
 // ============================================
 
 function updateStatusBadge(status) {
-    console.log('🎨 Updating status badge:', status);
-    
     const badge = document.getElementById('statusBadge');
     const icon = document.getElementById('statusIcon');
     const text = document.getElementById('statusText');
@@ -204,7 +161,6 @@ function updateStatusBadge(status) {
     
     switch (status) {
         case 'confirmed':
-            // GREEN - Confirmed
             if (badge) {
                 badge.style.background = 'rgba(39, 174, 96, 0.15)';
                 badge.style.border = '1px solid #27ae60';
@@ -217,11 +173,7 @@ function updateStatusBadge(status) {
             if (text) {
                 text.textContent = lang === 'ar' ? 'تم تأكيد الحجز ✓' : 'Booking Confirmed ✓';
             }
-            // Hide timer
-            if (timerSection) {
-                timerSection.classList.remove('active');
-            }
-            // Update title
+            if (timerSection) timerSection.classList.remove('active');
             if (title) {
                 title.textContent = lang === 'ar' ? 'مرحباً بكم في كورنثيا' : 'Welcome to Corinthia';
                 title.style.color = '#27ae60';
@@ -231,7 +183,6 @@ function updateStatusBadge(status) {
                     ? 'حجزكم مضمون - نراكم قريباً' 
                     : 'Your booking is guaranteed - See you soon';
             }
-            // Update button
             if (btnSpan) {
                 btnSpan.textContent = lang === 'ar' ? 'عرض تفاصيل الحجز' : 'View Booking Details';
             }
@@ -239,7 +190,6 @@ function updateStatusBadge(status) {
             
         case 'cancelled':
         case 'expired':
-            // RED - Cancelled
             if (badge) {
                 badge.style.background = 'rgba(231, 76, 60, 0.15)';
                 badge.style.border = '1px solid #e74c3c';
@@ -252,11 +202,7 @@ function updateStatusBadge(status) {
             if (text) {
                 text.textContent = lang === 'ar' ? 'تم إلغاء الحجز' : 'Booking Cancelled';
             }
-            // Hide timer
-            if (timerSection) {
-                timerSection.classList.remove('active');
-            }
-            // Update title
+            if (timerSection) timerSection.classList.remove('active');
             if (title) {
                 title.textContent = lang === 'ar' ? 'نأسف لهذا الأمر' : 'We apologize';
                 title.style.color = '#e74c3c';
@@ -266,7 +212,6 @@ function updateStatusBadge(status) {
                     ? 'تم إلغاء الحجز لعدم إتمام الدفع' 
                     : 'Booking cancelled due to non-payment';
             }
-            // Update button
             if (btnSpan) {
                 btnSpan.textContent = lang === 'ar' ? 'إعادة الحجز' : 'Book Again';
             }
@@ -274,7 +219,6 @@ function updateStatusBadge(status) {
             
         default:
         case 'pending':
-            // GOLD - Pending
             if (badge) {
                 badge.style.background = 'rgba(254, 163, 0, 0.1)';
                 badge.style.border = '1px solid var(--corinthia-honey)';
@@ -287,7 +231,6 @@ function updateStatusBadge(status) {
             if (text) {
                 text.textContent = lang === 'ar' ? 'بانتظار التأكيد' : 'Pending Confirmation';
             }
-            // Update title
             if (title) {
                 title.textContent = lang === 'ar' ? 'شكراً لاختياركم كورنثيا' : 'Thank you for choosing Corinthia';
                 title.style.color = 'var(--corinthia-anvil)';
@@ -297,7 +240,6 @@ function updateStatusBadge(status) {
                     ? 'تم استلام طلب الحجز بنجاح' 
                     : 'Your reservation request has been received';
             }
-            // Update button
             if (btnSpan) {
                 btnSpan.textContent = lang === 'ar' ? 'الانتقال للدفع' : 'Go to Payment';
             }
@@ -318,7 +260,6 @@ function startCountdownWithFallback() {
 }
 
 function startCountdown(expiresAtISO) {
-    // Show loading first
     const displayEl = document.getElementById('countdownDisplay');
     const timerSection = document.getElementById('timerSection');
     
@@ -327,10 +268,9 @@ function startCountdown(expiresAtISO) {
     }
     
     if (displayEl) {
-        displayEl.innerHTML = '<span class="loading-spinner"></span>';
+        displayEl.innerHTML = '<i class="fas fa-clock" style="color: var(--corinthia-honey)"></i> <span>--:--:--</span>';
     }
     
-    // Clear existing
     if (countdownInterval) {
         clearInterval(countdownInterval);
     }
@@ -347,7 +287,6 @@ function startCountdown(expiresAtISO) {
     
     console.log('⏰ Timer starting:', expirationTime.toISOString());
     
-    // Update immediately
     updateCountdown(expirationTime);
     
     countdownInterval = setInterval(() => {
@@ -363,10 +302,7 @@ function updateCountdown(expirationTime) {
     const diff = expirationTime - now;
     
     if (diff <= 0) {
-        displayEl.textContent = '00:00:00';
-        displayEl.style.color = '#e74c3c';
-        
-        // Stop and show cancelled
+        displayEl.innerHTML = '<span style="color: #e74c3c">00:00:00</span>';
         if (countdownInterval) {
             clearInterval(countdownInterval);
         }
@@ -379,59 +315,5 @@ function updateCountdown(expirationTime) {
     const seconds = Math.floor((diff % (1000 * 60)) / 1000);
     
     const timeStr = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-    displayEl.textContent = timeStr;
-    
-    // Color based on time
-    if (diff < 3600000) {
-        displayEl.style.color = '#e74c3c';
-    } else if (diff < 7200000) {
-        displayEl.style.color = '#f39c12';
-    } else {
-        displayEl.style.color = 'var(--corinthia-anvil)';
-    }
-}
-
-// ============================================
-// POLLING (Optional)
-// ============================================
-
-let pollingInterval = null;
-
-function startPolling(bookingId) {
-    if (pollingInterval) return;
-    
-    pollingInterval = setInterval(() => {
-        fetchBookingData(bookingId);
-    }, 10000); // 10 seconds
-    
-    console.log('🔄 Polling started');
-}
-
-function stopPolling() {
-    if (pollingInterval) {
-        clearInterval(pollingInterval);
-        pollingInterval = null;
-    }
-    if (countdownInterval) {
-        clearInterval(countdownInterval);
-        countdownInterval = null;
-    }
-}
-
-window.addEventListener('beforeunload', stopPolling);
-
-// ============================================
-// LANGUAGE UPDATE
-// ============================================
-
-function updateLanguageText() {
-    // Re-apply status badge with new language
-    const urlParams = new URLSearchParams(window.location.search);
-    const bookingId = urlParams.get('id');
-    
-    if (bookingId) {
-        fetchBookingData(bookingId);
-    } else {
-        updateStatusBadge('pending');
-    }
+    displayEl.innerHTML = `<i class="fas fa-clock" style="color: var(--corinthia-honey)"></i> <span>${timeStr}</span>`;
 }
