@@ -473,151 +473,396 @@
         }
         
         /* =========================================
-           DOWNLOADABLE PASS - LUXURY DESIGN
+           DOWNLOADABLE PASS - ENGLISH LUXURY DESIGN
            Hidden by default, shown for generation
            ========================================= */
+        
+        /* =========================================
+            DOWNLOADABLE PASS - CENTERED LUXURY INVITATION
+            Perfectly centered design for English-only export
+            ========================================= */
         
         #downloadablePass {
             position: absolute;
             left: -9999px;
             top: 0;
-            width: 350px;
+            width: 320px;
             background: #FFFFFF;
+            direction: ltr;
+            text-align: center;
+            padding: 24px;
         }
         
         .pass-container {
-            width: 350px;
+            width: 100%;
             background: #FFFFFF;
-            margin: 0 auto;
-            border: 1px solid #AFA9A0;
-            font-family: var(--font-body);
+            font-family: 'GT America LC Extended', 'Georgia', serif;
             overflow: hidden;
+            direction: ltr;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
+        /* Header Section - Logo & Titles */
         .pass-header {
             background: #FFFFFF;
-            padding: 20px;
+            padding: 0;
             text-align: center;
-            border-bottom: 2px solid #FFA300;
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .pass-logo {
-            height: 45px;
-            margin-bottom: 8px;
+            height: 40px;
+            margin-bottom: 16px;
             display: block;
-            margin-left: auto;
-            margin-right: auto;
         }
         
         .pass-title {
-            font-family: var(--font-arabic);
+            font-family: 'GT America LC Extended', 'Georgia', serif;
             font-size: 1rem;
-            font-weight: 500;
+            font-weight: 600;
             color: #101820;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         
         .pass-subtitle {
-            font-family: var(--font-arabic);
+            font-family: 'GT America LC Extended', 'Georgia', serif;
             font-size: 0.75rem;
             color: #AFA9A0;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
         }
         
+        .pass-welcome {
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.85rem;
+            color: #101820;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        
+        /* Divider */
+        .pass-divider {
+            width: 60px;
+            height: 1px;
+            background: #FFA300;
+            margin: 16px auto;
+        }
+        
+        /* Guest Details - Centered Stacked Layout */
         .pass-details {
-            padding: 20px;
+            padding: 0;
+            width: 100%;
+            margin-bottom: 16px;
         }
         
         .pass-row {
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(175, 169, 160, 0.3);
+            padding: 8px 0;
         }
         
-        .pass-row:last-child {
+        .pass-row:not(:last-child) {
             border-bottom: none;
         }
         
         .pass-label {
-            font-family: var(--font-arabic);
-            font-size: 0.8rem;
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.7rem;
             color: #AFA9A0;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
         
         .pass-value {
-            font-family: var(--font-body);
-            font-size: 0.85rem;
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.95rem;
             color: #101820;
             font-weight: 600;
         }
         
+        /* Reference Section */
         .pass-reference {
             text-align: center;
-            padding: 15px;
-            background: rgba(255, 163, 0, 0.08);
-            border-top: 1px solid rgba(255, 163, 0, 0.2);
-            border-bottom: 1px solid rgba(255, 163, 0, 0.2);
+            padding: 12px 20px;
+            background: rgba(255, 163, 0, 0.1);
+            width: 100%;
+            margin-bottom: 16px;
         }
         
         .pass-reference-label {
-            font-family: var(--font-arabic);
-            font-size: 0.7rem;
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.65rem;
             color: #AFA9A0;
-            margin-bottom: 8px;
-            letter-spacing: 1px;
+            margin-bottom: 6px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
         }
         
         .pass-reference-value {
-            font-family: var(--font-numeric);
-            font-size: 1.1rem;
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 1rem;
             font-weight: 700;
             color: #101820;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
         
+        /* Status Box */
         .pass-status {
             text-align: center;
-            padding: 15px;
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 12px;
         }
         
         #passStatusBox {
             display: inline-flex;
             align-items: center;
-            padding: 8px 20px;
-            border-radius: 2px;
-            font-family: var(--font-numeric);
+            padding: 6px 24px;
+            font-family: 'GT America LC Extended', 'Georgia', serif;
             font-weight: 600;
-            font-size: 0.8rem;
-            letter-spacing: 0.1em;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
+            background: #FFA300;
+            color: #101820;
         }
         
+        /* QR Code - Perfectly Centered */
         .pass-qr {
-            padding: 20px;
+            padding: 16px;
             text-align: center;
             background: #FFFFFF;
+            width: 100%;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
         .pass-qr img {
-            display: inline-block;
-            width: 100px;
-            height: 100px;
-            border: 1px solid #AFA9A0;
+            display: block;
+            width: 90px;
+            height: 90px;
+            margin-bottom: 8px;
         }
         
+        .pass-qr-label {
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.6rem;
+            color: #AFA9A0;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Footer */
         .pass-footer {
-            padding: 12px;
+            padding: 0;
             text-align: center;
-            background: rgba(16, 24, 32, 0.03);
-            border-top: 1px solid rgba(175, 169, 160, 0.3);
+            width: 100%;
         }
         
         .pass-footer-text {
-            font-family: var(--font-arabic);
-            font-size: 0.65rem;
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.7rem;
             color: #AFA9A0;
             letter-spacing: 0.5px;
+            line-height: 1.4;
+        }
+        
+        .pass-container {
+            width: 100%;
+            background: #FFFFFF;
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            overflow: hidden;
+            direction: ltr;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Header Section - Logo & Titles */
+        .pass-header {
+            background: #FFFFFF;
+            padding: 0;
+            text-align: center;
+            width: 100%;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .pass-logo {
+            height: 40px;
+            margin-bottom: 16px;
+            display: block;
+        }
+        
+        .pass-title {
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #101820;
+            margin-bottom: 6px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .pass-subtitle {
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.75rem;
+            color: #AFA9A0;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+        
+        .pass-welcome {
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.85rem;
+            color: #101820;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        
+        /* Divider */
+        .pass-divider {
+            width: 60px;
+            height: 1px;
+            background: #FFA300;
+            margin: 16px auto;
+        }
+        
+        /* Guest Details - Centered Stacked Layout */
+        .pass-details {
+            padding: 0;
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        
+        .pass-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 0;
+        }
+        
+        .pass-row:not(:last-child) {
+            border-bottom: none;
+        }
+        
+        .pass-label {
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.7rem;
+            color: #AFA9A0;
+            margin-bottom: 4px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        
+        .pass-value {
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.95rem;
+            color: #101820;
+            font-weight: 600;
+        }
+        
+        /* Reference Section */
+        .pass-reference {
+            text-align: center;
+            padding: 12px 20px;
+            background: rgba(255, 163, 0, 0.1);
+            width: 100%;
+            margin-bottom: 16px;
+        }
+        
+        .pass-reference-label {
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.65rem;
+            color: #AFA9A0;
+            margin-bottom: 6px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+        
+        .pass-reference-value {
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #101820;
+            letter-spacing: 3px;
+        }
+        
+        /* Status Box */
+        .pass-status {
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        
+        #passStatusBox {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 24px;
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-weight: 600;
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            background: #FFA300;
+            color: #101820;
+        }
+        
+        /* QR Code - Perfectly Centered */
+        .pass-qr {
+            padding: 16px;
+            text-align: center;
+            background: #FFFFFF;
+            width: 100%;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .pass-qr img {
+            display: block;
+            width: 90px;
+            height: 90px;
+            margin-bottom: 8px;
+        }
+        
+        .pass-qr-label {
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.6rem;
+            color: #AFA9A0;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Footer */
+        .pass-footer {
+            padding: 0;
+            text-align: center;
+            width: 100%;
+        }
+        
+        .pass-footer-text {
+            font-family: 'GT America LC Extended', 'Georgia', serif;
+            font-size: 0.7rem;
+            color: #AFA9A0;
+            letter-spacing: 0.5px;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -735,37 +980,41 @@
     </div>
     
     <!-- =========================================
-         DOWNLOADABLE PASS - LUXURY CARD DESIGN
-         Hidden section used for PNG generation
+         CENTERED LUXURY INVITATION PASS
+         Perfectly centered, English-only design
          ========================================= -->
     
     <div id="downloadablePass" class="pass-container">
-        <!-- Pass Header -->
+        <!-- Pass Header - Centered -->
         <div class="pass-header">
             <img src="new-logo.svg" alt="Corinthia Logo" class="pass-logo">
-            <div class="pass-title" data-i18n="welcome_corinthia">مرحباً بكم في كورنثيا</div>
-            <div class="pass-subtitle" data-i18n="pay_at_hotel_title">الدفع عند الفندق</div>
+            <div class="pass-title">CORINTHIA TRIPOLI</div>
+            <div class="pass-subtitle">La Valette Restaurant</div>
+            <div class="pass-welcome">Lavish Ramadan Iftar Awaits You</div>
         </div>
         
-        <!-- Pass Details -->
+        <!-- Divider -->
+        <div class="pass-divider"></div>
+        
+        <!-- Pass Details - Centered Stacked Layout -->
         <div class="pass-details">
             <div class="pass-row">
-                <span class="pass-label" data-i18n="pass_guest_name">Guest Name</span>
+                <span class="pass-label">Guest Name</span>
                 <span class="pass-value" id="passGuestName">----</span>
             </div>
             <div class="pass-row">
-                <span class="pass-label" data-i18n="pass_date">Date</span>
+                <span class="pass-label">Date</span>
                 <span class="pass-value" id="passDate">----</span>
             </div>
             <div class="pass-row">
-                <span class="pass-label" data-i18n="pass_guests">Guests</span>
+                <span class="pass-label">Guests</span>
                 <span class="pass-value" id="passGuests">2</span>
             </div>
         </div>
         
-        <!-- Reference Number -->
+        <!-- Reference Number - Highlighted -->
         <div class="pass-reference">
-            <div class="pass-reference-label" data-i18n="res_num_label">REFERENCE NUMBER</div>
+            <div class="pass-reference-label">Reference Number</div>
             <div class="pass-reference-value" id="passReference">----</div>
         </div>
         
@@ -776,14 +1025,18 @@
             </div>
         </div>
         
-        <!-- QR Code -->
+        <!-- QR Code - Perfectly Centered -->
         <div class="pass-qr">
-            <img src="corinthia_qr.svg" alt="Corinthia QR Code" style="width: 100px; height: 100px;">
+            <img src="corinthia_qr.svg" alt="Corinthia QR Code">
+            <div class="pass-qr-label">Scan to follow us on Facebook</div>
         </div>
         
         <!-- Footer -->
         <div class="pass-footer">
-            <div class="pass-footer-text" data-i18n="card_note">يرجى إظهار هذه البطاقة عند دخول الفندق</div>
+            <div class="pass-footer-text">Please show this card upon arrival<br>Thank you for choosing Corinthia Tripoli</div>
+        </div>
+    </div>
+            <div class="pass-footer-text">Please show this card upon arrival</div>
         </div>
     </div>
     
