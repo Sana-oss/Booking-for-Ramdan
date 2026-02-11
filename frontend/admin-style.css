@@ -511,19 +511,49 @@ body {
     font-size: 0.9rem;
 }
 
-/* Flatpickr Range Picker Styles */
+/* Flatpickr Range Picker Styles - Fixed Positioning */
 .date-range-container {
     position: relative;
     display: flex;
     align-items: center;
 }
 
-/* Admin Table Styles */
+/* Ensure Flatpickr calendar appears below the input */
+.flatpickr-calendar {
+    position: absolute !important;
+    top: 100% !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    margin-top: 8px !important;
+    z-index: 9999 !important;
+}
+
+/* Flatpickr RTL positioning */
+[dir="rtl"] .flatpickr-calendar {
+    left: auto !important;
+    right: 50% !important;
+    transform: translateX(50%) !important;
+}
+
+/* Ensure parent container has proper stacking context */
+.admin-tools-container {
+    position: relative;
+    z-index: 1;
+}
+
+.controls-group {
+    position: relative;
+    z-index: 1;
+}
+
+/* Admin Table Styles - Professional & Polished */
 .table-container {
     background: var(--white);
     border-radius: 2px;
     overflow: hidden;
     box-shadow: 0 10px 40px var(--anvil-shadow);
+    max-width: 1400px;
+    margin: 0 auto;
 }
 
 .admin-table-wrapper {
@@ -532,8 +562,11 @@ body {
 
 .admin-table {
     width: 100%;
+    table-layout: fixed;
     border-collapse: collapse;
     font-family: var(--font-body);
+    text-align: center;
+    vertical-align: middle;
 }
 
 .admin-table thead {
@@ -541,20 +574,24 @@ body {
 }
 
 .admin-table th {
-    padding: 16px 20px;
-    text-align: right;
+    padding: 15px;
+    text-align: center;
+    vertical-align: middle;
     font-family: var(--font-heading-en);
     font-weight: 400;
     color: var(--white);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
     border-bottom: 3px solid var(--corinthia-honey);
+    white-space: nowrap;
 }
 
 .admin-table td {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--corinthia-limestone);
+    padding: 15px;
+    text-align: center;
+    vertical-align: middle;
+    border-bottom: 1px solid #eee;
     color: var(--corinthia-anvil);
 }
 
@@ -563,65 +600,130 @@ body {
 }
 
 .admin-table tbody tr:hover {
-    background: rgba(254, 163, 0, 0.05);
+    background: rgba(254, 163, 0, 0.08);
+}
+
+/* Reference/ID Column - Light Grey Box */
+.admin-table .ref-cell {
+    text-align: center;
+    vertical-align: middle;
 }
 
 .admin-table .ref-number {
     font-family: var(--font-numeric);
     font-weight: 600;
-    color: var(--corinthia-honey);
-    letter-spacing: 1px;
+    font-size: 0.85rem;
+    color: var(--corinthia-anvil);
+    background: #f5f5f5;
+    padding: 6px 12px;
+    border-radius: 6px;
+    display: inline-block;
+    letter-spacing: 0.5px;
+    border: 1px solid #e0e0e0;
+}
+
+/* Guest Info Column - Bold name, smaller phone */
+.admin-table .guest-info-cell {
+    text-align: center;
+    vertical-align: middle;
 }
 
 .admin-table .guest-info {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 4px;
 }
 
 .admin-table .guest-name {
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--corinthia-anvil);
 }
 
 .admin-table .guest-phone {
     font-family: var(--font-numeric);
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: rgba(16, 24, 32, 0.6);
+    font-weight: 400;
+}
+
+/* Date/Time Column - Date on one line, time below */
+.admin-table .date-time-cell {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.admin-table .date-time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
 }
 
 .admin-table .booking-date {
     font-family: var(--font-numeric);
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: var(--corinthia-anvil);
+}
+
+.admin-table .booking-time {
+    font-family: var(--font-numeric);
+    font-size: 0.85rem;
+    color: rgba(16, 24, 32, 0.7);
+    font-weight: 400;
+}
+
+/* Guests Count Column */
+.admin-table .guests-cell {
+    text-align: center;
+    vertical-align: middle;
 }
 
 .admin-table .guests-count {
     font-family: var(--font-numeric);
-    font-weight: 500;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--corinthia-anvil);
+}
+
+/* Status Column - Fixed width badges with soft backgrounds */
+.admin-table .status-cell {
+    text-align: center;
+    vertical-align: middle;
 }
 
 .admin-table .status-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 90px;
     padding: 6px 12px;
-    border-radius: 2px;
+    border-radius: 20px;
     font-family: var(--font-body);
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.3px;
 }
 
 .admin-table .status-badge.pending {
-    background: rgba(243, 156, 18, 0.15);
-    color: #f39c12;
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
 }
 
 .admin-table .status-badge.confirmed {
-    background: rgba(39, 174, 96, 0.15);
-    color: #27ae60;
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
 
 .admin-table .status-badge.cancelled {
-    background: rgba(231, 76, 60, 0.15);
-    color: #e74c3c;
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
 
 .admin-table .action-btn {

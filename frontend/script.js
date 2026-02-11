@@ -10,6 +10,25 @@ const AVAILABILITY_URL = (date) => `/api/bookings/availability/${date}`;
 
 console.log('📋 Using relative API paths');
 
+/**
+ * Download Imsakia PDF
+ * Triggered when user clicks the Download Imsakia floating button
+ */
+function downloadImsakia(event) {
+    event.preventDefault();
+    const pdfUrl = 'Imsakia.pdf';
+    
+    // Create temporary link to trigger download
+    const link = document.createElement('a');
+    link.href = pdfUrl;
+    link.download = 'Imsakia.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    console.log('📥 Imsakia PDF download initiated');
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     const bookingForm = document.getElementById('bookingForm');
     const phoneInput = document.getElementById('phone');

@@ -266,14 +266,17 @@ function initializeEventListeners() {
         });
     }
 
-    // Initialize Flatpickr Range Picker
+    // Initialize Flatpickr Range Picker with fixed positioning
     const dateRangePicker = document.getElementById('dateRangePicker');
-    if (dateRangePicker && typeof flatpickr !== 'undefined') {
+    const dateRangeContainer = document.querySelector('.date-range-container');
+    if (dateRangePicker && typeof flatpickr !== 'undefined' && dateRangeContainer) {
         flatpickr("#dateRangePicker", {
             mode: "range",
             dateFormat: "Y-m-d",
             minDate: "today",
             locale: i18n?.currentLang === 'ar' ? 'ar' : 'en',
+            appendTo: dateRangeContainer,
+            position: 'bottom left',
             onChange: function(selectedDates) {
                 if (selectedDates.length === 2) {
                     // Trigger filter only when both dates are selected
@@ -511,10 +514,10 @@ function getExpirationWarning(booking) {
 }
 
 /**
- * تنسيق التاريخ والوقت للعرض
+ * تنسيق التاريخ والوقت للعرض - تاريخ في سطر والوقت في سطر آخر
  * @param {string} dateStr - التاريخ بتنسيق YYYY-MM-DD
  * @param {string} timeStr - الوقت بتنسيق HH:mm
- * @returns {string} - التاريخ والوقت بتنسيق YYYY-MM-DD | HH:mm
+ * @returns {string} - HTML مع التاريخ والوقت في سطرين
  */
 function formatDateTime(dateStr, timeStr) {
     const date = new Date(dateStr);
@@ -522,7 +525,16 @@ function formatDateTime(dateStr, timeStr) {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     const time = timeStr || '19:00'; // Default time if not provided
-    return `${year}-${month}-${day} | ${time}`;
+    
+    // Format date as: Feb 11, 2026
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const formattedMonth = monthNames[date.getMonth()];
+    const formattedDate = `${formattedMonth} ${day}, ${year}`;
+    
+    return `<div class="date-time">
+        <span class="booking-date">${formattedDate}</span>
+        <span class="booking-time">${time}</span>
+    </div>`;
 }
 
 /**
@@ -560,18 +572,20 @@ function renderAdminTable(data) {
 
     tableBody.innerHTML = displayData.map(booking => `
         <tr class="fade-in-row">
-            <td class="id-cell">${booking.referenceNumber || (booking._id ? booking._id.slice(-6).toUpperCase() : 'N/A')}</td>
+            <td class="ref-cell">
+                <span class="ref-number">${booking.referenceNumber || (booking._id ? booking._id.slice(-6).toUpperCase() : 'N/A')}</span>
+            </td>
             <td class="guest-info-cell">
                 <div class="guest-info">
-                    <span class="name">${booking.name}</span>
-                    <span class="phone">${booking.phone}</span>
+                    <span class="guest-name">${booking.name}</span>
+                    <span class="guest-phone">${booking.phone}</span>
                 </div>
             </td>
             <td class="date-time-cell">${formatDateTime(booking.date, booking.time)}</td>
-            <td style="text-align: center;"><span class="guests-count">${booking.guests}</span></td>
-            <td>
-                <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <select class="status-select status-${booking.status}" 
+            <td class="guests-cell"><span class="guests-count">${booking.guests}</span></td>
+            <td class="status-cell">
+                <div style="display: flex; flex-direction: column; gap: 5px; align-items: center;">
+                    <select class="status-select status-badge status-${booking.status}" 
                             data-id="${booking._id}"
                             data-current="${booking.status}"
                             onchange="updateBookingStatus(this)"

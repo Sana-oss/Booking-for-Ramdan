@@ -24,35 +24,39 @@ body.user-view {
 
 .language-toggle-container {
     position: absolute;
-    top: 30px;
-    left: 30px;
+    top: 20px;
+    left: 20px;
     z-index: 1000;
+    display: flex;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 5px;
+    border: 1px solid var(--corinthia-honey);
+    overflow: hidden;
 }
 
 .lang-toggle-item {
-    background: var(--white);
-    border: 2px solid var(--corinthia-honey);
-    padding: 10px 20px;
+    padding: 6px 12px;
     cursor: pointer;
     transition: var(--transition);
     color: var(--corinthia-anvil);
     font-family: var(--font-body);
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    border-radius: 2px;
+    border: none;
+    border-left: 1px solid var(--corinthia-clay);
+}
+
+.lang-toggle-item:first-child {
+    border-left: none;
 }
 
 .lang-toggle-item:hover {
-    background: var(--corinthia-honey);
-    color: var(--white);
+    background: rgba(255, 163, 0, 0.1);
 }
 
 .lang-toggle-item.active {
-    background: var(--corinthia-anvil);
-    color: var(--corinthia-honey);
-    border-color: var(--corinthia-anvil);
+    background: var(--corinthia-honey);
+    color: var(--corinthia-anvil);
 }
 
 /* =========================================
@@ -147,6 +151,30 @@ body.user-view {
     width: auto;
     max-width: 280px;
     filter: drop-shadow(0 0 10px var(--honey-glow));
+}
+
+/* Ramadan Logo Stamp - Seasonal Decoration */
+.ramadan-stamp {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 70px;
+    height: 70px;
+    background-color: var(--corinthia-limestone); /* #D7D2CB */
+    border-radius: 12px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(16, 24, 32, 0.2);
+    border: 2px solid var(--corinthia-honey);
+    z-index: 10;
+}
+
+.ramadan-stamp img {
+    width: 100%;
+    height: auto;
+    max-width: 54px;
 }
 
 /* Form */
@@ -420,6 +448,45 @@ body.user-view {
     background: var(--corinthia-anvil);
     color: var(--corinthia-honey);
     transform: scale(1.1);
+}
+
+/* Download Imsakia Floating Button */
+.imsakia-float {
+    position: fixed;
+    bottom: 60px;
+    left: 30px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 1000;
+    background-color: var(--corinthia-limestone); /* #D7D2CB */
+    border: 2px solid var(--corinthia-honey);
+    box-shadow: 0 4px 15px rgba(16, 24, 32, 0.2);
+    text-decoration: none;
+}
+
+.imsakia-float:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(16, 24, 32, 0.3);
+}
+
+.imsakia-float i {
+    font-size: 1.2rem;
+    color: var(--corinthia-anvil);
+    margin-bottom: 2px;
+}
+
+.imsakia-float span {
+    font-family: var(--font-arabic);
+    font-size: 0.55rem;
+    color: var(--corinthia-anvil);
+    font-weight: 500;
 }
 
 /* =========================================
