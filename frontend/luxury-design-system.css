@@ -3,7 +3,7 @@
     Official Brand Guidelines Implementation
     ============================================ */
 
-/* Font Definitions */
+/* Font Definitions with Performance Optimization */
 @font-face {
     font-family: 'Adobe Arabic';
     src: url('Font/AdobeArabic-Regular.otf') format('opentype');
@@ -82,6 +82,107 @@ body {
     color: var(--corinthia-anvil);
     line-height: 1.6;
     position: relative;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+    TYPOGRAPHY SYSTEM - Complete Scale
+    ============================================ */
+
+/* Font Size Scale - Desktop */
+.text-xs { font-size: 0.75rem; line-height: 1.4; }
+.text-sm { font-size: 0.875rem; line-height: 1.5; }
+.text-base { font-size: 1rem; line-height: 1.6; }
+.text-lg { font-size: 1.125rem; line-height: 1.6; }
+.text-xl { font-size: 1.25rem; line-height: 1.4; }
+.text-2xl { font-size: 1.5rem; line-height: 1.3; }
+.text-3xl { font-size: 2rem; line-height: 1.25; }
+.text-4xl { font-size: 2.5rem; line-height: 1.2; }
+.text-5xl { font-size: 3rem; line-height: 1.1; }
+
+/* Font Weights */
+.font-light { font-weight: 300; }
+.font-normal { font-weight: 400; }
+.font-medium { font-weight: 500; }
+.font-semibold { font-weight: 600; }
+.font-bold { font-weight: 700; }
+
+/* Letter Spacing */
+.tracking-none { letter-spacing: 0; }
+.tracking-tight { letter-spacing: -0.02em; }
+.tracking-normal { letter-spacing: 0; }
+.tracking-wide { letter-spacing: 0.02em; }
+.tracking-wider { letter-spacing: 0.05em; }
+.tracking-widest { letter-spacing: 0.1em; }
+
+/* Line Heights */
+.leading-none { line-height: 1; }
+.leading-tight { line-height: 1.25; }
+.leading-snug { line-height: 1.375; }
+.leading-normal { line-height: 1.5; }
+.leading-relaxed { line-height: 1.625; }
+.leading-loose { line-height: 2; }
+
+/* ============================================
+    HEADING TYPOGRAPHY
+    ============================================ */
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading-en);
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--corinthia-anvil);
+}
+
+h1 { font-size: 2.5rem; letter-spacing: -0.02em; }
+h2 { font-size: 2rem; letter-spacing: -0.01em; }
+h3 { font-size: 1.5rem; }
+h4 { font-size: 1.25rem; font-weight: 500; }
+h5 { font-size: 1.125rem; font-weight: 500; }
+h6 { font-size: 1rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+
+/* Arabic Headings */
+[lang="ar"] h1,
+[lang="ar"] h2,
+[lang="ar"] h3,
+[lang="ar"] h4,
+[lang="ar"] h5,
+[lang="ar"] h6,
+.arabic-heading {
+    font-family: var(--font-arabic) !important;
+    font-weight: 400 !important;
+    letter-spacing: 0 !important;
+}
+
+/* ============================================
+    LANGUAGE-SPECIFIC TYPOGRAPHY
+    ============================================ */
+
+/* Arabic Text Styling */
+[lang="ar"],
+.arabic,
+[data-i18n-lang="ar"] {
+    font-family: var(--font-arabic) !important;
+    font-weight: 400 !important;
+    direction: rtl;
+    text-align: right;
+}
+
+/* English Text Styling */
+[lang="en"],
+.english,
+[data-i18n-lang="en"] {
+    font-family: var(--font-body) !important;
+    font-weight: 400 !important;
+    direction: ltr;
+    text-align: left;
+}
+
+/* English Headings */
+.heading-en {
+    font-family: var(--font-heading-en) !important;
+    font-weight: 400 !important;
 }
 
 /* ============================================
@@ -94,37 +195,74 @@ body {
 input[type="number"],
 input[type="tel"],
 input[type="date"],
+input[type="time"],
 .time,
 .date,
 .count,
 .quantity,
 .price,
 .stats-value,
-.chart-number {
+.chart-number,
+.reference-number,
+.phone-number {
     font-family: var(--font-numeric) !important;
     font-weight: 500 !important;
 }
 
 /* ============================================
-    ARABIC TEXT STYLING
+    LUXURY COMPONENT TYPOGRAPHY
     ============================================ */
 
-[lang="ar"],
-.arabic,
-[data-i18n-lang="ar"] {
-    font-family: var(--font-arabic) !important;
-    font-weight: 400 !important;
+.luxury-title {
+    font-family: var(--font-heading-en);
+    font-size: 2.5rem;
+    line-height: 1.2;
+    color: var(--corinthia-anvil);
+    margin-bottom: 20px;
+    letter-spacing: -0.02em;
 }
 
-/* ============================================
-    ENGLISH HEADINGS
-    ============================================ */
+.luxury-subtitle {
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    color: rgba(16, 24, 32, 0.7);
+    margin-bottom: 30px;
+    font-weight: 400;
+    line-height: 1.6;
+}
 
-h1, h2, h3, h4, h5, h6,
-.heading-en,
-[data-i18n-lang="en"] .luxury-title {
-    font-family: var(--font-heading-en) !important;
-    font-weight: 400 !important;
+.luxury-tagline {
+    font-family: var(--font-heading-en);
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--corinthia-honey);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-top: 10px;
+}
+
+.luxury-label {
+    font-family: var(--font-body);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--corinthia-anvil);
+    margin-bottom: 8px;
+    display: block;
+}
+
+[lang="ar"] .luxury-label {
+    font-family: var(--font-arabic);
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+}
+
+html[lang="ar"] .luxury-tagline {
+    font-family: var(--font-arabic);
+    font-size: 1rem;
+    letter-spacing: 0;
 }
 
 /* ============================================
@@ -143,15 +281,16 @@ h1, h2, h3, h4, h5, h6,
     border: 2px solid var(--corinthia-honey);
     padding: 14px 32px;
     font-family: var(--font-body);
-    font-size: 0.95rem;
-    font-weight: 500;
-    letter-spacing: 0.5px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
     border-radius: 2px;
     cursor: pointer;
     transition: var(--transition);
     position: relative;
     overflow: hidden;
-    text-transform: uppercase;
+    line-height: 1;
 }
 
 .luxury-btn:hover {
@@ -159,6 +298,26 @@ h1, h2, h3, h4, h5, h6,
     color: var(--corinthia-honey);
     transform: translateY(-2px);
     box-shadow: 0 8px 25px var(--anvil-shadow);
+}
+
+.luxury-btn-ghost {
+    background: transparent;
+    color: var(--corinthia-anvil);
+    border: 2px solid var(--corinthia-anvil);
+    padding: 14px 32px;
+    font-family: var(--font-body);
+    font-size: 0.875rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.luxury-btn-ghost:hover {
+    background: var(--corinthia-anvil);
+    color: var(--white);
 }
 
 .luxury-card {
@@ -202,6 +361,7 @@ h1, h2, h3, h4, h5, h6,
     color: var(--corinthia-anvil);
     transition: var(--transition);
     border-radius: 2px;
+    line-height: 1.5;
 }
 
 .luxury-input:focus {
@@ -212,41 +372,6 @@ h1, h2, h3, h4, h5, h6,
 
 .luxury-input::placeholder {
     color: rgba(16, 24, 32, 0.4);
-}
-
-/* ============================================
-    TYPOGRAPHY
-    ============================================ */
-
-.luxury-title {
-    font-size: 2.5rem;
-    line-height: 1.2;
-    color: var(--corinthia-anvil);
-    margin-bottom: 20px;
-    letter-spacing: -0.5px;
-}
-
-.luxury-subtitle {
-    font-family: var(--font-body);
-    font-size: 1.1rem;
-    color: rgba(16, 24, 32, 0.7);
-    margin-bottom: 30px;
-    font-weight: 400;
-}
-
-.luxury-tagline {
-    font-family: var(--font-heading-en);
-    font-size: 0.9rem;
-    font-weight: 400;
-    color: var(--corinthia-honey);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-top: 10px;
-}
-
-html[lang="ar"] .luxury-tagline {
-    font-family: var(--font-arabic);
-    font-size: 1rem;
 }
 
 /* ============================================
@@ -275,10 +400,10 @@ html[lang="ar"] .luxury-tagline {
 
 .qr-section .qr-text {
     font-family: var(--font-body);
-    font-size: 0.9rem;
+    font-size: 0.875rem;
     color: var(--white);
     max-width: 300px;
-    line-height: 1.5;
+    line-height: 1.6;
 }
 
 .qr-section .qr-text strong {
@@ -287,20 +412,186 @@ html[lang="ar"] .luxury-tagline {
 }
 
 /* ============================================
-    RESPONSIVE DESIGN
+    STATUS BADGES
+    ============================================ */
+
+.status-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    font-family: var(--font-numeric);
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border-radius: 2px;
+}
+
+.status-pending {
+    background: rgba(255, 163, 0, 0.15);
+    color: var(--corinthia-honey);
+    border: 1px solid var(--corinthia-honey);
+}
+
+.status-confirmed {
+    background: rgba(16, 24, 32, 0.1);
+    color: var(--corinthia-anvil);
+    border: 1px solid var(--corinthia-anvil);
+}
+
+.status-cancelled {
+    background: rgba(200, 50, 50, 0.1);
+    color: #c83232;
+    border: 1px solid #c83232;
+}
+
+/* ============================================
+    RESPONSIVE TYPOGRAPHY - Tablet
+    ============================================ */
+
+@media (max-width: 1024px) {
+    h1 { font-size: 2.25rem; }
+    h2 { font-size: 1.75rem; }
+    h3 { font-size: 1.375rem; }
+    h4 { font-size: 1.125rem; }
+    
+    .luxury-title { font-size: 2.25rem; }
+    .luxury-subtitle { font-size: 1rem; }
+    
+    .text-4xl { font-size: 2.25rem; }
+    .text-5xl { font-size: 2.5rem; }
+}
+
+/* ============================================
+    RESPONSIVE TYPOGRAPHY - Mobile
     ============================================ */
 
 @media (max-width: 768px) {
+    h1 { font-size: 1.875rem; letter-spacing: -0.01em; }
+    h2 { font-size: 1.5rem; }
+    h3 { font-size: 1.25rem; }
+    h4 { font-size: 1.125rem; }
+    h5 { font-size: 1rem; }
+    h6 { font-size: 0.875rem; }
+    
     .luxury-title {
-        font-size: 2rem;
+        font-size: 1.75rem;
+        line-height: 1.25;
+        letter-spacing: -0.01em;
     }
+    
+    .luxury-subtitle {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+    
+    .luxury-tagline {
+        font-size: 0.75rem;
+    }
+    
+    html[lang="ar"] .luxury-tagline {
+        font-size: 0.875rem;
+    }
+    
+    .text-xs { font-size: 0.75rem; }
+    .text-sm { font-size: 0.8125rem; }
+    .text-base { font-size: 0.9375rem; }
+    .text-lg { font-size: 1rem; }
+    .text-xl { font-size: 1.125rem; }
+    .text-2xl { font-size: 1.25rem; }
+    .text-3xl { font-size: 1.5rem; }
+    .text-4xl { font-size: 1.75rem; }
+    .text-5xl { font-size: 2rem; }
     
     .luxury-card {
         padding: 25px;
     }
     
+    .luxury-btn {
+        padding: 12px 24px;
+        font-size: 0.8125rem;
+    }
+    
     .qr-section .qr-image {
         width: 100px;
         height: 100px;
+    }
+    
+    .qr-section {
+        padding: 20px;
+    }
+}
+
+/* ============================================
+    RTL/LTR ADJUSTMENTS
+    ============================================ */
+
+[lang="ar"] {
+    text-align: right;
+    direction: rtl;
+}
+
+[lang="ar"] body {
+    text-align: right;
+}
+
+[lang="en"] {
+    text-align: left;
+    direction: ltr;
+}
+
+[lang="en"] body {
+    text-align: left;
+}
+
+/* Form inputs RTL/LTR */
+[lang="ar"] input,
+[lang="ar"] textarea,
+[lang="ar"] select {
+    text-align: right;
+    direction: rtl;
+}
+
+[lang="en"] input,
+[lang="en"] textarea,
+[lang="en"] select {
+    text-align: left;
+    direction: ltr;
+}
+
+/* Button text alignment */
+[lang="ar"] .luxury-btn,
+[lang="ar"] .luxury-btn-ghost {
+    text-align: center;
+}
+
+[lang="en"] .luxury-btn,
+[lang="en"] .luxury-btn-ghost {
+    text-align: center;
+}
+
+/* ============================================
+    ACCESSIBILITY
+    ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    :root {
+        --corinthia-honey: #FFB000;
+        --corinthia-anvil: #000000;
+        --corinthia-clay: #000000;
+    }
+    
+    .luxury-btn,
+    .luxury-btn-ghost {
+        border-width: 3px;
     }
 }

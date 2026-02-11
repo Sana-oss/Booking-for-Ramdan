@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corinthia Hotel - حجز مؤكد</title>
+    <title data-i18n="success_title">شكراً لاختياركم كورنثيا</title>
     
     <!-- Premium Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -44,7 +44,7 @@
             width: 100%;
             background: var(--white);
             border: 1px solid var(--corinthia-clay);
-            border-radius: 4px;
+            border-radius: 2px;
             padding: 30px;
             text-align: center;
             position: relative;
@@ -62,9 +62,32 @@
             transform: translateY(0);
         }
         
+        /* Language Toggle */
+        .lang-toggle {
+            position: fixed;
+            inset-block-start: 20px;
+            inset-inline-end: 20px;
+            background: var(--white);
+            border: 1px solid var(--corinthia-honey);
+            color: var(--corinthia-honey);
+            padding: 10px 16px;
+            border-radius: 2px;
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 0.875rem;
+            transition: var(--transition);
+            z-index: 100;
+        }
+        
+        .lang-toggle:hover {
+            background: var(--corinthia-honey);
+            color: var(--white);
+        }
+        
         /* Logo */
         .card-logo {
-            margin-bottom: 25px;
+            margin-block-end: 25px;
         }
         
         .card-logo img {
@@ -74,7 +97,7 @@
         
         /* Thank You Message */
         .thank-you-message {
-            margin-bottom: 20px;
+            margin-block-end: 20px;
         }
         
         .thank-you-message h2 {
@@ -82,7 +105,7 @@
             font-size: 1.4rem;
             font-weight: 500;
             color: var(--corinthia-anvil);
-            margin-bottom: 8px;
+            margin-block-end: 8px;
         }
         
         .thank-you-message p {
@@ -93,10 +116,10 @@
         /* Status Message */
         .status-message {
             min-height: 24px;
-            margin-bottom: 15px;
+            margin-block-end: 15px;
             font-family: var(--font-arabic);
             font-size: 0.95rem;
-            color: var(--honey-gold);
+            color: var(--corinthia-honey);
         }
         
         /* Decorative Line */
@@ -111,7 +134,7 @@
         .reference-section {
             background: rgba(255, 163, 0, 0.08);
             border: 1px solid rgba(255, 163, 0, 0.3);
-            border-radius: 4px;
+            border-radius: 2px;
             padding: 18px;
             margin: 20px 0;
         }
@@ -122,7 +145,7 @@
             color: var(--corinthia-honey);
             letter-spacing: 1.5px;
             text-transform: uppercase;
-            margin-bottom: 6px;
+            margin-block-end: 6px;
         }
         
         .reference-number {
@@ -137,7 +160,7 @@
         .guest-details {
             background: rgba(255, 163, 0, 0.05);
             border: 1px solid var(--corinthia-clay);
-            border-radius: 4px;
+            border-radius: 2px;
             padding: 18px;
             margin: 20px 0;
             display: flex;
@@ -149,13 +172,13 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 12px;
-            border-bottom: 1px solid rgba(175, 169, 160, 0.2);
+            padding-block-end: 12px;
+            border-block-end: 1px solid rgba(175, 169, 160, 0.2);
         }
         
         .guest-row:last-child {
-            padding-bottom: 0;
-            border-bottom: none;
+            padding-block-end: 0;
+            border-block-end: none;
         }
         
         .guest-label {
@@ -169,7 +192,7 @@
             font-size: 0.9rem;
             color: var(--corinthia-anvil);
             font-weight: 500;
-            text-align: right;
+            text-align: end;
         }
         
         /* Status Badge */
@@ -179,10 +202,12 @@
             justify-content: center;
             gap: 10px;
             padding: 12px 24px;
-            border-radius: 4px;
-            font-family: var(--font-arabic);
-            font-size: 1rem;
-            font-weight: 500;
+            border-radius: 2px;
+            font-family: var(--font-numeric);
+            font-size: 0.875rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
             margin: 20px 0;
             transition: var(--transition);
         }
@@ -199,27 +224,27 @@
         }
         
         .status-pending i {
-            color: var(--honey-gold);
+            color: var(--corinthia-honey);
         }
         
         .status-confirmed {
-            background: rgba(39, 174, 96, 0.12);
-            border: 1px solid #27ae60;
-            color: #27ae60;
+            background: rgba(16, 24, 32, 0.1);
+            border: 1px solid var(--corinthia-anvil);
+            color: var(--corinthia-anvil);
         }
         
         .status-confirmed i {
-            color: #27ae60;
+            color: var(--corinthia-anvil);
         }
         
         .status-cancelled {
-            background: rgba(231, 76, 60, 0.12);
-            border: 1px solid #e74c3c;
-            color: #e74c3c;
+            background: rgba(200, 50, 50, 0.15);
+            border: 1px solid #c83232;
+            color: #c83232;
         }
         
         .status-cancelled i {
-            color: #e74c3c;
+            color: #c83232;
         }
         
         /* Timer Container */
@@ -235,7 +260,7 @@
         .timer-section {
             background: rgba(255, 163, 0, 0.05);
             border: 1px solid var(--corinthia-clay);
-            border-radius: 4px;
+            border-radius: 2px;
             padding: 18px;
         }
         
@@ -243,7 +268,7 @@
             font-family: var(--font-arabic);
             font-size: 0.8rem;
             color: var(--corinthia-clay);
-            margin-bottom: 10px;
+            margin-block-end: 10px;
         }
         
         .timer-display {
@@ -253,7 +278,7 @@
             gap: 10px;
             background: rgba(255, 163, 0, 0.1);
             border: 1px solid var(--corinthia-honey);
-            border-radius: 4px;
+            border-radius: 2px;
             padding: 12px 24px;
         }
         
@@ -266,7 +291,7 @@
             font-size: 1.3rem;
             font-weight: 600;
             color: var(--corinthia-anvil);
-            min-width: 80px;
+            min-inline-size: 80px;
         }
         
         /* Action Buttons */
@@ -274,8 +299,8 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
-            margin-top: 35px;
-            padding: 0 10px;
+            margin-block-start: 35px;
+            padding-inline: 10px;
         }
         
         /* Base Button Styles */
@@ -305,8 +330,9 @@
         }
         
         .btn-primary:hover {
-            background: #CC8200;
-            border-color: #CC8200;
+            background: var(--corinthia-anvil);
+            border-color: var(--corinthia-anvil);
+            color: var(--corinthia-honey);
             box-shadow: 0 6px 25px var(--honey-glow);
             transform: translateY(-2px);
         }
@@ -339,8 +365,8 @@
         /* Contact Buttons */
         .contact-buttons {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            inset-block-end: 20px;
+            inset-inline-end: 20px;
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -350,24 +376,24 @@
         .contact-btn {
             width: 44px;
             height: 44px;
-            border-radius: 4px;
+            border-radius: 2px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.1rem;
-            transition: all 0.3s ease;
+            transition: var(--transition);
             text-decoration: none;
         }
         
         .contact-btn.phone {
-            background: var(--honey-gold);
-            color: var(--anvil-dark);
+            background: var(--corinthia-honey);
+            color: var(--corinthia-anvil);
         }
         
         .contact-btn.whatsapp {
-            background: rgba(212, 175, 55, 0.2);
-            border: 1px solid var(--honey-gold);
-            color: var(--honey-gold);
+            background: rgba(255, 163, 0, 0.15);
+            border: 1px solid var(--corinthia-honey);
+            color: var(--corinthia-honey);
         }
         
         .contact-btn:hover {
@@ -396,10 +422,20 @@
             .timer-display span {
                 font-size: 1.1rem;
             }
+            
+            .lang-toggle {
+                padding: 8px 12px;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
 <body class="user-view">
+    
+    <!-- Language Toggle -->
+    <button class="lang-toggle" onclick="i18n.toggleLang()">
+        <span id="langToggleText">English</span>
+    </button>
     
     <!-- Main Card -->
     <div class="vip-invitation-card" id="mainCard">
@@ -410,33 +446,33 @@
         
         <!-- Thank You Message -->
         <div class="thank-you-message">
-            <h2 id="mainTitle">شكراً لاختياركم كورنثيا</h2>
-            <p id="mainSubtitle">تم استلام طلب الحجز بنجاح</p>
+            <h2 id="mainTitle" data-i18n="success_thank_you">شكراً لاختياركم كورنثيا</h2>
+            <p id="mainSubtitle" data-i18n="success_subtitle">تم استلام طلب الحجز بنجاح</p>
         </div>
         
         <!-- Status Message -->
-        <div class="status-message" id="statusMessageText"></div>
+        <div class="status-message" id="statusMessageText" data-i18n="success_message"></div>
         
         <div class="decorative-line"></div>
         
         <!-- Reference Number -->
         <div class="reference-section">
-            <div class="reference-label">الرقم المرجعي</div>
+            <div class="reference-label" data-i18n="res_num_label">الرقم المرجعي للحجز</div>
             <div class="reference-number" id="reservationNumber">----</div>
         </div>
         
         <!-- Guest Details - Clean Vertical Flexbox -->
         <div class="guest-details">
             <div class="guest-row">
-                <span class="guest-label">الاسم</span>
+                <span class="guest-label" data-i18n="label_name">الاسم</span>
                 <span class="guest-value" id="guestName">----</span>
             </div>
             <div class="guest-row">
-                <span class="guest-label">التاريخ</span>
+                <span class="guest-label" data-i18n="label_booking_date">التاريخ</span>
                 <span class="guest-value" id="guestDate">----</span>
             </div>
             <div class="guest-row">
-                <span class="guest-label">الهاتف</span>
+                <span class="guest-label" data-i18n="label_phone">الهاتف</span>
                 <span class="guest-value" id="guestPhone">----</span>
             </div>
         </div>
@@ -444,13 +480,13 @@
         <!-- Status Badge -->
         <div class="status-badge status-pending" id="statusBadge">
             <i class="fas fa-clock" id="statusIcon"></i>
-            <span id="statusText">بانتظار التأكيد</span>
+            <span id="statusText" data-i18n="status_pending">بانتظار التأكيد</span>
         </div>
         
         <!-- Timer Container -->
         <div id="timerContainer">
             <div class="timer-section">
-                <div class="timer-label">الوقت المتبقي لإتمام الحجز</div>
+                <div class="timer-label" data-i18n="timer_label">الوقت المتبقي لإتمام الحجز</div>
                 <div class="timer-display">
                     <i class="fas fa-clock"></i>
                     <span id="countdownDisplay">--:--:--</span>
@@ -462,21 +498,21 @@
         <div class="action-buttons">
             <a href="check-status.html" class="btn-primary" id="primaryBtn">
                 <i class="fas fa-credit-card"></i>
-                <span>الانتقال للدفع</span>
+                <span data-i18n="btn_payment">الانتقال للدفع</span>
             </a>
             <a href="index.html" class="btn-secondary">
                 <i class="fas fa-plus"></i>
-                <span>حجز جديد</span>
+                <span data-i18n="new_booking">حجز جديد</span>
             </a>
         </div>
     </div>
     
     <!-- Contact Buttons -->
     <div class="contact-buttons">
-        <a href="tel:+218910100708" class="contact-btn phone" title="اتصل بنا">
+        <a href="tel:+218910100708" class="contact-btn phone" title data-i18n-attr="title:label_phone">
             <i class="fas fa-phone-alt"></i>
         </a>
-        <a href="https://wa.me/218910100708" target="_blank" class="contact-btn whatsapp" title="واتساب">
+        <a href="https://wa.me/218910100708" target="_blank" class="contact-btn whatsapp" title data-i18n="need_help">
             <i class="fab fa-whatsapp"></i>
         </a>
     </div>

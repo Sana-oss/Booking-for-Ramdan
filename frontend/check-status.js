@@ -1,6 +1,7 @@
 /**
  * CORINTHIA HOTEL - CHECK STATUS JAVASCRIPT
  * Dynamic Booking Status Tracking with Live Polling
+ * Full i18n Support
  */
 
 // API URLs
@@ -18,9 +19,18 @@ let currentLang = 'ar';
 // ============================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Initialize i18n first
+    i18n.init();
+    
+    // Set currentLang from i18n
+    currentLang = i18n.getLang();
+    
     // Reveal card
     setTimeout(() => {
-        document.getElementById('mainCard').classList.add('visible');
+        const mainCard = document.getElementById('mainCard');
+        if (mainCard) {
+            mainCard.classList.add('visible');
+        }
     }, 100);
     
     // Check for booking ID in URL
@@ -31,6 +41,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('bookingID').value = bookingId;
         performTrack();
     }
+    
+    // Listen for language changes
+    window.addEventListener('languageChanged', (e) => {
+        currentLang = e.detail.lang;
+        if (currentBookingData) {
+            updateUIByStatus(currentBookingData);
+        }
+    });
 });
 
 // ============================================
@@ -38,15 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============================================
 
 function toggleLanguage() {
-    currentLang = currentLang === 'ar' ? 'en' : 'ar';
-    document.getElementById('langText').textContent = currentLang === 'ar' ? 'العربية' : 'English';
-    document.body.dir = currentLang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = currentLang;
-    
-    // Update UI content if booking is loaded
-    if (currentBookingData) {
-        updateUIByStatus(currentBookingData);
-    }
+    i18n.toggleLang();
+    currentLang = i18n.getLang();
 }
 
 // ============================================
@@ -57,6 +68,7 @@ async function performTrack() {
     const idInput = document.getElementById('bookingID');
     const id = idInput.value.trim();
     const errorEl = document.getElementById('errorMessage');
+    const dict = i18n.translations[currentLang];
     
     // Hide error
     errorEl.classList.remove('show');
@@ -116,11 +128,11 @@ async function performTrack() {
 function showError() {
     const errorEl = document.getElementById('errorMessage');
     errorEl.classList.add('show');
+    errorEl.classList.add('show');
     
     const p = errorEl.querySelector('p');
-    p.textContent = currentLang === 'ar'
-        ? 'تعذر العثور على بيانات الحجز، يرجى المحاولة لاحقاً'
-        : 'Booking data not found. Please try again later.';
+    const dict = i18n.translations[currentLang];
+    p.textContent = dict.error_not_found || 'Booking data not found. Please try again later.';
 }
 
 // ============================================
@@ -198,10 +210,12 @@ function showResultSection(booking) {
 function updateUIByStatus(data) {
     const status = (data.status || 'pending').toLowerCase();
     const isAr = currentLang === 'ar';
+    const dict = i18n.translations[currentLang];
     
     // DOM Elements
     const guestNameEl = document.getElementById('checkGuestName');
     const dateEl = document.getElementById('checkDate');
+    const guestsEl = document.getElementById('checkGuests');
     const bookingIdEl = document.getElementById('checkBookingID');
     const statusBadge = document.getElementById('checkStatusBadge');
     const statusIcon = document.getElementById('statusIcon');
@@ -217,7 +231,8 @@ function updateUIByStatus(data) {
     if (dateEl && data.date) {
         try {
             const dateObj = new Date(data.date);
-            dateEl.textContent = dateObj.toLocaleDateString(isAr ? 'ar-EG' : 'en-GB', {
+            const locale = isAr ? 'ar-EG' : 'en-US';
+            dateEl.textContent = dateObj.toLocaleDateString(locale, {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric'
@@ -225,6 +240,10 @@ function updateUIByStatus(data) {
         } catch (e) {
             dateEl.textContent = data.date;
         }
+    }
+    
+    if (guestsEl) {
+        guestsEl.textContent = data.numberOfSeats || data.guests || 2;
     }
     
     // Update Booking ID
@@ -235,32 +254,32 @@ function updateUIByStatus(data) {
     // Update Status Badge
     statusBadge.classList.remove('status-pending', 'status-confirmed', 'status-cancelled');
     
+    // Get translated status message
+    let statusMsg = dict.instr_pending || 'Please check your status later';
+    let actionBtnsHTML = '';
+    
     switch (status) {
         case 'confirmed':
-            // Green badge, show download button
+            // Green/black badge, show download button
             statusBadge.classList.add('status-confirmed');
             statusIcon.className = 'fas fa-check-circle';
-            statusText.textContent = isAr ? 'تم تأكيد الحجز ✓' : 'Booking Confirmed ✓';
-            statusMessage.textContent = isAr 
-                ? 'حجزكم مضمون - نراكم قريباً' 
-                : 'Your booking is guaranteed - See you soon';
+            statusText.textContent = dict.status_confirmed || 'Confirmed';
+            statusMsg = dict.booking_guaranteed || 'Your booking is guaranteed - See you soon';
             
             // Action buttons - Download Receipt
-            actionButtons.innerHTML = `
+            actionBtnsHTML = `
                 <button class="result-btn primary" onclick="saveBookingPass()">
                     <i class="fas fa-download"></i>
-                    <span>${isAr ? 'تحميل إيصال الدفع' : 'Download Receipt'}</span>
+                    <span>${dict.btn_download || 'Download Receipt'}</span>
                 </button>
                 <a href="index.html" class="result-btn secondary">
                     <i class="fas fa-plus"></i>
-                    <span>${isAr ? 'حجز جديد' : 'New Booking'}</span>
+                    <span>${dict.btn_new_booking || 'New Booking'}</span>
                 </a>
             `;
             
             // Update timeline - all completed
-            document.getElementById('step1').querySelector('.step-icon').classList.add('active');
-            document.getElementById('step2').querySelector('.step-icon').classList.add('active');
-            document.getElementById('step3').querySelector('.step-icon').classList.add('active');
+            updateTimeline(3);
             break;
             
         case 'cancelled':
@@ -268,27 +287,23 @@ function updateUIByStatus(data) {
             // Red badge, show contact support
             statusBadge.classList.add('status-cancelled');
             statusIcon.className = 'fas fa-times-circle';
-            statusText.textContent = isAr ? 'تم إلغاء الحجز' : 'Booking Cancelled';
-            statusMessage.textContent = isAr 
-                ? 'تم إلغاء الحجز لعدم إتمام الدفع' 
-                : 'Booking cancelled due to non-payment';
+            statusText.textContent = dict.status_cancelled || 'Cancelled';
+            statusMsg = dict.instr_cancelled || 'Booking cancelled due to non-payment';
             
             // Action buttons - Contact Support
-            actionButtons.innerHTML = `
+            actionBtnsHTML = `
                 <a href="tel:+218910100708" class="result-btn secondary">
                     <i class="fas fa-phone-alt"></i>
-                    <span>${isAr ? 'اتصل بنا' : 'Contact Support'}</span>
+                    <span>${dict.need_help || 'Contact Support'}</span>
                 </a>
                 <a href="index.html" class="result-btn primary">
                     <i class="fas fa-plus"></i>
-                    <span>${isAr ? 'حجز جديد' : 'New Booking'}</span>
+                    <span>${dict.btn_new_booking || 'New Booking'}</span>
                 </a>
             `;
             
             // Update timeline - only first step
-            document.getElementById('step1').querySelector('.step-icon').classList.add('active');
-            document.getElementById('step2').querySelector('.step-icon').classList.remove('active', 'current');
-            document.getElementById('step3').querySelector('.step-icon').classList.remove('active', 'current');
+            updateTimeline(1);
             break;
             
         default:
@@ -296,28 +311,63 @@ function updateUIByStatus(data) {
             // Gold badge, show waiting message
             statusBadge.classList.add('status-pending');
             statusIcon.className = 'fas fa-clock';
-            statusText.textContent = isAr ? 'بانتظار التأكيد' : 'Pending Confirmation';
-            statusMessage.textContent = isAr 
-                ? 'يرجى مراجعة حالتكم لاحقاً' 
-                : 'Please check your status later';
+            statusText.textContent = dict.status_pending || 'Pending';
+            statusMsg = dict.instr_pending || 'Please check your status later';
             
             // Action buttons - Refresh
-            actionButtons.innerHTML = `
+            actionBtnsHTML = `
                 <button class="result-btn secondary" onclick="performTrack()">
                     <i class="fas fa-sync-alt"></i>
-                    <span>${isAr ? 'تحديث' : 'Refresh'}</span>
+                    <span>${dict.btn_check || 'Refresh'}</span>
                 </button>
                 <a href="index.html" class="result-btn primary">
                     <i class="fas fa-plus"></i>
-                    <span>${isAr ? 'حجز جديد' : 'New Booking'}</span>
+                    <span>${dict.btn_new_booking || 'New Booking'}</span>
                 </a>
             `;
             
             // Update timeline - first two steps
-            document.getElementById('step1').querySelector('.step-icon').classList.add('active');
-            document.getElementById('step2').querySelector('.step-icon').classList.add('current');
-            document.getElementById('step3').querySelector('.step-icon').classList.remove('active', 'current');
+            updateTimeline(2);
             break;
+    }
+    
+    // Update status message
+    if (statusMessage) {
+        statusMessage.textContent = statusMsg;
+    }
+    
+    // Update action buttons
+    if (actionButtons) {
+        actionButtons.innerHTML = actionBtnsHTML;
+    }
+}
+
+function updateTimeline(completedSteps) {
+    const step1 = document.getElementById('step1');
+    const step2 = document.getElementById('step2');
+    const step3 = document.getElementById('step3');
+    
+    if (!step1 || !step2 || !step3) return;
+    
+    const icon1 = step1.querySelector('.step-icon');
+    const icon2 = step2.querySelector('.step-icon');
+    const icon3 = step3.querySelector('.step-icon');
+    
+    // Reset all
+    icon1.classList.remove('active', 'current');
+    icon2.classList.remove('active', 'current');
+    icon3.classList.remove('active', 'current');
+    
+    if (completedSteps >= 1) {
+        icon1.classList.add('active');
+    }
+    
+    if (completedSteps >= 2) {
+        icon2.classList.add('active');
+    }
+    
+    if (completedSteps >= 3) {
+        icon3.classList.add('active');
     }
 }
 
@@ -330,108 +380,133 @@ function populateDownloadPass(booking) {
     
     // Reference
     const displayRef = booking.referenceNumber || booking._id || booking.id || '----';
-    document.getElementById('passReference').textContent = displayRef;
+    const passRefEl = document.getElementById('passReference');
+    if (passRefEl) {
+        passRefEl.textContent = displayRef;
+    }
     
     // Guest Name
-    document.getElementById('passGuestName').textContent = booking.name || '----';
+    const passGuestEl = document.getElementById('passGuestName');
+    if (passGuestEl) {
+        passGuestEl.textContent = booking.name || '----';
+    }
     
     // Date
     if (booking.date) {
-        try {
-            const dateObj = new Date(booking.date);
-            document.getElementById('passDate').textContent = dateObj.toLocaleDateString(isAr ? 'ar-EG' : 'en-GB', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        } catch (e) {
-            document.getElementById('passDate').textContent = booking.date;
+        const passDateEl = document.getElementById('passDate');
+        if (passDateEl) {
+            try {
+                const dateObj = new Date(booking.date);
+                const locale = isAr ? 'ar-EG' : 'en-US';
+                passDateEl.textContent = dateObj.toLocaleDateString(locale, {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            } catch (e) {
+                passDateEl.textContent = booking.date;
+            }
         }
     }
     
     // Guests
-    document.getElementById('passGuests').textContent = booking.numberOfSeats || booking.guests || 2;
+    const passGuestsEl = document.getElementById('passGuests');
+    if (passGuestsEl) {
+        passGuestsEl.textContent = booking.numberOfSeats || booking.guests || 2;
+    }
     
-    // Status
+    // Status - QR code is now static (corinthia_qr.svg)
     const statusLower = (booking.status || 'pending').toLowerCase();
     const statusBox = document.getElementById('passStatusBox');
     const statusText = document.getElementById('passStatusText');
     
-    statusBox.classList.remove('pending', 'confirmed', 'cancelled');
-    
-    if (statusLower === 'confirmed') {
-        statusBox.style.background = 'rgba(39, 174, 96, 0.15)';
-        statusBox.style.borderColor = '#2ecc71';
-        statusText.textContent = 'CONFIRMED';
-        statusText.style.color = '#27ae60';
-    } else if (statusLower === 'cancelled') {
-        statusBox.style.background = 'rgba(231, 76, 60, 0.15)';
-        statusBox.style.borderColor = '#e74c3c';
-        statusText.textContent = 'CANCELLED';
-        statusText.style.color = '#c0392b';
-    } else {
-        statusBox.style.background = 'rgba(243, 156, 18, 0.15)';
-        statusBox.style.borderColor = '#f39c12';
-        statusText.textContent = 'PENDING';
-        statusText.style.color = '#d35400';
+    if (statusBox && statusText) {
+        statusBox.classList.remove('pending', 'confirmed', 'cancelled');
+        
+        if (statusLower === 'confirmed') {
+            statusBox.style.background = 'rgba(39, 174, 96, 0.15)';
+            statusBox.style.borderColor = '#2ecc71';
+            statusText.textContent = 'CONFIRMED';
+            statusText.style.color = '#27ae60';
+        } else if (statusLower === 'cancelled') {
+            statusBox.style.background = 'rgba(231, 76, 60, 0.15)';
+            statusBox.style.borderColor = '#e74c3c';
+            statusText.textContent = 'CANCELLED';
+            statusText.style.color = '#c0392b';
+        } else {
+            statusBox.style.background = 'rgba(243, 156, 18, 0.15)';
+            statusBox.style.borderColor = '#f39c12';
+            statusText.textContent = 'PENDING';
+            statusText.style.color = '#d35400';
+        }
     }
     
-    // Generate Real QR Code using QRCode.js
-    generateQRCode(displayRef);
-}
-
-function generateQRCode(data) {
-    const qrContainer = document.getElementById('passQRCode');
-    
-    // Clear previous QR code
-    qrContainer.innerHTML = '';
-    
-    // Generate new QR code
-    if (typeof QRCode !== 'undefined') {
-        new QRCode(qrContainer, {
-            text: data || 'CRT-XXXX',
-            width: 100,
-            height: 100,
-            colorDark: '#2C2C2C',
-            colorLight: '#FFFFFF',
-            correctLevel: QRCode.CorrectLevel.H
-        });
-    } else {
-        // Fallback if QRCode library not loaded
-        qrContainer.innerHTML = '<div style="width:100px;height:100px;background:#f5f5f5;border:1px solid #D4AF37;display:flex;align-items:center;justify-content:center;font-size:10px;color:#666;">QR Code</div>';
-    }
+    console.log('📋 Pass populated with static QR code');
 }
 
 async function saveBookingPass() {
     const booking = currentBookingData;
     if (!booking) {
+        console.error('No booking data found');
         alert('No booking data found');
         return;
     }
     
     const passElement = document.getElementById('downloadablePass');
     
+    if (!passElement) {
+        console.error('Pass element not found');
+        alert('Pass element not found');
+        return;
+    }
+    
     try {
-        // Use html2canvas to capture the pass
+        console.log('📥 Starting pass generation...');
+        
+        // First, populate all pass data
+        populateDownloadPass(booking);
+        
+        // Wait 200ms for QR code and texts to fully render
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        console.log('🎨 Capturing pass with html2canvas...');
+        
+        // Use html2canvas to capture the pass with proper settings
         const canvas = await html2canvas(passElement, {
             scale: 2,
             backgroundColor: '#FFFFFF',
             useCORS: true,
             allowTaint: true,
-            logging: false
+            logging: true
         });
+        
+        console.log('✅ Canvas captured successfully');
+        
+        // Convert to data URL
+        const dataURL = canvas.toDataURL('image/png');
+        
+        console.log('📄 Data URL length:', dataURL.length);
+        
+        // Verify the data URL is valid
+        if (!dataURL || dataURL.length < 100) {
+            throw new Error('Invalid canvas data URL generated');
+        }
         
         // Export to PNG
         const displayRef = booking.referenceNumber || booking._id || booking.id || 'pass';
         const link = document.createElement('a');
-        link.href = canvas.toDataURL('image/png');
+        link.href = dataURL;
         link.download = `booking-pass-${displayRef}.png`;
-        link.click();
         
-        console.log('✅ Booking pass downloaded successfully');
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        console.log('✅ Booking pass downloaded successfully:', link.download);
     } catch (error) {
         console.error('❌ Error generating pass:', error);
-        alert('Error generating pass. Please try again.');
+        alert('Error generating pass. Please try again.\nDetails: ' + error.message);
     }
 }
 
@@ -439,11 +514,14 @@ async function saveBookingPass() {
 // EVENT LISTENERS
 // ============================================
 
-document.getElementById('bookingID').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        performTrack();
-    }
-});
+const bookingIDInput = document.getElementById('bookingID');
+if (bookingIDInput) {
+    bookingIDInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            performTrack();
+        }
+    });
+}
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {

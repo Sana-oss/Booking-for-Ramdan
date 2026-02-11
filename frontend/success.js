@@ -1,6 +1,7 @@
 /**
  * CORINTHIA HOTEL - SUCCESS PAGE SCRIPT
  * Synced with success.html UI
+ * Full i18n Support
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -30,6 +31,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Populate UI with initial data (even before API call)
     populateGuestDetails(bookingData);
     
+    // Update language toggle text
+    updateLangToggleText();
+    
     // Fetch from API if ID exists
     if (bookingId) {
         console.log('📡 Fetching from API:', bookingId);
@@ -43,10 +47,24 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ============================================
+// LANGUAGE TOGGLE TEXT
+// ============================================
+
+function updateLangToggleText() {
+    const langToggle = document.getElementById('langToggleText');
+    if (langToggle && typeof i18n !== 'undefined') {
+        langToggle.textContent = i18n.currentLang === 'ar' ? 'English' : 'العربية';
+    }
+}
+
+// ============================================
 // POPULATE GUEST DETAILS
 // ============================================
 
 function populateGuestDetails(data) {
+    const lang = (typeof i18n !== 'undefined' && i18n.currentLang === 'en') ? 'en' : 'ar';
+    const dict = typeof i18n !== 'undefined' ? i18n.translations[lang] : { label_name: 'Name', label_booking_date: 'Date', label_phone: 'Phone' };
+    
     // Reference number
     const refEl = document.getElementById('reservationNumber');
     if (refEl) {
@@ -59,16 +77,27 @@ function populateGuestDetails(data) {
         nameEl.textContent = data.name || '----';
     }
     
-    // Date
+    // Date - Format based on language
     const dateEl = document.getElementById('guestDate');
     if (dateEl && data.date) {
         try {
             const dateObj = new Date(data.date);
-            dateEl.textContent = dateObj.toLocaleDateString('ar-EG', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
+            
+            if (lang === 'en') {
+                // English format: March 4, 2026
+                dateEl.textContent = dateObj.toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            } else {
+                // Arabic format: ٤ مارس ٢٠٢٦
+                dateEl.textContent = dateObj.toLocaleDateString('ar-EG', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+            }
         } catch (e) {
             dateEl.textContent = data.date;
         }
@@ -128,12 +157,13 @@ async function fetchBookingData(id) {
 }
 
 // ============================================
-// UPDATE UI BY STATUS
+// UPDATE UI BY STATUS (i18n Compatible)
 // ============================================
 
 function updateUIByStatus(data) {
     const status = data.status || 'pending';
     const lang = (typeof i18n !== 'undefined' && i18n.currentLang === 'en') ? 'en' : 'ar';
+    const dict = typeof i18n !== 'undefined' ? i18n.translations[lang] : {};
     
     // DOM Elements
     const badge = document.getElementById('statusBadge');
@@ -149,23 +179,24 @@ function updateUIByStatus(data) {
     // Remove all status classes
     badge.classList.remove('status-pending', 'status-confirmed', 'status-cancelled');
     
+    // Get translated status using i18n.tStatus()
+    const translatedStatus = typeof i18n !== 'undefined' ? i18n.tStatus(status) : status;
+    
     switch (status.toLowerCase()) {
         case 'confirmed':
-            // Green badge, hide timer
+            // Confirmed state
             badge.classList.add('status-confirmed');
             icon.className = 'fas fa-check-circle';
-            text.textContent = lang === 'ar' ? 'تم تأكيد الحجز ✓' : 'Booking Confirmed ✓';
+            text.textContent = translatedStatus + ' ✓';
             timerContainer.classList.remove('active');
             
-            // Title and message
-            title.textContent = lang === 'ar' ? 'مرحباً بكم في كورنثيا' : 'Welcome to Corinthia';
-            messageText.textContent = lang === 'ar' 
-                ? 'حجزكم مضمون - نراكم قريباً' 
-                : 'Your booking is guaranteed - See you soon';
+            // Title and message using i18n
+            title.textContent = dict.welcome_corinthia || 'Welcome to Corinthia';
+            messageText.textContent = dict.booking_guaranteed || 'Your booking is guaranteed - See you soon';
             
             // Button
             if (btnSpan) {
-                btnSpan.textContent = lang === 'ar' ? 'عرض تفاصيل الحجز' : 'View Booking Details';
+                btnSpan.textContent = dict.view_booking_details || 'View Booking Details';
             }
             btn.href = 'check-status.html';
             
@@ -175,21 +206,19 @@ function updateUIByStatus(data) {
             
         case 'cancelled':
         case 'expired':
-            // Red badge, hide timer
+            // Cancelled state
             badge.classList.add('status-cancelled');
             icon.className = 'fas fa-times-circle';
-            text.textContent = lang === 'ar' ? 'تم إلغاء الحجز' : 'Booking Cancelled';
+            text.textContent = translatedStatus;
             timerContainer.classList.remove('active');
             
-            // Title and message
-            title.textContent = lang === 'ar' ? 'نأسف لهذا الأمر' : 'We apologize';
-            messageText.textContent = lang === 'ar' 
-                ? 'تم إلغاء الحجز لعدم إتمام الدفع' 
-                : 'Booking cancelled due to non-payment';
+            // Title and message using i18n
+            title.textContent = dict.we_apologize || 'We apologize';
+            messageText.textContent = dict.instr_cancelled || 'Booking cancelled due to non-payment';
             
             // Button
             if (btnSpan) {
-                btnSpan.textContent = lang === 'ar' ? 'إعادة الحجز' : 'Book Again';
+                btnSpan.textContent = dict.new_booking || 'Book Again';
             }
             btn.href = 'index.html';
             
@@ -199,20 +228,18 @@ function updateUIByStatus(data) {
             
         default:
         case 'pending':
-            // Gold badge, show timer
+            // Pending state
             badge.classList.add('status-pending');
             icon.className = 'fas fa-clock';
-            text.textContent = lang === 'ar' ? 'بانتظار التأكيد' : 'Pending Confirmation';
+            text.textContent = translatedStatus;
             
-            // Title and message
-            title.textContent = lang === 'ar' ? 'شكراً لاختياركم كورنثيا' : 'Thank you for choosing Corinthia';
-            messageText.textContent = lang === 'ar' 
-                ? 'تم استلام طلب الحجز بنجاح' 
-                : 'Your reservation request has been received';
+            // Title and message using i18n
+            title.textContent = dict.success_thank_you || 'Thank you for choosing Corinthia';
+            messageText.textContent = dict.instr_pending || 'Your reservation request has been received';
             
             // Button
             if (btnSpan) {
-                btnSpan.textContent = lang === 'ar' ? 'الانتقال للدفع' : 'Go to Payment';
+                btnSpan.textContent = dict.go_to_payment || 'Go to Payment';
             }
             btn.href = 'check-status.html';
             

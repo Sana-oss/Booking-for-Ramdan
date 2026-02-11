@@ -3,21 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Corinthia Hotel - تتبع الحجز</title>
+    <title>Corinthia Tripoli - Digital Reservation</title>
     
     <!-- Google Fonts for fallback -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
-    <!-- QR Code Generator Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    
-    <!-- html2canvas Library -->
+    <!-- html2canvas Library for PNG generation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     
     <!-- Luxury Design System -->
     <link rel="stylesheet" href="luxury-design-system.css">
-    
     <link rel="stylesheet" href="main.css">
     
     <style>
@@ -309,17 +305,19 @@
             font-weight: 500;
         }
         
-        /* Status Badge */
+        /* Status Badge - Uses luxury-design-system.css variables */
         .status-badge {
             display: inline-flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
             padding: 12px 24px;
-            border-radius: 4px;
-            font-family: var(--font-body);
-            font-weight: 700;
-            font-size: 0.9rem;
+            border-radius: 2px;
+            font-family: var(--font-numeric);
+            font-weight: 600;
+            font-size: 0.875rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
             margin-bottom: 20px;
         }
         
@@ -329,20 +327,20 @@
         
         .status-pending {
             background: rgba(255, 163, 0, 0.15);
-            border: 1px solid #FFA300;
-            color: #CC8200;
+            border: 1px solid var(--corinthia-honey);
+            color: var(--corinthia-honey);
         }
         
         .status-confirmed {
-            background: rgba(39, 174, 96, 0.15);
-            border: 1px solid #2ecc71;
-            color: #27ae60;
+            background: rgba(16, 24, 32, 0.1);
+            border: 1px solid var(--corinthia-anvil);
+            color: var(--corinthia-anvil);
         }
         
         .status-cancelled {
-            background: rgba(231, 76, 60, 0.15);
-            border: 1px solid #e74c3c;
-            color: #c0392b;
+            background: rgba(200, 50, 50, 0.15);
+            border: 1px solid #c83232;
+            color: #c83232;
         }
         
         /* Status Message */
@@ -473,13 +471,161 @@
                 justify-content: center;
             }
         }
+        
+        /* =========================================
+           DOWNLOADABLE PASS - LUXURY DESIGN
+           Hidden by default, shown for generation
+           ========================================= */
+        
+        #downloadablePass {
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 350px;
+            background: #FFFFFF;
+        }
+        
+        .pass-container {
+            width: 350px;
+            background: #FFFFFF;
+            margin: 0 auto;
+            border: 1px solid #AFA9A0;
+            font-family: var(--font-body);
+            overflow: hidden;
+        }
+        
+        .pass-header {
+            background: #FFFFFF;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #FFA300;
+        }
+        
+        .pass-logo {
+            height: 45px;
+            margin-bottom: 8px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .pass-title {
+            font-family: var(--font-arabic);
+            font-size: 1rem;
+            font-weight: 500;
+            color: #101820;
+            margin-bottom: 4px;
+        }
+        
+        .pass-subtitle {
+            font-family: var(--font-arabic);
+            font-size: 0.75rem;
+            color: #AFA9A0;
+        }
+        
+        .pass-details {
+            padding: 20px;
+        }
+        
+        .pass-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(175, 169, 160, 0.3);
+        }
+        
+        .pass-row:last-child {
+            border-bottom: none;
+        }
+        
+        .pass-label {
+            font-family: var(--font-arabic);
+            font-size: 0.8rem;
+            color: #AFA9A0;
+        }
+        
+        .pass-value {
+            font-family: var(--font-body);
+            font-size: 0.85rem;
+            color: #101820;
+            font-weight: 600;
+        }
+        
+        .pass-reference {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 163, 0, 0.08);
+            border-top: 1px solid rgba(255, 163, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 163, 0, 0.2);
+        }
+        
+        .pass-reference-label {
+            font-family: var(--font-arabic);
+            font-size: 0.7rem;
+            color: #AFA9A0;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+        
+        .pass-reference-value {
+            font-family: var(--font-numeric);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #101820;
+            letter-spacing: 2px;
+        }
+        
+        .pass-status {
+            text-align: center;
+            padding: 15px;
+        }
+        
+        #passStatusBox {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 20px;
+            border-radius: 2px;
+            font-family: var(--font-numeric);
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+        
+        .pass-qr {
+            padding: 20px;
+            text-align: center;
+            background: #FFFFFF;
+        }
+        
+        .pass-qr img {
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            border: 1px solid #AFA9A0;
+        }
+        
+        .pass-footer {
+            padding: 12px;
+            text-align: center;
+            background: rgba(16, 24, 32, 0.03);
+            border-top: 1px solid rgba(175, 169, 160, 0.3);
+        }
+        
+        .pass-footer-text {
+            font-family: var(--font-arabic);
+            font-size: 0.65rem;
+            color: #AFA9A0;
+            letter-spacing: 0.5px;
+        }
     </style>
 </head>
 <body>
     
     <!-- Language Toggle -->
-    <button class="lang-toggle" onclick="toggleLanguage()">
-        <span id="langText">العربية</span>
+    <button class="lang-toggle" onclick="i18n.toggleLang()">
+        <span id="langToggleText" data-i18n="toggle_language">English</span>
     </button>
     
     <!-- Main Card -->
@@ -491,135 +637,182 @@
         
         <!-- Title -->
         <div class="page-title">
-            <h1>تتبع حالة الحجز</h1>
-            <p>أدخل الرقم المرجعي للتحقق من حالة الحجز</p>
+            <h1 data-i18n="title_status">الخدمة الرقمية</h1>
+            <p data-i18n="subtitle_status">الرقم المرجعي للحجز</p>
         </div>
         
         <!-- Search Section -->
         <div class="search-section" id="searchSection">
             <div class="search-input-wrapper">
-                <input type="text" id="bookingID" class="search-input" placeholder="CRT-XXXX" maxlength="10">
+                <input type="text" 
+                       id="bookingID" 
+                       class="search-input" 
+                       data-i18n-placeholder="placeholder_booking_id"
+                       placeholder="مثال: RMD12345"
+                       autocomplete="off">
                 <button class="search-btn" onclick="performTrack()">
                     <i class="fas fa-search"></i>
-                    <span>تتبع</span>
+                    <span data-i18n="btn_check">بحث</span>
                 </button>
             </div>
         </div>
         
         <!-- Error Message -->
         <div class="error-message" id="errorMessage">
-            <p>تعذر العثور على بيانات الحجز، يرجى المحاولة لاحقاً</p>
+            <p data-i18n="error_not_found">تعذر العثور على بيانات الحجز، يرجى المحاولة لاحقاً</p>
         </div>
         
         <!-- Result Section -->
-        <div id="resultSection" class="result-section">
-            
-            <!-- Logo at Top of Result Card -->
+        <div class="result-section" id="resultSection">
+            <!-- Logo at top of result -->
             <div class="result-logo">
                 <img src="new-logo.svg" alt="Corinthia Hotel Tripoli Logo">
             </div>
             
-            <!-- Guest Details -->
-            <div class="guest-details">
-                <div class="guest-row">
-                    <span class="guest-label">الاسم</span>
-                    <span class="guest-value" id="checkGuestName">----</span>
-                </div>
-                <div class="guest-row">
-                    <span class="guest-label">التاريخ</span>
-                    <span class="guest-value" id="checkDate">----</span>
-                </div>
-            </div>
-            
             <!-- Status Badge -->
-            <div class="status-badge status-pending" id="checkStatusBadge">
+            <div class="status-badge" id="checkStatusBadge">
                 <i class="fas fa-clock" id="statusIcon"></i>
-                <span id="statusText">بانتظار التأكيد</span>
+                <span id="statusText">قيد التقديم</span>
             </div>
             
             <!-- Status Message -->
-            <div class="status-message" id="statusMessage"></div>
+            <p class="status-message" id="statusMessage">يرجى مراجعة حالتكم لاحقاً</p>
+            
+            <!-- Guest Details -->
+            <div class="guest-details">
+                <div class="guest-row">
+                    <span class="guest-label" data-i18n="pass_guest_name">اسم الضيف</span>
+                    <span class="guest-value" id="checkGuestName">----</span>
+                </div>
+                <div class="guest-row">
+                    <span class="guest-label" data-i18n="pass_date">التاريخ</span>
+                    <span class="guest-value" id="checkDate">----</span>
+                </div>
+                <div class="guest-row">
+                    <span class="guest-label" data-i18n="pass_guests">الضيوف</span>
+                    <span class="guest-value" id="checkGuests">----</span>
+                </div>
+                <div class="guest-row">
+                    <span class="guest-label" data-i18n="res_num_label">الرقم المرجعي</span>
+                    <span class="guest-value" id="checkBookingID">----</span>
+                </div>
+            </div>
             
             <!-- Status Timeline -->
             <div class="status-timeline">
                 <div class="timeline-step" id="step1">
-                    <div class="step-icon"><i class="fas fa-file-alt"></i></div>
-                    <span class="step-label">قيد التقديم</span>
+                    <div class="step-icon">
+                        <i class="fas fa-file-alt"></i>
+                    </div>
+                    <span class="step-label" data-i18n="timeline_submitted">قيد التقديم</span>
                 </div>
                 <div class="timeline-step" id="step2">
-                    <div class="step-icon"><i class="fas fa-check"></i></div>
-                    <span class="step-label">تم التأكيد</span>
+                    <div class="step-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <span class="step-label" data-i18n="timeline_confirmed">تم التأكيد</span>
                 </div>
                 <div class="timeline-step" id="step3">
-                    <div class="step-icon"><i class="fas fa-calendar-check"></i></div>
-                    <span class="step-label">منجز</span>
+                    <div class="step-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <span class="step-label" data-i18n="timeline_completed">تم الحضور</span>
                 </div>
             </div>
             
             <!-- Action Buttons -->
             <div class="result-actions" id="actionButtons">
-                <!-- Buttons will be dynamically shown based on status -->
-            </div>
-            
-            <!-- Reference Number -->
-            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(175, 169, 160, 0.3);">
-                <div style="font-family: var(--font-body); font-size: 0.7rem; color: var(--honey-gold); text-transform: uppercase; letter-spacing: 1px;">الرقم المرجعي</div>
-                <div style="font-family: var(--font-numeric); font-size: 1.5rem; font-weight: 600; color: var(--anvil-dark); margin-top: 5px;" id="checkBookingID">----</div>
+                <button class="result-btn secondary" onclick="performTrack()">
+                    <i class="fas fa-sync-alt"></i>
+                    <span data-i18n="btn_check">بحث</span>
+                </button>
+                <a href="index.html" class="result-btn primary">
+                    <i class="fas fa-plus"></i>
+                    <span data-i18n="btn_new_booking">حجز جديد</span>
+                </a>
             </div>
         </div>
     </div>
     
-    <!-- Downloadable Pass Template (Hidden, positioned off-screen for capture) -->
-    <div id="downloadablePass" style="position: fixed; left: -9999px; top: 0; width: 400px; background: #FFFFFF; border: 2px solid #D4AF37; padding: 0; text-align: center; font-family: Arial, sans-serif;">
-        <!-- Elegant White Header with Graphical Crest -->
-        <div style="padding: 35px 25px 25px; background: #FFFFFF; text-align: center;">
-            <!-- Graphical Crest Logo - Centered and Elegant -->
-            <img id="passLogo" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0iTGF5ZXJfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB2ZXJzaW9uPSIxLjEiIHZpZXdCb3g9IjAgMCAxMTMzLjg2IDU2Ni45MyI+CiAgPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDI5LjYuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDIuMS4xIEJ1aWxkIDkpICAtLT4KICA8cG9seWdvbiBwb2ludHM9IjQ3Ny4wNyA0MzcuNjUgNDg0LjYzIDQzNy42NSA0ODQuNjMgNDYxLjAyIDQ4OC4wNSA0NjEuMDIgNDg4LjA1IDQzNy42NSA0OTUuNjQgNDM3LjY1IDQ5NS42NCA0MzQuMzQgNDc3LjA3IDQzNC4zNCA0NzcuMDcgNDM3LjY1Ii8+CiAgPHBhdGggZD0iTTUyMi4yOCw0NDYuNDhjMS4wMy0xLjM1LDEuNTQtMi44OSwxLjU0LTQuNjIsMC0yLjI4LS43OC00LjEtMi4zMy01LjQ3LTEuNTUtMS4zNy0zLjYzLTIuMDUtNi4yNC0yLjA1aC03LjkzdjI2LjY4aDMuNDJ2LTExLjY1aDIuOTNsOC45MSwxMS42NWg0LjEzbC05LjI0LTExLjg4YzIuMTgtLjQzLDMuNzgtMS4zMiw0LjgxLTIuNjdaTTUxMC43NSw0NDYuMzN2LTguODNoNC4yOGMxLjczLDAsMy4wNC4zOCwzLjkzLDEuMTUuODkuNzYsMS4zMywxLjg2LDEuMzMsMy4yOXMtLjQ1LDIuNDktMS4zMywzLjI1Yy0uODkuNzYtMi4yLDEuMTUtMy45MywxLjE1aC00LjI4WiIvPgogIDxyZWN0IHg9IjUzOC4xIiB5PSI0MzQuMzQiIHdpZHRoPSIzLjQyIiBoZWlnaHQ9IjI2LjY4Ii8+CiAgPHBhdGggZD0iTTU3MC40Niw0MzYuNTRjLTEuNjgtMS40Ny0zLjkyLTIuMi02LjczLTIuMmgtNy41NXYyNi42OGgzLjQydi0xMC4zN2g0LjEzYzIuODEsMCw1LjA1LS43NCw2LjczLTIuMjIsMS42OC0xLjQ4LDIuNTItMy40NiwyLjUyLTUuOTRzLS44NC00LjQ5LTIuNTItNS45NlpNNTY3Ljk4LDQ0Ni4yYy0xLC44Ni0yLjQ2LDEuMy00LjM2LDEuM2gtNC4wMnYtMTBoNC4wMmMxLjksMCwzLjM2LjQzLDQuMzYsMS4zLDEsLjg2LDEuNSwyLjEsMS41LDMuN3MtLjUsMi44NC0xLjUsMy43WiIvPgogIDxwYXRoIGQ9Ik01OTcuMDcsNDM0LjA0Yy0zLjgzLDAtNy4wNywxLjMxLTkuNywzLjkzLTIuNjMsMi42Mi0zLjk1LDUuODYtMy45NSw5LjcxczEuMzIsNy4xLDMuOTUsOS43MWMyLjYzLDIuNjIsNS44NiwzLjkzLDkuNywzLjkzczcuMDctMS4zMSw5LjctMi45M2MyLjYzLTIuNjIsMy45NS01Ljg2LDMuOTUtOS43MXMtMS4zMi03LjEtMy45NS05LjcxYy0yLjYzLTIuNjItNS44Ni0zLjkzLTkuNy0zLjkzWm02MDQuMzIsNDU1LjA3Yy0xLjkzLDEuOTktNC4zNSwyLjk5LTcuMjUsMi45OXMtNS4zMi0xLTcuMjUtMi45OWMtMS45My0xLjk5LTIuODktNC40NS0yLjg5LTcuMzhzLjk2LTUuMzksMi44OS03LjM4YzEuOTMtMS45OSw0LjM1LTIuOTksNy4yNS0yLjk5czUuMzIsMSw3LjI1LDIuOTljMS45MywxLjk5LDIuODksNC40NSwyLjg5LDcuMzhzLS45Niw1LjM5LTIuODksNy4zOFoiLz4KICA8cG9seWdvbiBwb2ludHM9IjYyNi45NSA0MzQuMzQgNjIzLjUzIDQzNC4zNCA2MjMuNTMgNDYxLjAyIDYzOC42MiA0NjEuMDIgNjM4LjYyIDQ1Ny42OCA2MjYuOTUgNDU3LjY4IDYyNi45NSA0MzQuMzQiLz4KICA8cmVjdCB4PSI2NTAuNCIgeT0iNDM0LjM0IiB3aWR0aD0iMy40MiIgaGVpZ2h0PSIyNi42OCIvPgogIDxwb2x5Z29uIHBvaW50cz0iNjA1LjI2IDI4NC4wNCA2MDUuMjQgMjg0LjA0IDU5NC4xNiAyODQuMDYgNTk0LjE2IDI4NC4zNCA2MDIuMzUgMjg5LjQ1IDYwMi4zNSAzNTUuNDcgNjAxLjk0IDM1NS40NiA1NDEuOTYgMjg2LjU2IDUzOS40OSAyODMuODUgNTM0LjA3IDI4My44NCA1MzQuMDcgMjgzLjg0IDUzNC4wNiAyODMuODQgNTIyLjk3IDI4My44NyA1MjIuOTcgMjg0LjE0IDUzMS4yMyAyOTIuNDggNTMxLjIzIDM2OC45NCA1MjMuMDIgMzc0LjA2IDUyMi4wMiAzNzQuMzMgNTMyLjE0IDM3NC4zNSA1MzIuMTYgMzc0LjM1IDU0My4yNCAzNzQuMzIgNTQzLjI0IDM3NC4wNSA1MzUuMDUgMzY4LjkzIDUzNS4wNSAyOTcuNCA1MzUuNTMgMjk3LjM4IDYwNi4yIDM3Ny44MiA2MDYuMTggMzU1LjU3IDYwNi4xNyAzNTUuNTcgNjA2LjE3IDI4OS40NSA2MTQuMzggMjg0LjMzIDYxNC4zNyAyODQuMDUgNjA1LjI2IDI4NC4wNCIvPgogIDxwYXRoIGQ9Ik05OTEuNjgsMzY5LjExYy00LjUyLTEwLjc4LTM1LjUxLTg1LjA4LTM1LjUxLTg1LjA4aC0xMS4wN2w0LjM1LDEwLjg2Yy01Ljc3LDE1LjAyLTExLjQ0LDI5LjgtMTcuMTUsNDQuNTUtMi45Nyw3LjY4LTcuODgsMjAuNjgtMTEuNTQsMjkuNzJsLTguMTMsNS4wOHYuMjdzMTEuMzUuMDEsMTEuMzUuMDFoLjAybDExLjEtLjAydi0uMjdzLTguMTgtNS4xLTguMTgtNS4xYzIuNDMtNi41Miw2LjQ2LTE3LjQxLDguNDEtMjIuNy40OC0xLjMxLDEuMS0xLjkzLDIuNjItMS45Miw5Ljg2LjA3LDE5LjcyLjA2LDI5LjU4LDAsMS40NywwLDIxNC41MiwyLjY1LDEuODgsMS40OSwzLjk1LDMuMTksNy44Myw0LjcyLDExLjc3Ljc3LDEuOTcsMS41NywzLjkyLDIuMjgsNS45Mi4xOS41NCwxLjA4LDIuODcsMS45MSw1LjA0bC04LjIxLDUuMTN2LjI3czExLjM1LjAxLDExLjM1LjAxaC4wMmwxNy42My0uMDJ2LjI3cy04LjE5LTUuMTItOC4xOS01LjEyWlptOTcuMTcsMzQxLjc2YzUtMTIuMDYsOS45Ni0yNS45OSwxNC45MS0zOC45My4yLDAsLjM5LDAsLjU5LDAsNS4xNywxMi45MSwxMC4zNCwyNS44MywxNS41OSwzOC45NGgtMzEuMDhaIi8+CiAgPHBhdGggZD0iTTg3OS4xNywyODkuNDlsOC4xNS01LjA5di0uMjdzLTEwLjIyLS4wMS0xMC4yMi0uMDFoLTEuMTJsLTE2LjA1LjAydi4yN3M4LjE1LDUuMDksOC4xNSw1LjA5YzAsNC4zNSwwLDExLjA4LDAsMTIuMDguMDIsMTQuNTcuMDIsMjkuMTQsMCw0My43LDAsNC41NC0uMDIsMTYuNy0uMDMsMjMuNjhsLTguMTUsNS4wN3YuMjdzMTAuMjIuMDEsMTAuMjIuMDFoMS4xMmwxNi4wNC0uMDJ2LjI3cy04LjE1LTUuMDktOC4xNS01LjA5YzAtNy42LDAtMTkuODQsMC0yNC44MSwwLTE0LjMsMC0yOC42LDAtNDIuOTEsMC0xLjA0LDAtNy4zLDAtMTEuNzVaIi8+CiAgPHBhdGggZD0iTTQwNy4yMiwzMzEuMTFjNi44My0yLjM1LDEyLjYyLTUuOTksMTUuNzctMTIuODUsNy4yNy0xNS44Ni0yLjI4LTMyLjc4LTE5Ljc1LTMzLjg2LTcuMDctLjQ0LTE0LjE3LS41Mi0yMS4yNy0uNTItLjgxLDAtMS44MSwwLTIuODYsMGgtNS4zOHMwLDAsMCwwaDBsLTExLjA4LjAydi4yN3M4LjEzLDUuMDcsOC4xMyw1LjA3bC0uMTUsNy4wMS4yNSw3My4wNmgtLjE5cy03Ljk5LDUuMTQtNy45OSw1LjE0di4yN3M5Ljk4LjAxLDkuOTguMDFoMS40MWwxNi4wNC0uMDJ2LjI3cy04LjIyLTUuMTMtOC4yMi01LjEzbC0uMS02LjQxcy0uMDgtMTkuMzQtLjA3LTI5LjAxYzAtLjI5LS4wMi0xLjItLjAyLTEuMiwwLDAsNi4zNy4wOCw3Ljk1LjA4bDM3LjUsNDIuMDQsMTUuMy0uMDUtMzguMjUtNDIuODhjMS4xOS0uMjIsMi4xNy0uNDgsMy4wMi0uNzdaTTM4MS43NSwzMjkuMjN2LTQyLjUycy41MywwLC41MywwYzYuMDEuMDIsMTIuNDEtLjMzLDE3LjgsMS4zNiw4LjEsMi41NSwxMy4wMSw5LjU1LDEzLjU0LDE5LjQxLjcxLDEzLjEyLTguNDgsMjEuNzYtMjIuMjEsMjEuODYtMi40MS4wMi05LjY2LS4xMi05LjY2LS4xMloiLz4KICA8cGF0aCBkPSJNMjkyLjMzLDI4MC45NWMtMjcuOTktLjA3LTUwLjIyLDIyLjA4LTUwLjI1LDUwLjA2LS4wMSwyNywyMS40NCw0OC4wOSw0OC40NSw0OC41OCwzMS44MS41OCw1MS40Ni0yNC41Miw1MS40NS00OC44NCwwLTI3LjU4LTIyLjA2LTQ5Ljc0LTQ5LjY1LTQ5LjgxWm0zMS40Niw3Ni4wOGMtNS4xNCwxMS4zLTE0Ljg4LDE2LjgxLTI3LjA5LDE3Ljk4LTE4LjY2LDEuNzgtMzAuNDMtOS43OC0zNi43LTIyLjg3LTMuNi03LjUxLTUuMzEtMTUuMjItNS4yNC0yMy41Ni4yLTcuODEsMS4xLTEyLjYzLDIuOTMtMTguNDUsNS4yLTE2LjUyLDE5LjQ4LTI1LjYsMzYuNzgtMjQuMDgsMTAuOC45NSwxOS4xOSw2LjE2LDI1LjA5LDE0Ljk0LDExLjk1LDE3Ljc4LDEzLDM2Ljc2LDQuMjMsNTYuMDRaIi8+CiAgPHBhdGggZD0iTTIxOS41MywzNTYuNzVjLTIuNjMsMi43Ni01LjA1LDUuNzctNy45NSw4LjIyLTE5LjgxLDE2Ljc1LTUzLjM5LDEyLjUtNjIuNTUtMTcuNjEtNC4zNS0xNC4yOS0zLjA2LTI4LjQ5LDMuMjctNDIuMDMsNC4zOC05LjM3LDEwLjktMTUuMzIsMjEuODEtMTguMjEsNS4wMi0xLjMzLDEwLjUyLTEuMTcsMTUuNzItLjc2LDM1LjI3LDExLjU4LDEuNzIsMjIuMjIsNi4xNmw2Ljg4LDE0LjkuNDYtLjAzLjE0LTE4LjU0aDBjLTEyLjg1LTQuODctMjAuMDYtNi4yOS0yOC4wNi03LjI5LTE2Ljk1LTIuMTItMzEuODcsMi4wNy00My41MSwxNS0xMC41MywxMS43LTE1LjA0LDI1Ljc2LTEzLjc4LDQxLjM2LDEuMywxNi4xMiw5LjQ3LDI4LjAzLDIzLjgsMzUuNjEsNi4xLDMuMjMsMTIuNjksNC45OCwxOS41Myw1LjY5LDE2LjE3LDEuNjgsMzAuNjUtMi4wOSw0Mi42OS0xMy40OS41MS0uNDksMS4yNS0xLjA5LDEuMjgtMS42Ny4xMy0yLjk3LjA2LTUuOTUuMDYtOS41Ni0uOTcsMS4xLTEuNDcsMS43MS0yLjAxLDIuMjhaIi8+CiAgPHBhdGggZD0iTTgxOC41NywyODkuMzlsOC4xMS01LjA2di0uMjNzLTEwLjIyLS4wMS0xMC4yMi0uMDFoLTEuMTJsLTE2LjA0LjAydi4yN3M4LjE5LDUuMTEsOC4xOSw1LjExYzAsNC4yOCwwLDExLjc2LDAsMTIuODEsMCw4LjIzLDAsMTYuNDYsMCwyNC43aC01Ni4zN2MwLTguODQsMC0xNy42OCwwLTI2LjUyLS45OSwwLTYuNjMsMC0xMWw4LjE3LTUuMTF2LjI3cy0xMC4yMi0uMDEtMTAuMjItLjAxaC0xLjEybC0xNi4wNC4wMnYuMjdzOC4xMyw1LjA3LDguMTMsNS4wN2MwLDQuMzQsMCwxMC40MiwwLDExLjM2LjAyLDE0LjU3LjAyLDI5LjE0LDAsNDMuNzAsMCw0LjctLjAyLDE3LjYtLjAzLDI0LjQzbC04LjEyLDUuMDd2LjI3czEwLjIyLjAxLDEwLjIyLjAxaDEuMTJsMTYuMDUtLjAydi4yN3MtOC4xNy01LjEtOC4xNy01LjFjMC03LjUzLDAtMjAuNCwwLTI1LjUzLDAtNC4yNSwwLTguNTEsMC0xMi43Nmg1Ni4zN2MwLDUuMTIsMCwxMC4yNiwwLDE1LjM4LDAsNC4zNy0uMDIsMTUuODMtLjAyLDIyLjkxbC04LjE5LDUuMTF2LjI3czEwLjIyLjAxLDEwLjIyLjAxaDEuMTJsMTYuMDUtLjAydi4yN3MtOC4xMS01LjA2LTguMTEtNS4wNmMwLTcuNjIsMC0xOS4yNywwLTI0LjA5LDAtMTQuMywwLTI4LjYsMC00Mi45MSwwLTEuMTEsMC04LjA2LDAtMTIuNTJaIi8+CiAgPHBhdGggZD0iTTcwMC4wNywyODQuMDNoMHMtNTguMDMsMC01OC4wMywwaC01LjkzbC0xLjM5LDE2LjcuMjcuMDMsMTAuMjQtMTMuNWgyMy4wOWMwLDMuOTksMCwxMi42NywwLDEzLjguMDIsMTQuNTcuMDIsMjkuMTQsMCw0My43MSwwLDQuNjQtLjAyLDE3LjI2LS4wMywyNC4xNWwtOC4xNSw1LjA3di4yN3MxMC4yMi4wMSwxMC4yMi4wMWgxLjEybDE2LjA0LS4wMnYuMjdzLTguMTUtNS4wOS04LjE1LTUuMDljMC03LjU2LDAtMjAuMiwwLTI1LjI4LDAtMTQuMywwLTI4LjYsMC00Mi45MSwwLTEuMTksMC05LjEyLDAtMTMuNDZoMjMuMDhsMTAuMjMsMTMuNTIuMjctLjAzLTEuMzktMTYuN2gtMTEuNTNaIi8+CiAgPHBhdGggZD0iTTQ5My4zNywzNzQuMzJ2LS4yN3MtOC4xNS01LjA5LTguMTUtNS4wOWMwLTcuNiwwLTE5Ljg0LDAtMjQuODEsMC0xNC4zLDAtMjguNiwwLTQyLjkxLDAtMS4wNCwwLTcuMywwLTExLjc1bDguMTUtNS4wOHYuMjdzLTEwLjIyLS4wMS0xMC4yMi0uMDFoLTEuMTJsLTE2LjA1LjAydi4yN3M4LjE1LDUuMDksOC4xNSw1LjA5YzAsNC4zNSwwLDExLjA4LDAsMTIuMDguMDIsMTQuNTcuMDIsMjkuMTQsMCw0My43MSwwLDQuNTQtLjAyLDE2LjctLjAzLDIzLjY4bC04LjE1LDUuMDd2LjI3czEwLjIyLjAxLDEwLjIyLjAxaDEuMTJsMTYuMDUtLjAyWiIvPgogIDxwYXRoIGQ9Ik01NDAuNTEsMTMzLjA4YzIuNDQuMjcsNC44My0uMzIsNi4yMi0xLjU2LDMuMjUtMi44OCwzLTYuMDUsMS44LTcuODktMS4wMS0xLjU1LTMuMS0yLjc0LTUuNDctMi4wNCwxLjYuMzgsMi44NiwxLjQ5LDMuMjMsMi45NC4zNiwxLjQtLjIxLDIuNzUtMS41NCwzLjYyLS45Ny42NC0yLjQxLjg1LTMuNzUuNTQtMS4wOS0uMjUtMi42My0uOTQtMy43My0yLjgxLTIuMDQtMy4xLTEuMzgtNy45OCwxLjQ4LTEwLjg3LDIuNjktMi45OSw3LjQyLTIuNywxMS41MS0xLjc1LDIuOSwxLjgyLDYuNjMsNi4xOCw2LjYzLDEwLjYzVjk3LjI5aDcuMDFjMC00Ljc0LjAxLTg2LC4wMS05Ny4zLDAtNy4zNi00LjMtMTMuOTQtMTAuOTUtMTYuNzYtNi4zMy0yLjk5LTE0LjUtMS4zMS0xOC42MiwzLjgxLTQuNDQsNS4wMi00Ljk1LDEyLjktMS4xNiwxNy45MywyLjMzLDMuMjMsNS41OSw0LjA0LDcuMzMsNC4yM1oiLz4KPC9zdmc+" alt="Corinthia Hotel Tripoli" style="width: 120px; display: block; margin: 0 auto;">
+    <!-- =========================================
+         DOWNLOADABLE PASS - LUXURY CARD DESIGN
+         Hidden section used for PNG generation
+         ========================================= -->
+    
+    <div id="downloadablePass" class="pass-container">
+        <!-- Pass Header -->
+        <div class="pass-header">
+            <img src="new-logo.svg" alt="Corinthia Logo" class="pass-logo">
+            <div class="pass-title" data-i18n="welcome_corinthia">مرحباً بكم في كورنثيا</div>
+            <div class="pass-subtitle" data-i18n="pay_at_hotel_title">الدفع عند الفندق</div>
+        </div>
+        
+        <!-- Pass Details -->
+        <div class="pass-details">
+            <div class="pass-row">
+                <span class="pass-label" data-i18n="pass_guest_name">Guest Name</span>
+                <span class="pass-value" id="passGuestName">----</span>
+            </div>
+            <div class="pass-row">
+                <span class="pass-label" data-i18n="pass_date">Date</span>
+                <span class="pass-value" id="passDate">----</span>
+            </div>
+            <div class="pass-row">
+                <span class="pass-label" data-i18n="pass_guests">Guests</span>
+                <span class="pass-value" id="passGuests">2</span>
+            </div>
         </div>
         
         <!-- Reference Number -->
-        <div style="padding: 15px 25px 10px; background: #FFFFFF; border-bottom: 1px solid rgba(212, 175, 55, 0.3);">
-            <p id="passReference" style="font-family: Arial, sans-serif; font-size: 22px; font-weight: bold; color: #2C2C2C; margin: 0; letter-spacing: 2px;">----</p>
+        <div class="pass-reference">
+            <div class="pass-reference-label" data-i18n="res_num_label">REFERENCE NUMBER</div>
+            <div class="pass-reference-value" id="passReference">----</div>
         </div>
         
-        <!-- Guest Details - Aligned -->
-        <div style="padding: 20px 30px; background: #FFFFFF;">
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(16, 24, 32, 0.1);">
-                <span style="font-family: Arial, sans-serif; font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 1px;">Guest Name</span>
-                <span id="passGuestName" style="font-family: Arial, sans-serif; font-size: 14px; color: #2C2C2C; font-weight: 600; text-align: right;">----</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(16, 24, 32, 0.1);">
-                <span style="font-family: Arial, sans-serif; font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 1px;">Date</span>
-                <span id="passDate" style="font-family: Arial, sans-serif; font-size: 14px; color: #2C2C2C; font-weight: 600;">----</span>
-            </div>
-            <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: none;">
-                <span style="font-family: Arial, sans-serif; font-size: 13px; color: #888; text-transform: uppercase; letter-spacing: 1px;">Guests</span>
-                <span id="passGuests" style="font-family: Arial, sans-serif; font-size: 14px; color: #2C2C2C; font-weight: 600;">2</span>
+        <!-- Status Box -->
+        <div class="pass-status">
+            <div id="passStatusBox">
+                <span id="passStatusText">PENDING</span>
             </div>
         </div>
         
-        <!-- Status Badge -->
-        <div id="passStatusBox" style="margin: 15px 30px; padding: 12px; border-radius: 2px; text-align: center; background: rgba(243, 156, 18, 0.15); border: 1px solid #f39c12;">
-            <span id="passStatusText" style="font-family: Arial, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 2px; color: #d35400;">PENDING</span>
-        </div>
-        
-        <!-- QR Code Container -->
-        <div style="margin: 20px 0; text-align: center;">
-            <div id="passQRCode" style="display: inline-block; padding: 10px; background: #FFFFFF; border: 1px solid rgba(212, 175, 55, 0.3);"></div>
+        <!-- QR Code -->
+        <div class="pass-qr">
+            <img src="corinthia_qr.svg" alt="Corinthia QR Code" style="width: 100px; height: 100px;">
         </div>
         
         <!-- Footer -->
-        <div style="background: #F5F5F5; padding: 18px 20px; border-top: 1px solid rgba(212, 175, 55, 0.3); text-align: center;">
-            <p style="font-family: Arial, sans-serif; font-size: 11px; color: #666; line-height: 1.6; margin: 0;">
-                Scan to follow our restaurants on <strong style="color: #D4AF37;">Facebook</strong>
-            </p>
+        <div class="pass-footer">
+            <div class="pass-footer-text" data-i18n="card_note">يرجى إظهار هذه البطاقة عند دخول الفندق</div>
         </div>
     </div>
     
-    <!-- Scripts -->
+    <!-- i18n Engine -->
     <script src="i18n.js"></script>
-    <script src="storage.js"></script>
-    <script src="storage-api.js"></script>
+    
+    <!-- Check Status Logic -->
     <script src="check-status.js"></script>
+    
+    <!-- Initialize i18n -->
+    <script>
+        // Initialize i18n engine
+        document.addEventListener('DOMContentLoaded', function() {
+            i18n.init();
+            
+            // Reveal card
+            setTimeout(() => {
+                document.getElementById('mainCard').classList.add('visible');
+            }, 100);
+            
+            // Check for booking ID in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookingId = urlParams.get('id');
+            
+            if (bookingId) {
+                document.getElementById('bookingID').value = bookingId;
+                performTrack();
+            }
+        });
+    </script>
 </body>
 </html>

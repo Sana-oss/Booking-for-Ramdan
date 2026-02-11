@@ -103,10 +103,24 @@ const i18n = {
             subtitle_status: "الرقم المرجعي للحجز",
             placeholder_booking_id: "مثال: RMD12345",
             btn_check: "بحث",
+            error_not_found: "تعذر العثور على بيانات الحجز، يرجى المحاولة لاحقاً",
+            toggle_language: "English",
+            
+            // Timeline labels
+            timeline_submitted: "قيد التقديم",
+            timeline_confirmed: "تم التأكيد",
+            timeline_completed: "تم الحضور",
+            
+            // Downloadable pass labels
+            pass_guest_name: "اسم الضيف",
+            pass_date: "التاريخ",
+            pass_guests: "الضيوف",
             
             // --- Success Page (NEW) ---
-            success_title: "شكراً لك",
-            success_desc: "يسعدنا استضافتكم في فندق كورنثيا طرابلس",
+            success_title: "شكراً لاختياركم كورنثيا",
+            success_thank_you: "شكراً لاختياركم كورنثيا",
+            success_subtitle: "تم استلام طلب الحجز بنجاح",
+            success_message: "",
             ramadan_blessing: "رمضان مبارك، ننتظر تشريفكم لنا",
             res_num_label: "الرقم المرجعي للحجز",
             copy_btn: "نسخ الرقم",
@@ -114,6 +128,28 @@ const i18n = {
             new_booking: "حجز جديد",
             follow_up: "متابعة حالة الحجز",
             save_card: "حفظ البطاقة كصورة",
+            
+            // Status translations
+            status_pending: "بانتظار التأكيد",
+            status_confirmed: "تم التأكيد",
+            status_cancelled: "ملغى",
+            
+            // UI Elements
+            btn_payment: "الانتقال للدفع",
+            btn_download: "تحميل إيصال الدفع",
+            btn_download_receipt: "تحميل الإيصال",
+            btn_new_booking: "حجز جديد",
+            timer_label: "الوقت المتبقي لإتمام الحجز",
+            welcome_corinthia: "مرحباً بكم في كورنثيا",
+            view_booking_details: "عرض تفاصيل الحجز",
+            go_to_payment: "الانتقال للدفع",
+            we_apologize: "نأسف لهذا الأمر",
+            booking_confirmed: "حجز مؤكد",
+            booking_cancelled: "حجز ملغى",
+            booking_guaranteed: "حجزكم مضمون - نراكم قريباً",
+            
+            // Timer
+            expires_in: "تنتهي خلال",
 
             // --- حالات الحجز (Database Statuses) ---
             statuses: {
@@ -288,10 +324,24 @@ const i18n = {
             subtitle_status: "Booking Reference Number",
             placeholder_booking_id: "e.g., RMD12345",
             btn_check: "Search",
+            error_not_found: "Unable to find booking data, please try again later",
+            toggle_language: "العربية",
+            
+            // Timeline labels
+            timeline_submitted: "Submitted",
+            timeline_confirmed: "Confirmed",
+            timeline_completed: "Completed",
+            
+            // Downloadable pass labels
+            pass_guest_name: "Guest Name",
+            pass_date: "Date",
+            pass_guests: "Guests",
             
             // --- Success Page (NEW) ---
             success_title: "Thank You",
-            success_desc: "We are honored to host you at Corinthia Hotel Tripoli",
+            success_thank_you: "Thank you for choosing Corinthia",
+            success_subtitle: "Your reservation request has been received",
+            success_message: "",
             ramadan_blessing: "Ramadan Kareem, we look forward to welcoming you",
             res_num_label: "Booking Reference Number",
             copy_btn: "Copy Number",
@@ -299,6 +349,28 @@ const i18n = {
             new_booking: "New Booking",
             follow_up: "Track Booking Status",
             save_card: "Save Card as Image",
+            
+            // Status translations
+            status_pending: "Pending Confirmation",
+            status_confirmed: "Confirmed",
+            status_cancelled: "Cancelled",
+            
+            // UI Elements
+            btn_payment: "Go to Payment",
+            btn_download: "Download Receipt",
+            btn_download_receipt: "Download Receipt",
+            btn_new_booking: "New Booking",
+            timer_label: "Time remaining to complete booking",
+            welcome_corinthia: "Welcome to Corinthia",
+            view_booking_details: "View Booking Details",
+            go_to_payment: "Go to Payment",
+            we_apologize: "We apologize",
+            booking_confirmed: "Booking Confirmed",
+            booking_cancelled: "Booking Cancelled",
+            booking_guaranteed: "Your booking is guaranteed - See you soon",
+            
+            // Timer
+            expires_in: "Expires in",
 
             // --- Database Statuses ---
             statuses: {
@@ -426,74 +498,95 @@ const i18n = {
     },
 
     /**
-     * تبديل اللغة مع تأثير Fade-out فخم
+     * تبديل اللغة بين العربية والإنجليزية
      */
     toggleLang() {
         this.currentLang = this.currentLang === 'ar' ? 'en' : 'ar';
         localStorage.setItem('hotel_lang', this.currentLang);
         
-        // تأثير انسيابي قبل إعادة التحميل
-        document.body.style.transition = 'opacity 0.3s ease';
-        document.body.style.opacity = '0';
+        this.updatePageAttributes();
+        this.apply();
         
-        setTimeout(() => {
-            location.reload();
-        }, 300);
+        // Dispatch custom event for other scripts
+        window.dispatchEvent(new CustomEvent('languageChanged', {
+            detail: { lang: this.currentLang }
+        }));
+        
+        console.log("Language switched to:", this.currentLang);
     },
 
     /**
-     * تطبيق الترجمات على جميع العناصر المستهدفة
+     * تطبيق الترجمات على جميع العناصر
      */
     apply() {
         const dict = this.translations[this.currentLang];
-
-        // 1. ترجمة النصوص التي تحمل السمة [data-i18n]
+        
+        // Translate all elements with data-i18n attribute
         document.querySelectorAll('[data-i18n]').forEach(el => {
             const key = el.getAttribute('data-i18n');
             if (dict[key]) {
-                el.innerText = dict[key];
+                el.textContent = dict[key];
             }
         });
-
-        // 2. ترجمة النصوص التي تحمل السمة [data-i18n-attr]
-        document.querySelectorAll('[data-i18n-attr]').forEach(el => {
-            const parts = el.getAttribute('data-i18n-attr').split(':');
-            if (parts.length === 2 && dict[parts[1]]) {
-                el[parts[0]] = dict[parts[1]];
-            }
-        });
-
-        // 3. ترجمة الـ Placeholders (البحث والاسم)
-        const searchInput = document.getElementById('searchInput');
-        if (searchInput) searchInput.placeholder = dict.search_placeholder;
-
-        const nameInput = document.getElementById('guestName');
-        if (nameInput) nameInput.placeholder = dict.placeholder_name;
         
-        const phoneInput = document.getElementById('phone');
-        if (phoneInput) phoneInput.placeholder = dict.placeholder_phone;
-
-        // 4. تحديث حالة زر التبديل (تبديل class active)
-        const langAr = document.getElementById('langAr');
-        const langEn = document.getElementById('langEn');
-        if (langAr && langEn) {
-            if (this.currentLang === 'ar') {
-                langAr.classList.add('active');
-                langEn.classList.remove('active');
-            } else {
-                langEn.classList.add('active');
-                langAr.classList.remove('active');
+        // Translate placeholders
+        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+            const key = el.getAttribute('data-i18n-placeholder');
+            if (dict[key]) {
+                el.placeholder = dict[key];
             }
+        });
+        
+        // Update language toggle text
+        const langToggle = document.getElementById('langToggleText');
+        if (langToggle) {
+            langToggle.textContent = dict.toggle_language;
         }
-        
-        // 5. تحديث نص زر التبديل لعرض اللغة المقابلة
-        const langToggle = document.getElementById('langToggle');
-        const langText = langToggle ? langToggle.querySelector('.lang-text') : null;
-        if (langText) {
-            langText.textContent = this.currentLang === 'ar' ? 'English' : 'العربية';
+    },
+
+    /**
+     * Get translation by key
+     */
+    t(key) {
+        const dict = this.translations[this.currentLang];
+        return dict[key] || key;
+    },
+
+    /**
+     * Get current language
+     */
+    getLang() {
+        return this.currentLang;
+    },
+
+    /**
+     * Set language explicitly
+     */
+    setLang(lang) {
+        if (lang === 'ar' || lang === 'en') {
+            this.currentLang = lang;
+            localStorage.setItem('hotel_lang', lang);
+            this.updatePageAttributes();
+            this.apply();
+            
+            // Dispatch custom event
+            window.dispatchEvent(new CustomEvent('languageChanged', {
+                detail: { lang: this.currentLang }
+            }));
         }
     }
 };
 
-// تهيئة النظام عند جاهزية المتصفح
-document.addEventListener('DOMContentLoaded', () => i18n.init());
+// Auto-initialize when DOM is ready
+if (typeof document !== 'undefined') {
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => i18n.init());
+    } else {
+        i18n.init();
+    }
+}
+
+// Export for module systems
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { i18n };
+}
