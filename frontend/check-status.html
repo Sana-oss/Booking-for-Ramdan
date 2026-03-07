@@ -40,9 +40,9 @@
             max-width: 500px;
             width: 100%;
             background: var(--white);
-            border: 1px solid var(--corinthia-clay);
+            border: 2px solid var(--corinthia-clay);
             border-radius: 4px;
-            padding: 40px 30px;
+            padding: 30px 30px;
             text-align: center;
             position: relative;
             box-shadow: 0 10px 50px var(--anvil-shadow);
@@ -55,6 +55,37 @@
         .main-card.visible {
             opacity: 1;
             transform: translateY(0);
+        }
+        
+        /* Responsive adjustments for mobile */
+        @media (max-width: 520px) {
+            .main-card {
+                padding: 25px 20px;
+                padding-top: 220px; /* Extra space for ticket-mode logo on mobile */
+                margin: 15px;
+            }
+            
+            body {
+                padding: 10px;
+            }
+            
+            .page-title h1 {
+                font-size: 1.3rem;
+            }
+            
+            .search-input-wrapper {
+                flex-direction: column;
+            }
+            
+            .search-btn {
+                justify-content: center;
+            }
+            
+            .action-btn,
+            .result-btn {
+                padding: 14px 24px;
+                font-size: 0.9rem;
+            }
         }
         
         /* Language Toggle */
@@ -81,29 +112,37 @@
         
         /* Logo */
         .card-logo {
+            margin-top: 20px;
             margin-bottom: 25px;
+            transition: all 0.4s ease;
         }
         
         .card-logo img {
             height: 60px;
             filter: drop-shadow(0 0 20px var(--honey-glow));
+            transition: all 0.4s ease;
         }
         
-        /* Result Logo - Logo at top of result card */
-        .result-logo {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid rgba(255, 163, 0, 0.3);
+        /* Ticket Mode - Larger logo for result view */
+        .card-logo.ticket-mode {
+            margin-top: 15px;
+            margin-bottom: 15px;
         }
         
-        .result-logo img {
-            height: 50px;
-            filter: drop-shadow(0 0 15px var(--honey-glow));
+        .card-logo.ticket-mode img {
+            height: 90px;
         }
         
         /* Title */
         .page-title {
             margin-bottom: 30px;
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        
+        .page-title.hidden {
+            opacity: 0;
+            transform: translateY(-15px);
+            pointer-events: none;
         }
         
         .page-title h1 {
@@ -424,19 +463,6 @@
             font-size: 1.1em;
         }
         
-        /* Responsive Button Adjustments */
-        @media (max-width: 500px) {
-            .result-actions {
-                padding: 0 5px;
-            }
-            
-            .action-btn,
-            .result-btn {
-                padding: 14px 24px;
-                font-size: 0.9rem;
-            }
-        }
-        
         /* Error Message */
         .error-message {
             display: none;
@@ -453,27 +479,8 @@
             display: block;
         }
         
-        /* Responsive */
-        @media (max-width: 500px) {
-            .main-card {
-                padding: 30px 20px;
-            }
-            
-            .page-title h1 {
-                font-size: 1.3rem;
-            }
-            
-            .search-input-wrapper {
-                flex-direction: column;
-            }
-            
-            .search-btn {
-                justify-content: center;
-            }
-        }
-        
         /* =========================================
-           DOWNLOADABLE PASS - LUXURY DESIGN
+           DOWNLOADABLE PASS - ENGLISH LUXURY DESIGN
            Hidden by default, shown for generation
            ========================================= */
         
@@ -481,45 +488,62 @@
             position: absolute;
             left: -9999px;
             top: 0;
-            width: 350px;
+            width: 160px;
             background: #FFFFFF;
         }
         
         .pass-container {
-            width: 350px;
+            width: 160px;
             background: #FFFFFF;
             margin: 0 auto;
-            border: 1px solid #AFA9A0;
+            border: 2px solid #FFA300;
+            border-radius: 4px;
             font-family: var(--font-body);
             overflow: hidden;
         }
         
+        /* Header Section - Logo */
         .pass-header {
             background: #FFFFFF;
-            padding: 30px 20px 20px;
+            padding: 6px;
             text-align: center;
             border-bottom: 2px solid #FFA300;
         }
         
         .pass-logo {
-            width: 240px;
+            width: 80px;
             height: auto;
-            margin-bottom: 30px;
             display: block;
-            margin-left: auto;
-            margin-right: auto;
+            margin: 0 auto;
+        }
+        
+        .pass-title {
+            color: #FFA300;
+            font-family: var(--font-arabic);
+            font-size: 0.5rem;
+            font-weight: 600;
+            margin-top: 4px;
+            letter-spacing: 1px;
+        }
+        
+        .pass-subtitle {
+            color: #8A8378;
+            font-family: var(--font-body);
+            font-size: 0.5rem;
+            margin-top: 2px;
         }
         
         .pass-details {
-            padding: 20px;
+            padding: 8px;
+            background: #FFFFFF;
         }
         
         .pass-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(175, 169, 160, 0.3);
+            padding: 4px 0;
+            border-bottom: 1px solid #E8E5E0;
         }
         
         .pass-row:last-child {
@@ -528,75 +552,84 @@
         
         .pass-label {
             font-family: var(--font-arabic);
-            font-size: 0.8rem;
-            color: #AFA9A0;
+            font-size: 0.55rem;
+            color: #8A8378;
+            text-transform: uppercase;
         }
         
         .pass-value {
             font-family: var(--font-body);
-            font-size: 0.85rem;
+            font-size: 0.65rem;
             color: #101820;
             font-weight: 600;
         }
         
         .pass-reference {
             text-align: center;
-            padding: 15px;
-            background: rgba(255, 163, 0, 0.08);
-            border-top: 1px solid rgba(255, 163, 0, 0.2);
-            border-bottom: 1px solid rgba(255, 163, 0, 0.2);
+            padding: 6px;
+            background: #FFA300;
+            border-top: 1px solid #E69500;
+            border-bottom: 1px solid #E69500;
+        }
+        
+        .pass-reference-label {
+            font-family: var(--font-arabic);
+            font-size: 0.45rem;
+            color: rgba(0, 0, 0, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 3px;
         }
         
         .pass-reference-value {
             font-family: var(--font-numeric);
-            font-size: 1.3rem;
+            font-size: 0.65rem;
             font-weight: 700;
             color: #101820;
-            letter-spacing: 3px;
+            letter-spacing: 1px;
         }
         
         .pass-status {
             text-align: center;
-            padding: 15px;
+            padding: 8px;
+            background: #FFFFFF;
         }
         
         #passStatusBox {
             display: inline-flex;
             align-items: center;
-            padding: 8px 20px;
+            padding: 5px 15px;
             border-radius: 2px;
             font-family: var(--font-numeric);
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.6rem;
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
         
         .pass-qr {
-            padding: 20px;
+            padding: 6px;
             text-align: center;
             background: #FFFFFF;
         }
         
         .pass-qr img {
-            display: inline-block;
-            width: 100px;
-            height: 100px;
-            border: 1px solid #AFA9A0;
+            width: 35px;
+            height: 35px;
+            border: 1px solid #FFA300;
+            padding: 2px;
+            background: #FFFFFF;
         }
         
         .pass-footer {
-            padding: 12px;
+            padding: 6px;
             text-align: center;
-            background: rgba(16, 24, 32, 0.03);
-            border-top: 1px solid rgba(175, 169, 160, 0.3);
-        }
-        
-        .pass-footer-text {
-            font-family: var(--font-arabic);
-            font-size: 0.65rem;
-            color: #AFA9A0;
+            background: #FFFFFF;
+            color: #8A8378;
+            font-family: var(--font-body);
+            font-size: 0.45rem;
             letter-spacing: 0.5px;
+            border-top: 1px solid #E8E5E0;
         }
     </style>
 </head>
@@ -643,11 +676,6 @@
         
         <!-- Result Section -->
         <div class="result-section" id="resultSection">
-            <!-- Logo at top of result -->
-            <div class="result-logo">
-                <img src="new-logo.svg" alt="Corinthia Hotel Tripoli Logo">
-            </div>
-            
             <!-- Status Badge -->
             <div class="status-badge" id="checkStatusBadge">
                 <i class="fas fa-clock" id="statusIcon"></i>
@@ -713,35 +741,34 @@
         </div>
     </div>
     
-    <!-- =========================================
-         DOWNLOADABLE PASS - LUXURY CARD DESIGN
-         Hidden section used for PNG generation
-         ========================================= -->
-    
+    <!-- Downloadable Pass -->
     <div id="downloadablePass" class="pass-container">
         <!-- Pass Header -->
         <div class="pass-header">
             <img src="new-logo.svg" alt="Corinthia Logo" class="pass-logo">
+            <div class="pass-title">RAMADAN IFTAR</div>
+            <div class="pass-subtitle">La Valette Restaurant</div>
         </div>
         
         <!-- Pass Details -->
         <div class="pass-details">
             <div class="pass-row">
-                <span class="pass-label" data-i18n="pass_guest_name">Guest Name</span>
+                <span class="pass-label">Guest Name</span>
                 <span class="pass-value" id="passGuestName">----</span>
             </div>
             <div class="pass-row">
-                <span class="pass-label" data-i18n="pass_date">Date</span>
+                <span class="pass-label">Date</span>
                 <span class="pass-value" id="passDate">----</span>
             </div>
             <div class="pass-row">
-                <span class="pass-label" data-i18n="pass_guests">Guests</span>
+                <span class="pass-label">Guests</span>
                 <span class="pass-value" id="passGuests">2</span>
             </div>
         </div>
         
         <!-- Reference Number -->
         <div class="pass-reference">
+            <div class="pass-reference-label">Booking Reference</div>
             <div class="pass-reference-value" id="passReference">----</div>
         </div>
         
@@ -754,12 +781,12 @@
         
         <!-- QR Code -->
         <div class="pass-qr">
-            <img src="corinthia_qr.svg" alt="Corinthia QR Code" style="width: 100px; height: 100px;">
+            <img src="corinthia_qr.svg" alt="Corinthia QR Code">
         </div>
         
-        <!-- Footer -->
+        <!-- Pass Footer -->
         <div class="pass-footer">
-            <div class="pass-footer-text" data-i18n="card_note">يرجى إظهار هذه البطاقة عند دخول الفندق</div>
+            CORINTHIA HOTEL TRIPOLI • LA VALETTE RESTAURANT
         </div>
     </div>
     

@@ -376,7 +376,7 @@ function updateTimeline(completedSteps) {
 // ============================================
 
 function populateDownloadPass(booking) {
-    const isAr = currentLang === 'ar';
+    // Always use English format for downloadable pass
     
     // Reference
     const displayRef = booking.referenceNumber || booking._id || booking.id || '----';
@@ -391,14 +391,14 @@ function populateDownloadPass(booking) {
         passGuestEl.textContent = booking.name || '----';
     }
     
-    // Date
+    // Date - Always use English format for downloadable pass
     if (booking.date) {
         const passDateEl = document.getElementById('passDate');
         if (passDateEl) {
             try {
                 const dateObj = new Date(booking.date);
-                const locale = isAr ? 'ar-EG' : 'en-US';
-                passDateEl.textContent = dateObj.toLocaleDateString(locale, {
+                // Always use English format for downloadable pass
+                passDateEl.textContent = dateObj.toLocaleDateString('en-US', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric'
@@ -469,6 +469,12 @@ async function saveBookingPass() {
         // Wait 200ms for QR code and texts to fully render
         await new Promise(resolve => setTimeout(resolve, 200));
         
+        // Font loading guard - ensure Adobe Arabic is fully loaded
+        if (document.fonts && document.fonts.ready) {
+            await document.fonts.ready;
+            console.log('✅ Fonts loaded');
+        }
+        
         console.log('🎨 Capturing pass with html2canvas...');
         
         // Use html2canvas to capture the pass with proper settings
@@ -477,7 +483,22 @@ async function saveBookingPass() {
             backgroundColor: '#FFFFFF',
             useCORS: true,
             allowTaint: true,
-            logging: true
+            logging: true,
+            // RTL Support: Force RTL direction in cloned element
+            onclone: (clonedDoc) => {
+                const pass = clonedDoc.getElementById('downloadablePass');
+                if (pass) {
+                    pass.style.direction = 'rtl';
+                    pass.style.textAlign = 'right';
+                    pass.style.unicodeBidi = 'isolate';
+                    // Ensure all child elements have correct RTL direction
+                    pass.querySelectorAll('*').forEach(el => {
+                        el.style.direction = 'rtl';
+                        el.style.unicodeBidi = 'isolate';
+                        el.style.textAlign = 'right';
+                    });
+                }
+            }
         });
         
         console.log('✅ Canvas captured successfully');
