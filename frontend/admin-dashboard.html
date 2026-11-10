@@ -8,14 +8,14 @@
     <!-- Luxury Design System -->
     <link rel="stylesheet" href="luxury-design-system.css">
     
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="vendor/fonts/fonts.css">
     
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="vendor/flatpickr/flatpickr.min.css">
+    <script src="vendor/flatpickr/flatpickr.min.js"></script>
+    <script src="vendor/flatpickr/l10n/ar.js"></script>
+    <script src="vendor/xlsx/xlsx.full.min.js"></script>
+    <script src="vendor/chartjs/chart.umd.min.js"></script>
     
     <link rel="stylesheet" href="admin-style.css">
 </head>
@@ -43,11 +43,11 @@
                 <i class="fas fa-users"></i> 
                 <span data-i18n="users_management">إدارة المستخدمين</span>
             </a>
-            <button id="langToggle" class="lang-switch-text" onclick="i18n.toggleLang()">
+            <button id="langToggle" class="lang-switch-text" data-action="i18n.toggleLang">
                 <span class="lang-text">English</span>
             </button>
             
-            <button class="logout-btn" onclick="logout()">
+            <button class="logout-btn" data-action="logout">
                 <i class="fas fa-sign-out-alt"></i> 
                 <span data-i18n="logout">تسجيل الخروج</span>
             </button>
@@ -110,7 +110,7 @@
                        placeholder="RMD12345" 
                        maxlength="10" pattern="[A-Za-z0-9\-]*"
                        autocomplete="off"
-                       oninput="cleanSearchInput(this)">
+                       data-on-input="cleanSearchInput" data-pass="element">
             </div>
 
             <div class="controls-group">
@@ -119,11 +119,11 @@
                     <input type="text" id="dateRangePicker" class="flatpickr-input" data-i18n-attr="placeholder:select_date_range">
                 </div>
                 
-                <button onclick="resetFilter()" class="action-btn secondary-gold" title="Reset">
+                <button data-action="resetFilter" class="action-btn secondary-gold" title="Reset">
                     <i class="fas fa-sync-alt"></i>
                 </button>
 
-                <button onclick="exportToExcel()" class="action-btn excel-green">
+                <button data-action="exportToExcel" class="action-btn excel-green">
                     <i class="fas fa-file-excel"></i>
                     <span>Export Excel</span>
                 </button>
@@ -157,6 +157,8 @@
         </div>
 
     </main>
+
+    <script src="actions.js"></script>
 
     <script src="constants.js"></script>
     <script src="i18n.js"></script>

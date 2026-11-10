@@ -588,7 +588,7 @@ function renderAdminTable(data) {
                     <select class="status-select status-badge status-${escapeHtml(booking.status)}" 
                             data-id="${escapeHtml(booking._id)}"
                             data-current="${escapeHtml(booking.status)}"
-                            onchange="updateBookingStatus(this)"
+                            data-on-change="updateBookingStatus" data-pass="element"
                             title="Change Status">
                         <option value="Pending" ${booking.status === 'Pending' ? 'selected' : ''}>Pending</option>
                         <option value="Confirmed" ${booking.status === 'Confirmed' ? 'selected' : ''}>Confirmed</option>
@@ -600,19 +600,19 @@ function renderAdminTable(data) {
             <td>
                 <div class="action-buttons">
                     <button class="checkin-btn" 
-                            onclick="archiveBooking('${booking._id}', 'Arrived')" 
+                            data-action="archiveBooking" data-args="[&quot;${escapeHtml(booking._id)}&quot;,&quot;Arrived&quot;]" 
                             title="Arrived"
                             style="background:linear-gradient(135deg, #27ae60, #2ecc71); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-size:0.8rem;">
                         <i class="fas fa-check"></i>
                     </button>
                     <button class="noshow-btn" 
-                            onclick="archiveBooking('${booking._id}', 'No-Show')" 
+                            data-action="archiveBooking" data-args="[&quot;${escapeHtml(booking._id)}&quot;,&quot;No-Show&quot;]" 
                             title="No Show"
                             style="background:linear-gradient(135deg, #e67e22, #f39c12); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-size:0.8rem;">
                         <i class="fas fa-user-times"></i>
                     </button>
                     ${userIsAdmin ? `
-                    <button class="delete-btn" onclick="confirmDelete('${booking._id}')" title="Delete Booking" style="background:linear-gradient(135deg, #c0392b, #e74c3c); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">
+                    <button class="delete-btn" data-action="confirmDelete" data-args="[&quot;${escapeHtml(booking._id)}&quot;]" title="Delete Booking" style="background:linear-gradient(135deg, #c0392b, #e74c3c); color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">
                         <i class="fas fa-trash-alt"></i>
                     </button>
                     ` : ''}
@@ -641,17 +641,17 @@ function renderAdminPagination(totalPages) {
     const prevIcon = '<i class="fas fa-chevron-left"></i>';
     const nextIcon = '<i class="fas fa-chevron-right"></i>';
     
-    html += `<button ${currentPage === 1 ? 'disabled' : ''} onclick="goToAdminPage(${currentPage - 1})" class="pagination-btn">${prevIcon}</button>`;
+    html += `<button ${currentPage === 1 ? 'disabled' : ''} data-action="goToAdminPage" data-args="[${currentPage - 1}]" class="pagination-btn">${prevIcon}</button>`;
     
     for (let i = 1; i <= totalPages; i++) {
         if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
-            html += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="goToAdminPage(${i})">${i}</button>`;
+            html += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" data-action="goToAdminPage" data-args="[${i}]">${i}</button>`;
         } else if (i === currentPage - 3 || i === currentPage + 3) {
             html += `<button class="pagination-btn" disabled>...</button>`;
         }
     }
     
-    html += `<button ${currentPage === totalPages ? 'disabled' : ''} onclick="goToAdminPage(${currentPage + 1})" class="pagination-btn">${nextIcon}</button>`;
+    html += `<button ${currentPage === totalPages ? 'disabled' : ''} data-action="goToAdminPage" data-args="[${currentPage + 1}]" class="pagination-btn">${nextIcon}</button>`;
     
     pagination.innerHTML = html;
 }

@@ -590,3 +590,5 @@ if (typeof document !== 'undefined') {
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { i18n };
 }
+
+window.i18n = i18n; // used by data-action="i18n.toggleLang"

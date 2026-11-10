@@ -6,11 +6,11 @@
     <title>Corinthia Tripoli - Digital Reservation</title>
     
     <!-- Google Fonts for fallback -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css">
     
     <!-- html2canvas Library for PNG generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="vendor/html2canvas/html2canvas.min.js"></script>
     
     <!-- Luxury Design System -->
     <link rel="stylesheet" href="luxury-design-system.css">
@@ -636,7 +636,7 @@
 <body>
     
     <!-- Language Toggle -->
-    <button class="lang-toggle" onclick="i18n.toggleLang()">
+    <button class="lang-toggle" data-action="i18n.toggleLang">
         <span id="langToggleText" data-i18n="toggle_language">English</span>
     </button>
     
@@ -662,7 +662,7 @@
                        data-i18n-placeholder="placeholder_booking_id"
                        placeholder="مثال: RMD12345"
                        autocomplete="off">
-                <button class="search-btn" onclick="performTrack()">
+                <button class="search-btn" data-action="performTrack">
                     <i class="fas fa-search"></i>
                     <span data-i18n="btn_check">بحث</span>
                 </button>
@@ -729,7 +729,7 @@
             
             <!-- Action Buttons -->
             <div class="result-actions" id="actionButtons">
-                <button class="result-btn secondary" onclick="performTrack()">
+                <button class="result-btn secondary" data-action="performTrack">
                     <i class="fas fa-sync-alt"></i>
                     <span data-i18n="btn_check">بحث</span>
                 </button>
@@ -791,31 +791,12 @@
     </div>
     
     <!-- i18n Engine -->
+    <script src="actions.js"></script>
     <script src="i18n.js"></script>
     
     <!-- Check Status Logic -->
     <script src="check-status.js"></script>
     
     <!-- Initialize i18n -->
-    <script>
-        // Initialize i18n engine
-        document.addEventListener('DOMContentLoaded', function() {
-            i18n.init();
-            
-            // Reveal card
-            setTimeout(() => {
-                document.getElementById('mainCard').classList.add('visible');
-            }, 100);
-            
-            // Check for booking ID in URL
-            const urlParams = new URLSearchParams(window.location.search);
-            const bookingId = urlParams.get('id');
-            
-            if (bookingId) {
-                document.getElementById('bookingID').value = bookingId;
-                performTrack();
-            }
-        });
-    </script>
 </body>
 </html>

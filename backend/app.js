@@ -26,14 +26,14 @@ app.use(helmet({
   contentSecurityPolicy: {
     useDefaults: true,
     directives: {
-      // The pages still use inline <script> blocks and onclick="" handlers, so
-      // 'unsafe-inline' remains until the frontend refactor removes them. The
-      // policy still blocks scripts from other origins, framing, plugins, and
-      // fetch/XHR to any other host.
-      'script-src': ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://cdnjs.cloudflare.com'],
-      'script-src-attr': ["'unsafe-inline'"],
-      'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net', 'https://cdnjs.cloudflare.com'],
-      'font-src': ["'self'", 'data:', 'https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com'],
+      // All scripts, fonts and libraries are served from this origin
+      // (frontend/vendor). No inline <script> and no on*="" handlers: an
+      // injected script tag or attribute cannot run. Inline style attributes
+      // are still allowed (low risk; many remain in the markup).
+      'script-src': ["'self'"],
+      'script-src-attr': ["'none'"],
+      'style-src': ["'self'", "'unsafe-inline'"],
+      'font-src': ["'self'", 'data:'],
       'img-src': ["'self'", 'data:', 'blob:'],
       'connect-src': ["'self'"],
       'frame-ancestors': ["'none'"],
