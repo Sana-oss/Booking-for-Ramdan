@@ -89,8 +89,7 @@ const bookingArchiveSchema = new mongoose.Schema({
   }
 }, {
   timestamps: true,
-  collection: 'bookingarchives',
-  dbName: 'corinthiaDB'
+  collection: 'bookingarchives'
 });
 
 // Indexes for efficient querying
@@ -131,7 +130,6 @@ bookingArchiveSchema.statics.getStats = async function(startDate, endDate) {
   return stats;
 };
 
-// Ensure model uses corinthiaDB connection
-const BookingArchive = mongoose.model('BookingArchive', bookingArchiveSchema, 'bookingarchives', 'corinthiaDB');
+const BookingArchive = mongoose.model('BookingArchive', bookingArchiveSchema);
 
 module.exports = BookingArchive;

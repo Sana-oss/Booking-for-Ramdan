@@ -56,7 +56,9 @@ const CONSTANTS = {
         USERS: {
             LIST: API_CONFIG.endpoints.admin.users,
             CREATE: API_CONFIG.endpoints.admin.users,
-            DELETE: (id) => `${API_CONFIG.endpoints.admin.users}/${id}`
+            DELETE: (id) => `${API_CONFIG.endpoints.admin.users}/${id}`,
+            UPDATE_STATUS: (id) => `${API_CONFIG.endpoints.admin.users}/${encodeURIComponent(id)}/status`,
+            RESET_PASSWORD: (id) => `${API_CONFIG.endpoints.admin.users}/${encodeURIComponent(id)}/password`
         },
         // Analytics Dashboard (Admin Only)
         ANALYTICS: API_CONFIG.endpoints.admin.analytics,
@@ -114,6 +116,20 @@ const ENDPOINTS = {
     DELETE_BOOKING: (id) => CONSTANTS.API.ITEM(id),
     GET_SINGLE_STATUS: (id) => CONSTANTS.API.ITEM(id)
 };
+
+/**
+ * Escape a value for safe insertion into HTML built with template strings.
+ * Always use this for data that came from the server or from users.
+ */
+function escapeHtml(value) {
+    if (value === null || value === undefined) return '';
+    return String(value)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
 
 // تجميد الكائن لضمان عدم التلاعب بالإعدادات أثناء التشغيل
 Object.freeze(CONSTANTS);

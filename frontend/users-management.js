@@ -126,7 +126,7 @@ function renderUsersTable() {
     const isSuperAdmin = currentAdmin && currentAdmin.role === 'superadmin';
     
     tbody.innerHTML = allUsers.map(user => {
-        const isSelf = user._id === currentAdmin._id;
+        const isSelf = user._id === (currentAdmin._id || currentAdmin.id);
         const isSuperAdminUser = user.role === 'superadmin';
         const isLastSuperAdmin = isSuperAdminUser && allUsers.filter(u => u.role === 'superadmin').length <= 1;
         
@@ -139,8 +139,8 @@ function renderUsersTable() {
         
         return `
             <tr>
-                <td><strong>${user.username}</strong></td>
-                <td>${user.name}</td>
+                <td><strong>${escapeHtml(user.username)}</strong></td>
+                <td>${escapeHtml(user.name)}</td>
                 <td>
                     <span style="padding: 5px 12px; border-radius: 15px; font-size: 0.85rem; 
                         background: ${user.role === 'superadmin' ? 'rgba(231, 76, 60, 0.2)' : (user.role === 'admin' ? 'rgba(197, 160, 89, 0.2)' : 'rgba(52, 152, 219, 0.2)')};
@@ -184,7 +184,7 @@ function renderUsersTable() {
 async function toggleUserStatus(userId, isActive) {
     try {
         const token = localStorage.getItem('adminToken');
-        const response = await fetch(CONSTANTS.API.USERS.UPDATE_STATUS.replace('{id}', userId), {
+        const response = await fetch(CONSTANTS.API.USERS.UPDATE_STATUS(userId), {
             method: 'PUT',
             headers: {
                 'Authorization': `Bearer ${token}`,
@@ -222,8 +222,31 @@ function editUser(userId) {
 /**
  * Reset user password placeholder
  */
-function resetUserPassword(userId) {
-    alert(t('feature_coming_soon'));
+async function resetUserPassword(userId) {
+    const user = allUsers.find(u => u._id === userId);
+    const label = user ? user.username : '';
+    const password = prompt(`New password for "${label}" (minimum 10 characters):`);
+    if (password === null) return;
+    if (password.length < 10) {
+        alert('Password must be at least 10 characters.');
+        return;
+    }
+    try {
+        const token = localStorage.getItem('adminToken');
+        const response = await fetch(CONSTANTS.API.USERS.RESET_PASSWORD(userId), {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ password })
+        });
+        const result = await response.json();
+        alert(result.success ? 'Password updated.' : (result.message || t('error_loading')));
+    } catch (error) {
+        console.error('Error resetting password:', error);
+        alert(t('error_loading'));
+    }
 }
 
 /**
