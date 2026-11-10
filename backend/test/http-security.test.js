@@ -12,7 +12,7 @@ const mongoose = require('mongoose');
 
 mongoose.set('bufferCommands', false); // fail fast if a test accidentally hits the DB
 
-const { app } = require('../server');
+const app = require('../app');
 const { hasOperatorKey } = require('../middleware/security');
 
 let server;

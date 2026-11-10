@@ -183,6 +183,7 @@ function updateUIByStatus(data) {
     const translatedStatus = typeof i18n !== 'undefined' ? i18n.tStatus(status) : status;
     
     switch (status.toLowerCase()) {
+        case 'arrived':
         case 'confirmed':
             // Confirmed state
             badge.classList.add('status-confirmed');
@@ -206,6 +207,7 @@ function updateUIByStatus(data) {
             
         case 'cancelled':
         case 'expired':
+        case 'no-show':
             // Cancelled state
             badge.classList.add('status-cancelled');
             icon.className = 'fas fa-times-circle';

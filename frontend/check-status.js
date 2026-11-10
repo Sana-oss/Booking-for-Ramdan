@@ -258,6 +258,7 @@ function updateUIByStatus(data) {
     let actionBtnsHTML = '';
     
     switch (status) {
+        case 'arrived':
         case 'confirmed':
             // Green/black badge, show download button
             statusBadge.classList.add('status-confirmed');
@@ -283,6 +284,7 @@ function updateUIByStatus(data) {
             
         case 'cancelled':
         case 'expired':
+        case 'no-show':
             // Red badge, show contact support
             statusBadge.classList.add('status-cancelled');
             statusIcon.className = 'fas fa-times-circle';

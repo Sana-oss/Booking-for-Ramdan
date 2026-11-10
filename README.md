@@ -24,6 +24,46 @@ First superadmin (only if none exists yet):
 SETUP_ADMIN_USERNAME=<name> SETUP_ADMIN_PASSWORD=<12+ chars> npm run setup
 ```
 
+## Upgrading an existing installation (one-time data migration)
+
+Older versions kept checked-in / no-show bookings in a separate `bookingarchives`
+collection. They now live in `bookings` with a status (`Arrived`, `No-Show`,
+`Cancelled`, `Expired`) and a full `statusHistory`. The server refuses to start
+until old archive records are migrated:
+
+```bash
+cd backend
+npm run migrate              # dry run: shows exactly what will change
+npm run migrate -- --apply   # writes a JSON backup to backend/backups/, then migrates
+```
+
+## Code layout
+
+```
+backend/
+  server.js        startup: DB connection, expiry job, graceful shutdown
+  app.js           Express app: security middleware, routes, static pages
+  config/env.js    validated configuration
+  routes/          auth, bookings (public + staff), admin (dashboard data, users)
+  services/        booking lifecycle: create, change status, expire
+  models/          Booking (single collection, status history), Admin
+  utils/           business rules, errors
+  scripts/         data migration
+  test/            node:test suites (npm test)
+```
+
+## Booking lifecycle
+
+```
+Pending ──► Confirmed ──► Arrived | No-Show
+   │            │
+   └──► Cancelled / Expired ◄──┘
+```
+
+Pending bookings expire after `PENDING_EXPIRY_HOURS`. Closed bookings appear on
+the Archives page; an admin can restore one (if the date still has capacity).
+Every change records who, when and why.
+
 ## Tests
 
 ```bash

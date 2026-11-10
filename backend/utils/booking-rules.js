@@ -11,8 +11,33 @@ const MAX_PARTY_SIZE = 200;
 const NAME_MAX_LENGTH = 100;
 const NOTES_MAX_LENGTH = 300;
 
+// Booking lifecycle
+const STATUSES = ['Pending', 'Confirmed', 'Cancelled', 'Expired', 'Arrived', 'No-Show'];
 // Statuses that hold seats against daily capacity
 const ACTIVE_STATUSES = ['Pending', 'Confirmed'];
+// Closed statuses appear on the Archives page
+const CLOSED_STATUSES = ['Cancelled', 'Expired', 'Arrived', 'No-Show'];
+
+/**
+ * Allowed status transitions. Re-opening a closed booking (to Pending or
+ * Confirmed) is a "restore" and needs admin rights plus free capacity.
+ */
+const TRANSITIONS = {
+  Pending: ['Confirmed', 'Cancelled', 'Expired', 'Arrived', 'No-Show'],
+  Confirmed: ['Pending', 'Cancelled', 'Arrived', 'No-Show'],
+  Cancelled: ['Pending', 'Confirmed'],
+  Expired: ['Pending', 'Confirmed'],
+  Arrived: ['Confirmed'],
+  'No-Show': ['Confirmed'],
+};
+
+function canTransition(from, to) {
+  return Boolean(TRANSITIONS[from] && TRANSITIONS[from].includes(to));
+}
+
+function isReopen(from, to) {
+  return CLOSED_STATUSES.includes(from) && ACTIVE_STATUSES.includes(to);
+}
 
 // Reference numbers: CRT- + 6 chars from an unambiguous alphabet (32^6 ≈ 1.07e9).
 // Legacy references (CRT- + 4 chars) remain valid for lookup.
@@ -102,7 +127,12 @@ module.exports = {
   PENDING_EXPIRY_HOURS,
   MAX_PARTY_SIZE,
   NOTES_MAX_LENGTH,
+  STATUSES,
   ACTIVE_STATUSES,
+  CLOSED_STATUSES,
+  TRANSITIONS,
+  canTransition,
+  isReopen,
   generateReferenceNumber,
   isReferenceNumber,
   todayInBusinessTz,
