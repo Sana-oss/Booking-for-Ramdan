@@ -637,6 +637,8 @@ function showToast(message, type) {
     }
     
     const toast = document.createElement('div');
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
     toast.className = 'toast ' + type;
     const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-times-circle' : 'fa-info-circle';
     toast.innerHTML = '<i class="fas ' + icon + '"></i> ' + message;

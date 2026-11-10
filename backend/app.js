@@ -71,7 +71,22 @@ app.use((req, res, next) => {
   if (/\.(md|ya?ml|sh|conf|lst|env|example|txt|json)$/i.test(req.path)) return res.status(404).end();
   next();
 });
-app.use(express.static(frontendPath, { dotfiles: 'deny', index: 'index.html' }));
+app.use(express.static(frontendPath, {
+  dotfiles: 'deny',
+  index: 'index.html',
+  setHeaders(res, filePath) {
+    const rel = path.relative(frontendPath, filePath).split(path.sep).join('/');
+    if (rel.startsWith('vendor/')) {
+      // Pinned third-party versions: safe to cache for a long time
+      res.setHeader('Cache-Control', 'public, max-age=2592000');
+    } else if (/\.(webp|jpe?g|png|svg|otf|woff2?|pdf)$/i.test(rel)) {
+      res.setHeader('Cache-Control', 'public, max-age=604800');
+    } else {
+      // HTML, app JS and CSS: always revalidate so updates show immediately
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  },
+}));
 
 const pages = {
   '/': 'index.html',

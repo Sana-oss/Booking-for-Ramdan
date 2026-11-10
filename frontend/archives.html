@@ -945,22 +945,22 @@
             <div class="filters-row">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" id="searchInput" class="search-field" 
+                    <input type="text" id="searchInput" aria-label="Search archive" class="search-field" 
                            data-placeholder-ar="البحث بالاسم أو رقم الهاتف..." 
-                           data-placeholder-en="RMD12345" 
-                           placeholder="RMD12345" 
+                           data-placeholder-en="CRT-ABCD23" 
+                           placeholder="CRT-ABCD23" 
                            maxlength="10" pattern="[A-Za-z0-9\-]*"
                            autocomplete="off"
                            data-on-input="cleanArchiveSearch" data-pass="element">
                 </div>
                 <div class="date-range-container">
                     <i class="fas fa-history"></i>
-                    <input type="text" id="archiveRangePicker" data-i18n-attr="placeholder:select_date_range" class="flatpickr-input date-range-input">
+                    <input type="text" id="archiveRangePicker" aria-label="Date range" data-i18n-attr="placeholder:select_date_range" class="flatpickr-input date-range-input">
                     <button id="clearDates" class="btn-clear" data-action="clearDateFilters" title="Clear dates">
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <select id="reasonFilter" class="filter-select" data-on-change="applyFilters">
+                <select id="reasonFilter" aria-label="Filter by reason" class="filter-select" data-on-change="applyFilters">
                     <option value="" class="filter-option" data-ar="جميع الأسباب" data-en="All Reasons">جميع الأسباب</option>
                     <option value="Arrived" class="filter-option" data-ar="تم الحضور" data-en="Arrived">تم الحضور</option>
                     <option value="No-Show" class="filter-option" data-ar="لم يحضر" data-en="No Show">لم يحضر</option>

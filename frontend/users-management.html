@@ -159,19 +159,19 @@
             <h3 style="color: var(--gold); margin-bottom: 20px; font-family: 'Cinzel', serif;">Add New User</h3>
             <form id="createUserForm">
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; color: #fff; margin-bottom: 8px;" data-i18n="col_username">Username</label>
+                    <label style="display: block; color: #fff; margin-bottom: 8px;" for="newUsername" data-i18n="col_username">Username</label>
                     <input type="text" id="newUsername" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
                 </div>
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; color: #fff; margin-bottom: 8px;" data-i18n="col_fullname">Full Name</label>
+                    <label for="newName" style="display: block; color: #fff; margin-bottom: 8px;" data-i18n="col_fullname">Full Name</label>
                     <input type="text" id="newName" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
                 </div>
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; color: #fff; margin-bottom: 8px;" data-i18n="label_password">Password</label>
-                    <input type="password" id="newPassword" required minlength="6" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
+                    <label for="newPassword" style="display: block; color: #fff; margin-bottom: 8px;" data-i18n="label_password">Password</label>
+                    <input type="password" id="newPassword" required minlength="10" autocomplete="new-password" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
                 </div>
                 <div style="margin-bottom: 20px;">
-                    <label style="display: block; color: #fff; margin-bottom: 8px;" data-i18n="col_role">Role</label>
+                    <label for="newRole" style="display: block; color: #fff; margin-bottom: 8px;" data-i18n="col_role">Role</label>
                     <select id="newRole" required style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--gold); background: rgba(255,255,255,0.05); color: #fff;">
                         <option value="staff" data-i18n="role_staff">Staff</option>
                         <option value="admin" data-i18n="role_admin">Admin</option>

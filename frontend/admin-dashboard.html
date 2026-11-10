@@ -106,8 +106,8 @@
         <div class="admin-tools-container">
             <div class="search-wrapper">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" id="searchInput" 
-                       placeholder="RMD12345" 
+                <input type="text" id="searchInput" aria-label="Search bookings" 
+                       placeholder="CRT-ABCD23" 
                        maxlength="10" pattern="[A-Za-z0-9\-]*"
                        autocomplete="off"
                        data-on-input="cleanSearchInput" data-pass="element">
@@ -116,7 +116,7 @@
             <div class="controls-group">
                 <div class="date-range-container">
                     <i class="fas fa-calendar-alt"></i>
-                    <input type="text" id="dateRangePicker" class="flatpickr-input" data-i18n-attr="placeholder:select_date_range">
+                    <input type="text" id="dateRangePicker" aria-label="Date range" class="flatpickr-input" data-i18n-attr="placeholder:select_date_range">
                 </div>
                 
                 <button data-action="resetFilter" class="action-btn secondary-gold" title="Reset">

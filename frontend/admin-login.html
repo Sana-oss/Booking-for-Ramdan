@@ -20,7 +20,7 @@
             justify-content: center;
             padding: 40px 20px;
             position: relative;
-            background-image: url('lobby.jpg');
+            background-image: url('lobby.webp');
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
@@ -75,7 +75,7 @@
         .admin-login-subtitle {
             font-family: var(--font-body);
             font-size: 1rem;
-            color: rgba(249, 247, 242, 0.7);
+            color: rgba(26, 26, 26, 0.65);
             margin-bottom: 40px;
             text-align: left !important;
         }
@@ -132,7 +132,7 @@
         }
         
         .admin-input::placeholder {
-            color: rgba(249, 247, 242, 0.4);
+            color: rgba(26, 26, 26, 0.45);
             font-family: var(--font-body);
         }
         
@@ -173,7 +173,7 @@
             align-items: center;
             justify-content: center;
             gap: 12px;
-            color: rgba(249, 247, 242, 0.7);
+            color: rgba(26, 26, 26, 0.7);
             text-decoration: none;
             margin-top: 40px;
             font-size: 0.95rem;
@@ -222,7 +222,7 @@
 
             <form id="adminLoginForm">
                 <div class="admin-form-group">
-                    <label>Username</label>
+                    <label for="adminUser">Username</label>
                     <div class="admin-input-wrapper">
                         <i class="fas fa-user"></i>
                         <input type="text" id="adminUser" 
@@ -234,7 +234,7 @@
                 </div>
 
                 <div class="admin-form-group">
-                    <label>Password</label>
+                    <label for="adminPass">Password</label>
                     <div class="admin-input-wrapper">
                         <i class="fas fa-lock"></i>
                         <input type="password" id="adminPass" 

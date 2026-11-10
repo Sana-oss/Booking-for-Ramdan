@@ -1102,6 +1102,8 @@ function showNotification(msg, type = 'info') {
     if (existing) existing.remove();
     
     const toast = document.createElement('div');
+    toast.setAttribute('role', 'status');
+    toast.setAttribute('aria-live', 'polite');
     toast.className = 'new-booking-toast';
     
     // Set icon and color based on type

@@ -101,7 +101,7 @@ const i18n = {
             // --- Check Status (NEW) ---
             title_status: "الخدمة الرقمية",
             subtitle_status: "الرقم المرجعي للحجز",
-            placeholder_booking_id: "مثال: RMD12345",
+            placeholder_booking_id: "مثال: CRT-ABCD23",
             btn_check: "بحث",
             error_not_found: "تعذر العثور على بيانات الحجز، يرجى المحاولة لاحقاً",
             toggle_language: "English",
@@ -322,7 +322,7 @@ const i18n = {
             // --- Check Status (NEW) ---
             title_status: "Digital Reservation",
             subtitle_status: "Booking Reference Number",
-            placeholder_booking_id: "e.g., RMD12345",
+            placeholder_booking_id: "e.g., CRT-ABCD23",
             btn_check: "Search",
             error_not_found: "Unable to find booking data, please try again later",
             toggle_language: "العربية",
