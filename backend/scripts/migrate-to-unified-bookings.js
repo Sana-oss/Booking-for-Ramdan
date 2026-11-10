@@ -110,17 +110,16 @@ function upgradeBooking(b) {
   return Object.keys(update).length ? update : null;
 }
 
-async function main() {
-  const apply = process.argv.includes('--apply');
-  const config = require('../config/env');
-  const mongoose = require('mongoose');
-
-  await mongoose.connect(config.MONGODB_URI, { dbName: config.MONGODB_DB_NAME });
+/**
+ * Run the migration on an already-open mongoose connection.
+ * @returns {{moved:number, upgraded:number, conflicts:string[]}}
+ */
+async function runMigration(mongoose, { apply = false } = {}) {
   const db = mongoose.connection.db;
   const bookingsCol = db.collection('bookings');
   const archiveCol = db.collection('bookingarchives');
 
-  try {
+  {
     const bookings = await bookingsCol.find({}).toArray();
     const archives = (await db.listCollections({ name: 'bookingarchives' }).toArray()).length
       ? await archiveCol.find({}).toArray()
@@ -163,7 +162,7 @@ async function main() {
 
     if (!apply) {
       console.log('\nDry run only — nothing was written. Re-run with --apply to migrate.');
-      return;
+      return { moved: 0, upgraded: 0, conflicts };
     }
 
     // --- Backup
@@ -203,6 +202,17 @@ async function main() {
       console.log('⚠️  Some archive records conflict with existing bookings and were left in place. Resolve them manually.');
     }
     console.log('✅ Migration complete.');
+    return { moved: moves.length, upgraded: upgrades.length, conflicts };
+  }
+}
+
+async function main() {
+  const apply = process.argv.includes('--apply');
+  const config = require('../config/env');
+  const mongoose = require('mongoose');
+  await mongoose.connect(config.MONGODB_URI, { dbName: config.MONGODB_DB_NAME });
+  try {
+    await runMigration(mongoose, { apply });
   } finally {
     await mongoose.connection.close();
   }
@@ -215,4 +225,4 @@ if (require.main === module) {
   });
 }
 
-module.exports = { archiveToBooking, upgradeBooking };
+module.exports = { archiveToBooking, upgradeBooking, runMigration };
