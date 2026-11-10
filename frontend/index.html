@@ -6,13 +6,12 @@
     <title data-i18n="hotelName">فندق كورنثيا | حجز الإفطار</title>
     
     <!-- Google Fonts for fallback -->
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ar.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="vendor/fonts/fonts.css">
+    <link rel="stylesheet" href="vendor/fontawesome/css/all.min.css">
+    <link rel="stylesheet" href="vendor/flatpickr/flatpickr.min.css">
+    <script src="vendor/flatpickr/flatpickr.min.js"></script>
+    <script src="vendor/flatpickr/l10n/ar.js"></script>
+    <script src="vendor/sweetalert2/sweetalert2.all.min.js"></script>
     
     <!-- Luxury Design System -->
     <link rel="stylesheet" href="luxury-design-system.css">
@@ -22,7 +21,7 @@
 <body class="user-view">
 
     <!-- Language Switcher - Luxury Style -->
-    <div class="language-toggle-container" onclick="i18n.toggleLang()">
+    <div class="language-toggle-container" data-action="i18n.toggleLang" role="button" tabindex="0" aria-label="العربية / English">
         <div class="lang-toggle-item active" id="langAr">
             <span> العربية</span>
         </div>
@@ -58,7 +57,7 @@
             <div class="luxury-input-group">
                 <i class="fas fa-user luxury-input-icon"></i>
                 <input type="text" id="guestName" class="luxury-input" maxlength="100" pattern="^[a-zA-Z\s\u0600-\u06FF]+$" required placeholder data-i18n-attr="placeholder:placeholder_name">
-                <label class="luxury-label" data-i18n="label_name">الاسم الكامل</label>
+                <label class="luxury-label" for="guestName" data-i18n="label_name">الاسم الكامل</label>
             </div>
 
             <!-- Phone & Date Row -->
@@ -66,12 +65,12 @@
                 <div class="luxury-input-group">
                     <i class="fas fa-phone luxury-input-icon"></i>
                     <input type="tel" id="phone" class="luxury-input" placeholder data-i18n-attr="placeholder:placeholder_phone" required>
-                    <label class="luxury-label" data-i18n="label_phone">رقم الهاتف</label>
+                    <label class="luxury-label" for="phone" data-i18n="label_phone">رقم الهاتف</label>
                 </div>
                 <div class="luxury-input-group">
                     <i class="fas fa-calendar-alt luxury-input-icon"></i>
                     <input type="text" id="bookingDate" class="luxury-input flatpickr-input" placeholder data-i18n-attr="placeholder:select_date" required>
-                    <label class="luxury-label" data-i18n="label_date">التاريخ</label>
+                    <label class="luxury-label" for="bookingDate" data-i18n="label_date">التاريخ</label>
                 </div>
             </div>
 
@@ -79,16 +78,16 @@
             <div class="luxury-input-group">
                 <i class="fas fa-users luxury-input-icon"></i>
                 <input type="number" id="guests" class="luxury-input" min="1" max="200" value="2" required>
-                <label class="luxury-label" data-i18n="label_people">عدد الضيوف</label>
+                <label class="luxury-label" for="guests" data-i18n="label_people">عدد الضيوف</label>
             </div>
 
             <!-- Group Booking Toggle -->
             <div class="luxury-group-option">
                 <label class="luxury-switch">
-                    <input type="checkbox" id="isGroup">
+                    <input type="checkbox" id="isGroup" aria-labelledby="groupBookingText">
                     <span class="luxury-slider"></span>
                 </label>
-                <span class="luxury-group-text" data-i18n="group_booking">حجز لمجموعة / مناسبة</span>
+                <span class="luxury-group-text" id="groupBookingText" data-i18n="group_booking">حجز لمجموعة / مناسبة</span>
             </div>
 
             <!-- Hero Submit Button -->
@@ -113,23 +112,23 @@
     </div>
 
     <!-- Phone Call Floating Button - Right Side (Above WhatsApp) -->
-    <a href="tel:+218910100708" class="phone-float">
+    <a href="tel:+218910100708" class="phone-float" aria-label="اتصل بنا / Call us">
         <i class="fas fa-phone-alt"></i>
     </a>
 
     <!-- WhatsApp Floating Button - Always Right -->
-    <a href="https://wa.me/218910100708" target="_blank" class="whatsapp-float">
+    <a href="https://wa.me/218910100708" target="_blank" rel="noopener" class="whatsapp-float" aria-label="WhatsApp">
         <i class="fab fa-whatsapp"></i>
     </a>
 
     <!-- Download Imsakia Floating Button - Left Side -->
-    <a href="Imsakia.pdf" download class="imsakia-float" onclick="downloadImsakia(event)">
+    <a href="Imsakia.pdf" download class="imsakia-float" aria-label="تحميل الإمساكية / Download Imsakia" data-action="downloadImsakia" data-pass="event">
         <i class="fas fa-download"></i>
         <span>إمساكية</span>
     </a>
 
     <!-- Floating Bell Icon - Transparent Glass Circle -->
-    <button class="bell-float" onclick="toggleInfoCard()">
+    <button class="bell-float" data-action="toggleInfoCard" aria-label="معلومات / Information">
         <i class="fas fa-bell"></i>
     </button>
 
@@ -137,7 +136,7 @@
     <div class="info-popup" id="infoPopup">
         <div class="info-popup-header">
             <span data-i18n="info_title">معلومات الحجز</span>
-            <button class="info-popup-close" onclick="closeInfoCard()">&times;</button>
+            <button class="info-popup-close" data-action="closeInfoCard">&times;</button>
         </div>
         <div class="info-popup-content">
             <div class="info-popup-item">
@@ -150,6 +149,8 @@
             </div>
         </div>
     </div>
+
+    <script src="actions.js"></script>
 
     <script src="constants.js"></script>
     <script src="i18n.js"></script>

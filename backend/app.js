@@ -26,14 +26,14 @@ app.use(helmet({
   contentSecurityPolicy: {
     useDefaults: true,
     directives: {
-      // The pages still use inline <script> blocks and onclick="" handlers, so
-      // 'unsafe-inline' remains until the frontend refactor removes them. The
-      // policy still blocks scripts from other origins, framing, plugins, and
-      // fetch/XHR to any other host.
-      'script-src': ["'self'", "'unsafe-inline'", 'https://cdn.jsdelivr.net', 'https://cdnjs.cloudflare.com'],
-      'script-src-attr': ["'unsafe-inline'"],
-      'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com', 'https://cdn.jsdelivr.net', 'https://cdnjs.cloudflare.com'],
-      'font-src': ["'self'", 'data:', 'https://fonts.gstatic.com', 'https://cdnjs.cloudflare.com'],
+      // All scripts, fonts and libraries are served from this origin
+      // (frontend/vendor). No inline <script> and no on*="" handlers: an
+      // injected script tag or attribute cannot run. Inline style attributes
+      // are still allowed (low risk; many remain in the markup).
+      'script-src': ["'self'"],
+      'script-src-attr': ["'none'"],
+      'style-src': ["'self'", "'unsafe-inline'"],
+      'font-src': ["'self'", 'data:'],
       'img-src': ["'self'", 'data:', 'blob:'],
       'connect-src': ["'self'"],
       'frame-ancestors': ["'none'"],
@@ -71,7 +71,22 @@ app.use((req, res, next) => {
   if (/\.(md|ya?ml|sh|conf|lst|env|example|txt|json)$/i.test(req.path)) return res.status(404).end();
   next();
 });
-app.use(express.static(frontendPath, { dotfiles: 'deny', index: 'index.html' }));
+app.use(express.static(frontendPath, {
+  dotfiles: 'deny',
+  index: 'index.html',
+  setHeaders(res, filePath) {
+    const rel = path.relative(frontendPath, filePath).split(path.sep).join('/');
+    if (rel.startsWith('vendor/')) {
+      // Pinned third-party versions: safe to cache for a long time
+      res.setHeader('Cache-Control', 'public, max-age=2592000');
+    } else if (/\.(webp|jpe?g|png|svg|otf|woff2?|pdf)$/i.test(rel)) {
+      res.setHeader('Cache-Control', 'public, max-age=604800');
+    } else {
+      // HTML, app JS and CSS: always revalidate so updates show immediately
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  },
+}));
 
 const pages = {
   '/': 'index.html',

@@ -268,7 +268,7 @@ function updateUIByStatus(data) {
             
             // Action buttons - Download Receipt
             actionBtnsHTML = `
-                <button class="result-btn primary" onclick="saveBookingPass()">
+                <button class="result-btn primary" data-action="saveBookingPass">
                     <i class="fas fa-download"></i>
                     <span>${dict.btn_download || 'Download Receipt'}</span>
                 </button>
@@ -317,7 +317,7 @@ function updateUIByStatus(data) {
             
             // Action buttons - Refresh
             actionBtnsHTML = `
-                <button class="result-btn secondary" onclick="performTrack()">
+                <button class="result-btn secondary" data-action="performTrack">
                     <i class="fas fa-sync-alt"></i>
                     <span>${dict.btn_check || 'Refresh'}</span>
                 </button>

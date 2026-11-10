@@ -151,7 +151,7 @@ function renderUsersTable() {
                 <td>
                     <label class="toggle-switch">
                         <input type="checkbox" ${user.isActive ? 'checked' : ''} 
-                            onchange="toggleUserStatus('${user._id}', this.checked)" 
+                            data-on-change="toggleUserStatus" data-args="[&quot;${escapeHtml(user._id)}&quot;]" data-pass="checked" 
                             ${toggleDisabled ? 'disabled' : ''}>
                         <span class="toggle-slider"></span>
                     </label>
@@ -159,14 +159,14 @@ function renderUsersTable() {
                 <td>${formatDate(user.createdAt)}</td>
                 <td>
                     <div class="action-btn-group">
-                        <button onclick="editUser('${user._id}')" class="edit-btn" title="${t('btn_edit')}">
+                        <button data-action="editUser" data-args="[&quot;${escapeHtml(user._id)}&quot;]" class="edit-btn" title="${t('btn_edit')}">
                             <i class="fas fa-pencil-alt"></i>
                         </button>
-                        <button onclick="resetUserPassword('${user._id}')" class="reset-btn" title="${t('btn_reset_password')}">
+                        <button data-action="resetUserPassword" data-args="[&quot;${escapeHtml(user._id)}&quot;]" class="reset-btn" title="${t('btn_reset_password')}">
                             <i class="fas fa-key"></i>
                         </button>
                         ${showDeleteBtn ? `
-                        <button onclick="showDeleteConfirmModal('${user._id}')" class="delete-btn" 
+                        <button data-action="showDeleteConfirmModal" data-args="[&quot;${escapeHtml(user._id)}&quot;]" class="delete-btn" 
                             title="${t('btn_delete')}">
                             <i class="fas fa-trash-alt"></i>
                         </button>

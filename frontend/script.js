@@ -552,6 +552,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Create feedback element
         const feedback = document.createElement('div');
+        feedback.setAttribute('role', 'status');
+        feedback.setAttribute('aria-live', 'polite');
         feedback.className = `luxury-feedback ${type}`;
         feedback.style.cssText = `
             position: fixed;

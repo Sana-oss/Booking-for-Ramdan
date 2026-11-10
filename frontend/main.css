@@ -644,3 +644,20 @@ body.user-view {
         right: 20px;
     }
 }
+
+/* Small phones: floating buttons in one compact row along the bottom edge
+   instead of a column that covers the form fields. */
+@media (max-width: 480px) {
+    body.user-view { padding-bottom: 76px; }
+    .bell-float, .phone-float, .whatsapp-float, .imsakia-float {
+        width: 46px;
+        height: 46px;
+        bottom: 14px;
+        font-size: 1.2rem;
+    }
+    .whatsapp-float { right: 14px; }
+    .phone-float { right: 68px; }
+    .bell-float { right: 122px; }
+    .imsakia-float { left: 14px; }
+    .imsakia-float span { display: none; }
+}

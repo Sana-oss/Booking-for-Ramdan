@@ -88,7 +88,7 @@ test('security headers and CSP are set', async () => {
   const res = await fetch(`${base}/`);
   assert.equal(res.status, 200);
   const csp = res.headers.get('content-security-policy');
-  assert.ok(csp && csp.includes("connect-src 'self'") && csp.includes("frame-ancestors 'none'"));
+  assert.ok(csp && csp.includes("connect-src 'self'") && csp.includes("frame-ancestors 'none'") && /script-src 'self'(;|$)/.test(csp) && csp.includes("script-src-attr 'none'"));
   assert.equal(res.headers.get('x-powered-by'), null);
   assert.equal(res.headers.get('access-control-allow-origin'), null);
 });
