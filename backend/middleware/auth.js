@@ -1,25 +1,17 @@
 const jwt = require('jsonwebtoken');
 const Admin = require('../models/Admin');
-
-// Security: Check for JWT_SECRET environment variable
-// Use fallback only in development with a strong warning
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-do-not-use-in-production-change-this';
-
-if (!process.env.JWT_SECRET) {
-  console.warn('⚠️  WARNING: JWT_SECRET is not set in environment variables.');
-  console.warn('⚠️  Using development fallback secret. SET JWT_SECRET for production!');
-  console.warn('⚠️  Add JWT_SECRET=your-secure-random-string to your .env file.');
-}
+const { JWT_SECRET } = require('../config/env');
 
 const auth = async (req, res, next) => {
   try {
-    const token = req.header('Authorization')?.replace('Bearer ', '');
+    const header = req.header('Authorization') || '';
+    const token = header.startsWith('Bearer ') ? header.slice(7) : null;
 
     if (!token) {
       return res.status(401).json({ message: 'No authentication token provided' });
     }
 
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, JWT_SECRET, { algorithms: ['HS256'] });
     const admin = await Admin.findById(decoded.id);
 
     if (!admin || !admin.isActive) {

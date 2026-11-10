@@ -573,21 +573,21 @@ function renderAdminTable(data) {
     tableBody.innerHTML = displayData.map(booking => `
         <tr class="fade-in-row">
             <td class="ref-cell">
-                <span class="ref-number">${booking.referenceNumber || (booking._id ? booking._id.slice(-6).toUpperCase() : 'N/A')}</span>
+                <span class="ref-number">${escapeHtml(booking.referenceNumber || (booking._id ? booking._id.slice(-6).toUpperCase() : 'N/A'))}</span>
             </td>
             <td class="guest-info-cell">
                 <div class="guest-info">
-                    <span class="guest-name">${booking.name}</span>
-                    <span class="guest-phone">${booking.phone}</span>
+                    <span class="guest-name">${escapeHtml(booking.name)}</span>
+                    <span class="guest-phone">${escapeHtml(booking.phone)}</span>
                 </div>
             </td>
-            <td class="date-time-cell">${formatDateTime(booking.date, booking.time)}</td>
-            <td class="guests-cell"><span class="guests-count">${booking.guests}</span></td>
+            <td class="date-time-cell">${escapeHtml(formatDateTime(booking.date, booking.time))}</td>
+            <td class="guests-cell"><span class="guests-count">${escapeHtml(booking.guests)}</span></td>
             <td class="status-cell">
                 <div style="display: flex; flex-direction: column; gap: 5px; align-items: center;">
-                    <select class="status-select status-badge status-${booking.status}" 
-                            data-id="${booking._id}"
-                            data-current="${booking.status}"
+                    <select class="status-select status-badge status-${escapeHtml(booking.status)}" 
+                            data-id="${escapeHtml(booking._id)}"
+                            data-current="${escapeHtml(booking.status)}"
                             onchange="updateBookingStatus(this)"
                             title="Change Status">
                         <option value="Pending" ${booking.status === 'Pending' ? 'selected' : ''}>Pending</option>
@@ -1126,7 +1126,8 @@ function showNotification(msg, type = 'info') {
             bgColor = 'linear-gradient(135deg, #3498db, #2980b9)';
     }
     
-    toast.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
+    toast.innerHTML = `<i class="fas ${icon}"></i> `;
+    toast.appendChild(document.createTextNode(String(msg)));
     toast.style.background = bgColor;
     document.body.appendChild(toast);
     

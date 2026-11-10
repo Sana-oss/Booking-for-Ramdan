@@ -80,13 +80,12 @@ async function performTrack() {
     
     // Validate booking ID format
     const isNumericId = /^[0-9]{10,}$/.test(id);
-    const isMongoId = id.length === 24 && /^[a-f0-9]+$/.test(id.toLowerCase());
-    const isRefNumber = /^CRT-[A-Z0-9]{4}$/i.test(id);
+        const isRefNumber = /^CRT-[A-Z0-9]{4}(?:[A-Z0-9]{2})?$/i.test(id);
     
-    if (!isNumericId && !isMongoId && !isRefNumber) {
+    if (!isNumericId && !isRefNumber) {
         const msg = currentLang === 'ar' 
-            ? 'يرجى إدخال رقم الحجز الصحيح (مثال: CRT-ABCD)' 
-            : 'Please enter a valid booking ID (e.g., CRT-ABCD)';
+            ? 'يرجى إدخال رقم الحجز الصحيح (مثال: CRT-ABCD23)' 
+            : 'Please enter a valid booking ID (e.g., CRT-ABCD23)';
         alert(msg);
         return;
     }
@@ -146,7 +145,7 @@ function startPolling(bookingId) {
     
     console.log('🔄 Starting polling for booking:', bookingId);
     
-    // Poll every 10 seconds
+    // Poll every 30 seconds
     pollingInterval = setInterval(async () => {
         try {
             const response = await fetch(BOOKING_ITEM_URL(bookingId));
@@ -177,7 +176,7 @@ function startPolling(bookingId) {
         } catch (err) {
             console.error('Polling error:', err);
         }
-    }, 10000); // 10 seconds
+    }, 30000); // 30 seconds
 }
 
 function stopPolling() {
@@ -259,6 +258,7 @@ function updateUIByStatus(data) {
     let actionBtnsHTML = '';
     
     switch (status) {
+        case 'arrived':
         case 'confirmed':
             // Green/black badge, show download button
             statusBadge.classList.add('status-confirmed');
@@ -284,6 +284,7 @@ function updateUIByStatus(data) {
             
         case 'cancelled':
         case 'expired':
+        case 'no-show':
             // Red badge, show contact support
             statusBadge.classList.add('status-cancelled');
             statusIcon.className = 'fas fa-times-circle';

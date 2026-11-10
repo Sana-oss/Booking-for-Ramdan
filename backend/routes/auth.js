@@ -4,18 +4,18 @@ const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
 const Admin = require('../models/Admin');
 const { auth } = require('../middleware/auth');
+const { loginLimiter } = require('../middleware/security');
+const { JWT_SECRET, JWT_EXPIRES_IN } = require('../config/env');
 
 const router = express.Router();
 
-// Use same JWT_SECRET as auth middleware
-const JWT_SECRET = process.env.JWT_SECRET || 'dev-secret-do-not-use-in-production-change-this';
 
 // @route   POST /api/auth/login
 // @desc    Admin login
 // @access  Public
-router.post('/login', [
-  body('username').trim().notEmpty().withMessage('Username is required'),
-  body('password').notEmpty().withMessage('Password is required')
+router.post('/login', loginLimiter, [
+  body('username').isString().trim().toLowerCase().notEmpty().withMessage('Username is required'),
+  body('password').isString().notEmpty().withMessage('Password is required')
 ], async (req, res) => {
   try {
     const errors = validationResult(req);
@@ -45,7 +45,7 @@ router.post('/login', [
     const token = jwt.sign(
       { id: admin._id, username: admin.username, role: admin.role },
       JWT_SECRET,
-      { expiresIn: '24h' }
+      { expiresIn: JWT_EXPIRES_IN, algorithm: 'HS256' }
     );
 
     res.json({
