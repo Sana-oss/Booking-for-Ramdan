@@ -28,15 +28,17 @@ async function start() {
     process.exit(1);
   }
 
-  // Refuse to run against un-migrated data (old separate archive collection)
+  // Data written by an older version (separate archive collection) is migrated
+  // automatically, with a JSON backup in backend/backups/ first.
   const legacy = await mongoose.connection.db
     .listCollections({ name: 'bookingarchives' }).toArray();
-  if (legacy.length) {
-    const count = await mongoose.connection.db.collection('bookingarchives').countDocuments();
-    if (count > 0) {
-      console.error(`❌ Found ${count} record(s) in the old "bookingarchives" collection.`);
-      console.error('   Run the migration first:  npm run migrate        (dry run)');
-      console.error('                             npm run migrate -- --apply');
+  if (legacy.length && (await mongoose.connection.db.collection('bookingarchives').countDocuments()) > 0) {
+    console.log('ℹ️  Old-format archive records found — migrating them now.');
+    const { runMigration } = require('./scripts/migrate-to-unified-bookings');
+    const { conflicts } = await runMigration(mongoose, { apply: true });
+    if (conflicts.length) {
+      console.error(`❌ ${conflicts.length} archive record(s) conflict with existing bookings: ${conflicts.join(', ')}`);
+      console.error('   They were left in "bookingarchives". Resolve them, then restart.');
       process.exit(1);
     }
   }

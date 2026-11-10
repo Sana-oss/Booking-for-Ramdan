@@ -24,18 +24,23 @@ First superadmin (only if none exists yet):
 SETUP_ADMIN_USERNAME=<name> SETUP_ADMIN_PASSWORD=<12+ chars> npm run setup
 ```
 
-## Upgrading an existing installation (one-time data migration)
+## Updating the server
 
-Older versions kept checked-in / no-show bookings in a separate `bookingarchives`
-collection. They now live in `bookings` with a status (`Arrived`, `No-Show`,
-`Cancelled`, `Expired`) and a full `statusHistory`. The server refuses to start
-until old archive records are migrated:
+From the project folder on the server (stop the running server first):
 
 ```bash
-cd backend
-npm run migrate              # dry run: shows exactly what will change
-npm run migrate -- --apply   # writes a JSON backup to backend/backups/, then migrates
+git pull origin master && bash update.sh          # Linux / macOS
 ```
+
+```powershell
+git pull origin master; .\update.ps1              # Windows PowerShell
+```
+
+The script installs dependencies and starts the server. On first run it restores
+`backend/.env` from git history if the pull removed it. On startup the server
+also generates a `JWT_SECRET` if none is set, and migrates any old-format archive
+records (backup first, in `backend/backups/`). To preview a migration manually:
+`cd backend && npm run migrate`.
 
 ## Code layout
 
